@@ -1,0 +1,93 @@
+<app-page-header title="Recruitment" subtitle="Manage job postings and candidate pipeline" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Recruitment'}]">
+      <button class="btn btn--primary"><i class="fas fa-plus"></i> New Job Posting</button>
+    </app-page-header>
+    <div class="recruit-stats">
+      <div class="r-stat"><span class="r-val">12</span><span class="r-label">Open Positions</span></div>
+      <div class="r-stat"><span class="r-val">86</span><span class="r-label">Applications</span></div>
+      <div class="r-stat"><span class="r-val">24</span><span class="r-label">Interviews Scheduled</span></div>
+      <div class="r-stat"><span class="r-val">6</span><span class="r-label">Offers Extended</span></div>
+    </div>
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'jobs'" (click)="activeTab = 'jobs'">Job Postings</button>
+      <button class="tab" [class.active]="activeTab === 'pipeline'" (click)="activeTab = 'pipeline'">Candidate Pipeline</button>
+      <button class="tab" [class.active]="activeTab === 'interviews'" (click)="activeTab = 'interviews'">Interviews</button>
+    </div>
+    <div *ngIf="activeTab === 'jobs'" class="jobs-grid">
+      <div class="job-card" *ngFor="let job of jobPostings">
+        <div class="job-card-header">
+          <h4>{{ job.title }}</h4>
+          <span class="job-status" [class]="job.status.toLowerCase()">{{ job.status }}</span>
+        </div>
+        <div class="job-meta">
+          <span><i class="fas fa-building"></i> {{ job.department }}</span>
+          <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+          <span><i class="fas fa-briefcase"></i> {{ job.type }}</span>
+        </div>
+        <div class="job-salary">{{ job.salary }}</div>
+        <div class="job-applicants">
+          <div class="applicant-dots">
+            <div class="dot" *ngFor="let c of job.colorDots" [style.background]="c"></div>
+          </div>
+          <span>{{ job.applicantCount }} applicants</span>
+        </div>
+        <div class="job-footer">
+          <span class="job-posted">Posted {{ job.posted }}</span>
+          <button class="btn-sm">View Details</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'pipeline'" class="table-card">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Candidate</th><th>Position</th><th>Stage</th><th>Rating</th><th>Applied Date</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of candidates">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="c.color">{{ c.name.charAt(0) }}</div>
+                  <div><span class="emp-name">{{ c.name }}</span><br><span class="emp-id">{{ c.email }}</span></div>
+                </div>
+              </td>
+              <td>{{ c.position }}</td>
+              <td><span class="stage-badge" [class]="c.stage.toLowerCase().replace(' ','-')">{{ c.stage }}</span></td>
+              <td>
+                <div class="rating">
+                  <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= c.rating ? '#f59e0b' : '#e2e8f0'"></i>
+                </div>
+              </td>
+              <td>{{ c.appliedDate }}</td>
+              <td>
+                <button class="btn-icon" title="Advance"><i class="fas fa-arrow-right"></i></button>
+                <button class="btn-icon" title="View"><i class="fas fa-eye"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'interviews'" class="table-card">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Candidate</th><th>Position</th><th>Interviewer</th><th>Date & Time</th><th>Type</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i of interviews">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="i.color">{{ i.candidate.charAt(0) }}</div>
+                  <span class="emp-name">{{ i.candidate }}</span>
+                </div>
+              </td>
+              <td>{{ i.position }}</td>
+              <td>{{ i.interviewer }}</td>
+              <td>{{ i.dateTime }}</td>
+              <td><span class="type-badge">{{ i.type }}</span></td>
+              <td><span class="status-badge" [class]="i.status.toLowerCase()">{{ i.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

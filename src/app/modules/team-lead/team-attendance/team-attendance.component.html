@@ -1,0 +1,206 @@
+<div class="team-attendance-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="title-group">
+        <h1 class="page-title">Team Attendance</h1>
+        <span class="subtitle">{{ totalMembersCount }} assigned members</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="date-btn">
+        <i class="far fa-calendar-alt"></i> {{ selectedDateLabel }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tabs-nav">
+    <button class="tab-btn" [class.active]="activeTab === 'attendance'" (click)="activeTab = 'attendance'">
+      Attendance
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'summary'" (click)="activeTab = 'summary'">
+      Summary
+    </button>
+  </div>
+
+  <!-- TAB 1: ATTENDANCE VIEW -->
+  <div class="tab-content" *ngIf="activeTab === 'attendance'">
+    <!-- Light Blue Banner -->
+    <div class="date-banner">
+      <i class="far fa-calendar-alt banner-icon-left"></i>
+      <i class="far fa-calendar-alt banner-icon-right"></i>
+    </div>
+
+    <!-- Filter Pills Row -->
+    <div class="filter-pills-row">
+      <button class="pill-btn" [class.active]="filterStatus === 'ALL'" (click)="filterStatus = 'ALL'">
+        All <span class="pill-badge">{{ totalMembersCount }}</span>
+      </button>
+      <button class="pill-btn pill-present" [class.active]="filterStatus === 'PRESENT'" (click)="filterStatus = 'PRESENT'">
+        Present <span class="pill-badge">{{ presentCount }}</span>
+      </button>
+      <button class="pill-btn pill-absent" [class.active]="filterStatus === 'ABSENT'" (click)="filterStatus = 'ABSENT'">
+        Absent <span class="pill-badge">{{ absentCount }}</span>
+      </button>
+      <button class="pill-btn pill-late" [class.active]="filterStatus === 'LATE'" (click)="filterStatus = 'LATE'">
+        Late <span class="pill-badge">{{ lateCount }}</span>
+      </button>
+      <button class="pill-btn pill-pending" [class.active]="filterStatus === 'PENDING'" (click)="filterStatus = 'PENDING'">
+        Pending <span class="pill-badge">{{ pendingCount }}</span>
+      </button>
+    </div>
+
+    <!-- Search Input -->
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search name or employee ID..." class="search-input">
+    </div>
+
+    <!-- Member Attendance List -->
+    <div class="attendance-cards-list">
+      <div class="member-card" *ngFor="let member of filteredAttendance">
+        <div class="member-card-header">
+          <div class="user-info">
+            <div class="avatar-container">
+              <div class="avatar-circle">
+                <img *ngIf="member.avatar" [src]="member.avatar" [alt]="member.name">
+                <span *ngIf="!member.avatar">{{ getInitial(member.name) }}</span>
+              </div>
+              <span class="status-dot" [class.dot-present]="member.status === 'PRESENT'" [class.dot-absent]="member.status === 'ABSENT'"></span>
+            </div>
+            <div class="user-details">
+              <h3 class="user-name">{{ member.name }}</h3>
+              <p class="user-meta">{{ member.employeeId }} • {{ member.department }}</p>
+            </div>
+          </div>
+
+          <div class="status-badge-container">
+            <span class="badge-status badge-absent" *ngIf="member.status === 'ABSENT'">Absent</span>
+            <span class="badge-status badge-approved" *ngIf="member.status === 'PRESENT'"><i class="fas fa-check-circle"></i> Approved</span>
+            <span class="badge-status badge-late" *ngIf="member.status === 'LATE'">Late</span>
+            <span class="badge-status badge-pending" *ngIf="member.status === 'PENDING'">Pending</span>
+          </div>
+        </div>
+
+        <!-- Metrics Panel (for Present/Working members) -->
+        <div class="metrics-panel" *ngIf="member.status === 'PRESENT'">
+          <div class="metric-col">
+            <span class="metric-label">In Time</span>
+            <span class="metric-value">{{ member.inTime || '--' }}</span>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Out Time</span>
+            <span class="metric-value">{{ member.outTime || '--' }}</span>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Break</span>
+            <span class="metric-value text-amber">{{ member.breakHours || '--' }}</span>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Net Hours</span>
+            <span class="metric-value text-blue">{{ member.netHours || '--' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: SUMMARY VIEW -->
+  <div class="tab-content" *ngIf="activeTab === 'summary'">
+    <!-- Date Header -->
+    <h2 class="summary-date-title">Wednesday, 9 September 2026</h2>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon-wrapper icon-blue">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="kpi-value">{{ totalMembersCount }}</div>
+        <div class="kpi-label">Total Team</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrapper icon-green">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="kpi-value text-green">{{ presentCount }}</div>
+        <div class="kpi-label">Present</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrapper icon-red">
+          <i class="fas fa-times"></i>
+        </div>
+        <div class="kpi-value text-red">{{ absentCount }}</div>
+        <div class="kpi-label">Absent</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrapper icon-orange">
+          <i class="far fa-clock"></i>
+        </div>
+        <div class="kpi-value text-orange">{{ lateCount }}</div>
+        <div class="kpi-label">Late</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrapper icon-orange-light">
+          <i class="far fa-clipboard"></i>
+        </div>
+        <div class="kpi-value text-orange">{{ pendingCount }}</div>
+        <div class="kpi-label">Pending</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrapper icon-purple">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+        <div class="kpi-value text-purple">{{ attendanceRatePercentage }}%</div>
+        <div class="kpi-label">Rate</div>
+      </div>
+    </div>
+
+    <!-- Attendance Rate Section -->
+    <div class="rate-card">
+      <h3 class="section-subheading">Attendance Rate</h3>
+      <div class="rate-info-row">
+        <span class="rate-text">{{ presentCount }} / {{ totalMembersCount }} Present</span>
+        <span class="rate-percentage">{{ attendanceRatePercentage }}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="attendanceRatePercentage"></div>
+      </div>
+    </div>
+
+    <!-- Absent Today Section -->
+    <div class="absent-today-section">
+      <h3 class="section-subheading text-red">
+        <i class="fas fa-times-circle"></i> Absent Today ({{ absentMembers.length }})
+      </h3>
+      <div class="attendance-cards-list">
+        <div class="member-card" *ngFor="let member of absentMembers">
+          <div class="member-card-header">
+            <div class="user-info">
+              <div class="avatar-container">
+                <div class="avatar-circle">
+                  <img *ngIf="member.avatar" [src]="member.avatar" [alt]="member.name">
+                  <span *ngIf="!member.avatar">{{ getInitial(member.name) }}</span>
+                </div>
+                <span class="status-dot dot-absent"></span>
+              </div>
+              <div class="user-details">
+                <h3 class="user-name">{{ member.name }}</h3>
+                <p class="user-meta">{{ member.employeeId }} • {{ member.department }}</p>
+              </div>
+            </div>
+            <div class="status-badge-container">
+              <span class="badge-status badge-absent">Absent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

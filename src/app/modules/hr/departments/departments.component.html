@@ -1,0 +1,38 @@
+<app-page-header title="Departments" subtitle="Manage organizational departments" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Departments'}]">
+      <button class="btn btn--primary" (click)="showAddModal = true"><i class="fas fa-plus"></i> Add Department</button>
+    </app-page-header>
+    <div class="dept-grid">
+      <div class="dept-card" *ngFor="let dept of departments">
+        <div class="dept-card-header">
+          <div class="dept-icon" [style.background]="dept.color">
+            <i [class]="dept.icon"></i>
+          </div>
+          <div class="dept-menu">
+            <button class="btn-menu"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <h3 class="dept-name">{{ dept.name }}</h3>
+        <p class="dept-desc">{{ dept.description }}</p>
+        <div class="dept-stats">
+          <div class="dept-stat">
+            <span class="stat-value">{{ dept.employeeCount }}</span>
+            <span class="stat-label">Employees</span>
+          </div>
+          <div class="dept-stat">
+            <span class="stat-value">{{ dept.teamCount }}</span>
+            <span class="stat-label">Teams</span>
+          </div>
+          <div class="dept-stat">
+            <span class="stat-value">{{ dept.budget }}</span>
+            <span class="stat-label">Budget</span>
+          </div>
+        </div>
+        <div class="dept-footer">
+          <div class="dept-hod">
+            <div class="avatar-xs" [style.background]="dept.color">{{ dept.hod.charAt(0) }}</div>
+            <span>{{ dept.hod }}</span>
+          </div>
+          <span class="dept-status" [class.active]="dept.status === 'Active'">{{ dept.status }}</span>
+        </div>
+      </div>
+    </div>

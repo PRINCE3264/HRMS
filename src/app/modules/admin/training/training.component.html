@@ -1,0 +1,50 @@
+<app-page-header title="Training & Development" subtitle="Manage employee training programs" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Training'}]">
+      <button class="btn btn--primary"><i class="fas fa-plus"></i> Create Program</button>
+    </app-page-header>
+
+    <div class="training-stats">
+      <div class="training-stat">
+        <span class="training-stat__value">8</span>
+        <span class="training-stat__label">Active Programs</span>
+      </div>
+      <div class="training-stat">
+        <span class="training-stat__value">156</span>
+        <span class="training-stat__label">Enrolled Employees</span>
+      </div>
+      <div class="training-stat">
+        <span class="training-stat__value">92%</span>
+        <span class="training-stat__label">Completion Rate</span>
+      </div>
+      <div class="training-stat">
+        <span class="training-stat__value">4.6</span>
+        <span class="training-stat__label">Avg. Feedback</span>
+      </div>
+    </div>
+
+    <div class="training-grid">
+      <div class="training-card" *ngFor="let program of programs">
+        <div class="training-card__banner" [style.background]="program.color">
+          <i [class]="program.icon"></i>
+        </div>
+        <div class="training-card__body">
+          <div class="training-card__header">
+            <h3>{{ program.title }}</h3>
+            <app-status-badge [status]="program.status"></app-status-badge>
+          </div>
+          <p>{{ program.description }}</p>
+          <div class="training-card__meta">
+            <span><i class="fas fa-user-graduate"></i> {{ program.instructor }}</span>
+            <span><i class="fas fa-calendar"></i> {{ program.duration }}</span>
+            <span><i class="fas fa-users"></i> {{ program.enrolled }}/{{ program.capacity }}</span>
+          </div>
+          <div class="training-card__progress">
+            <div class="progress-bar">
+              <div class="progress-bar__fill" [style.width]="(program.enrolled / program.capacity * 100) + '%'"></div>
+            </div>
+          </div>
+          <div class="training-card__tags">
+            <span class="tag" *ngFor="let tag of program.tags">{{ tag }}</span>
+          </div>
+        </div>
+      </div>
+    </div>

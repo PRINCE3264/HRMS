@@ -1,0 +1,73 @@
+<div class="sidebar-overlay" [class.active]="mobileOpen" (click)="closeMobile()"></div>
+
+<aside class="sidebar" [class.collapsed]="collapsed" [class.mobile-open]="mobileOpen">
+  <!-- Sidebar Header -->
+  <div class="sidebar__header">
+    <div class="sidebar__brand" *ngIf="!collapsed; else collapsedBrand">
+      <img src="assets/images/hrm.png" alt="HRM Logo" class="brand-img-large">
+      <div class="brand-text-block">
+        <h2 class="brand-title">HRM</h2>
+        <span class="brand-tagline">HUMAN RESOURCE MANAGEMENT</span>
+      </div>
+    </div>
+    <ng-template #collapsedBrand>
+      <div class="sidebar__brand collapsed-brand">
+        <img src="assets/images/hrm.png" alt="HRM Logo" class="brand-img-collapsed">
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Navigation Menu List -->
+  <nav class="sidebar__menu">
+    <div class="menu-item" *ngFor="let item of navItems">
+      <!-- Menu Item without Children -->
+      <a *ngIf="!item.children" class="menu-link" [routerLink]="item.routerLink" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: item.routerLink === '/dashboard' }" (click)="closeMobile()">
+        <i [class]="item.icon" class="menu-icon"></i>
+        <span class="menu-text" *ngIf="!collapsed">{{ item.label }}</span>
+        <i class="fas fa-chevron-up chevron-icon" *ngIf="!collapsed"></i>
+      </a>
+
+      <!-- Menu Item with Children (Accordion) -->
+      <ng-container *ngIf="item.children">
+        <div class="menu-link menu-link--parent" (click)="toggleSubmenu(item.label)"
+          [class.expanded]="expandedMenus.has(item.label)">
+          <i [class]="item.icon" class="menu-icon"></i>
+          <span class="menu-text" *ngIf="!collapsed">{{ item.label }}</span>
+          <i [class]="expandedMenus.has(item.label) ? 'fas fa-chevron-down' : 'fas fa-chevron-up'" class="chevron-icon"
+            *ngIf="!collapsed"></i>
+        </div>
+        <div class="submenu-list" *ngIf="expandedMenus.has(item.label) && !collapsed">
+          <a *ngFor="let child of item.children" class="submenu-link" [routerLink]="child.routerLink"
+            routerLinkActive="active" (click)="closeMobile()">
+            <i [class]="child.icon || 'fas fa-file-alt'" class="submenu-icon"></i>
+            <span>{{ child.label }}</span>
+          </a>
+        </div>
+      </ng-container>
+    </div>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar__footer">
+    <a class="menu-link menu-link--logout" (click)="confirmLogout()">
+      <i class="fas fa-sign-out-alt menu-icon"></i>
+      <span class="menu-text" *ngIf="!collapsed">Logout</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Logout Confirmation Modal -->
+<div class="logout-modal-backdrop" *ngIf="showLogoutModal" (click)="cancelLogout()">
+  <div class="logout-modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-icon-box">
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+    <h3 class="modal-title">Confirm Logout</h3>
+    <p class="modal-desc">Are you sure you want to log out of HRM Pro?</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" (click)="cancelLogout()">Cancel</button>
+      <button class="btn-modal-confirm" (click)="performLogout()">Yes, Logout</button>
+    </div>
+  </div>
+</div>

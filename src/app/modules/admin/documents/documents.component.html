@@ -1,0 +1,18 @@
+<app-page-header title="Document Management" subtitle="Organize and manage company documents" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Documents'}]">
+      <button class="btn btn--primary"><i class="fas fa-upload"></i> Upload Document</button>
+    </app-page-header>
+
+    <div class="doc-categories">
+      <div class="doc-cat" *ngFor="let cat of categories">
+        <div class="doc-cat__icon" [style.background]="cat.color">
+          <i [class]="cat.icon"></i>
+        </div>
+        <div class="doc-cat__info">
+          <span class="doc-cat__name">{{ cat.name }}</span>
+          <span class="doc-cat__count">{{ cat.count }} files</span>
+        </div>
+      </div>
+    </div>
+
+    <app-data-table [columns]="columns" [data]="documents" [pageSize]="10" [actions]="tableActions" (onActionClick)="onAction($event)">
+    </app-data-table>

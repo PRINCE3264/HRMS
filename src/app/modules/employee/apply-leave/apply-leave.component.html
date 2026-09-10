@@ -1,0 +1,67 @@
+<app-page-header title="Apply for Leave" subtitle="Submit a new leave request" [breadcrumbs]="[{label:'Dashboard',link:'/employee/dashboard'},{label:'My Leave',link:'/employee/my-leave'},{label:'Apply Leave'}]"></app-page-header>
+    <div class="section-card">
+      <div class="card-body">
+        <div class="leave-balance-bar">
+          <div class="lb-item" *ngFor="let b of balances">
+            <span class="lb-type">{{ b.type }}:</span>
+            <strong>{{ b.remaining }}</strong> days remaining
+          </div>
+        </div>
+        <form class="leave-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Leave Type *</label>
+              <select class="form-input" [(ngModel)]="leaveForm.type" name="type" required>
+                <option value="">Select leave type</option>
+                <option value="Annual Leave">Annual Leave</option>
+                <option value="Sick Leave">Sick Leave</option>
+                <option value="Personal Leave">Personal Leave</option>
+                <option value="Unpaid Leave">Unpaid Leave</option>
+                <option value="Maternity Leave">Maternity Leave</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Duration *</label>
+              <select class="form-input" [(ngModel)]="leaveForm.duration" name="duration">
+                <option value="full">Full Day(s)</option>
+                <option value="half-am">Half Day (Morning)</option>
+                <option value="half-pm">Half Day (Afternoon)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Start Date *</label>
+              <input type="date" class="form-input" [(ngModel)]="leaveForm.startDate" name="startDate" required>
+            </div>
+            <div class="form-group">
+              <label>End Date *</label>
+              <input type="date" class="form-input" [(ngModel)]="leaveForm.endDate" name="endDate" required>
+            </div>
+            <div class="form-group">
+              <label>Total Days</label>
+              <input type="text" class="form-input" [value]="calculatedDays + ' day(s)'" readonly>
+            </div>
+            <div class="form-group">
+              <label>Contact During Leave</label>
+              <input type="text" class="form-input" [(ngModel)]="leaveForm.contact" name="contact" placeholder="Phone number">
+            </div>
+            <div class="form-group full-width">
+              <label>Reason for Leave *</label>
+              <textarea class="form-input form-textarea" rows="4" [(ngModel)]="leaveForm.reason" name="reason" required placeholder="Please provide a reason for your leave request..."></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" routerLink="/employee/my-leave">Cancel</button>
+            <button type="submit" class="btn-primary" (click)="submitLeave()"><i class="fas fa-paper-plane"></i> Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="section-card" style="margin-top:20px" *ngIf="submitted">
+      <div class="success-msg">
+        <i class="fas fa-check-circle"></i>
+        <div>
+          <strong>Leave request submitted successfully!</strong>
+          <p>Your request has been sent to your team lead for approval.</p>
+        </div>
+      </div>
+    </div>

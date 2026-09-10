@@ -1,0 +1,51 @@
+<app-page-header title="Admin Dashboard" subtitle="System overview and management" [breadcrumbs]="[{label:'Dashboard'}]"></app-page-header>
+    
+    <div class="stats-grid">
+      <app-stat-card label="Total Employees" value="248" icon="fas fa-users" color="primary" [change]="5.2"></app-stat-card>
+      <app-stat-card label="Active Employees" value="231" icon="fas fa-user-check" color="success" [change]="3.1"></app-stat-card>
+      <app-stat-card label="Departments" value="12" icon="fas fa-building" color="info"></app-stat-card>
+      <app-stat-card label="Present Today" value="198" icon="fas fa-calendar-check" color="purple" [change]="2.4"></app-stat-card>
+      <app-stat-card label="Absent Today" value="33" icon="fas fa-user-times" color="danger" [change]="-1.8"></app-stat-card>
+      <app-stat-card label="Pending Leaves" value="14" icon="fas fa-calendar-alt" color="warning" [change]="8.5"></app-stat-card>
+    </div>
+
+    <div class="charts-row">
+      <app-chart-bar title="Monthly Attendance" subtitle="Last 6 months" [chartData]="attendanceData"></app-chart-bar>
+      <app-chart-donut title="Department Distribution" [data]="departmentData"></app-chart-donut>
+    </div>
+
+    <div class="recent-section">
+      <div class="section-card">
+        <div class="section-header">
+          <h3>Recent Activities</h3>
+          <a class="view-all">View All</a>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-icon" [class]="'activity-icon--' + activity.type">
+              <i [class]="activity.icon"></i>
+            </div>
+            <div class="activity-content">
+              <p>{{ activity.text }}</p>
+              <span>{{ activity.time }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-header">
+          <h3>Payroll Summary</h3>
+          <a class="view-all">View All</a>
+        </div>
+        <div class="payroll-list">
+          <div class="payroll-item" *ngFor="let item of payrollSummary">
+            <div class="payroll-info">
+              <span class="payroll-month">{{ item.month }}</span>
+              <span class="payroll-amount">{{ item.amount | currency }}</span>
+            </div>
+            <app-status-badge [status]="item.status"></app-status-badge>
+          </div>
+        </div>
+      </div>
+    </div>

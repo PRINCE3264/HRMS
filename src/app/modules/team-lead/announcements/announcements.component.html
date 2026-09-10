@@ -1,0 +1,45 @@
+<app-page-header title="Announcements" subtitle="Company-wide announcements" [breadcrumbs]="[{label:'Dashboard',link:'/team-lead/dashboard'},{label:'Announcements'}]"></app-page-header>
+    <div class="filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search announcements..." [(ngModel)]="searchTerm">
+      </div>
+      <select [(ngModel)]="filterCategory">
+        <option value="">All Categories</option>
+        <option value="Company">Company</option>
+        <option value="HR">HR</option>
+        <option value="IT">IT</option>
+        <option value="Events">Events</option>
+      </select>
+    </div>
+    <div class="announcements-list">
+      <div class="announcement-card" *ngFor="let a of filteredAnnouncements" [class.unread]="!a.read">
+        <div class="announce-header">
+          <div class="announce-icon" [style.background]="a.iconBg" [style.color]="a.iconColor">
+            <i [class]="a.icon"></i>
+          </div>
+          <div class="announce-meta">
+            <h3>{{ a.title }}</h3>
+            <div class="meta-row">
+              <span class="category-badge" [style.background]="a.iconBg" [style.color]="a.iconColor">{{ a.category }}</span>
+              <span class="announce-date"><i class="fas fa-clock"></i> {{ a.date }}</span>
+              <span class="announce-author"><i class="fas fa-user"></i> {{ a.author }}</span>
+            </div>
+          </div>
+          <div *ngIf="!a.read" class="unread-dot"></div>
+        </div>
+        <div class="announce-body">
+          <p>{{ a.content }}</p>
+        </div>
+        <div class="announce-footer">
+          <div class="announce-tags">
+            <span class="tag" *ngFor="let tag of a.tags">{{ tag }}</span>
+          </div>
+          <button class="btn-text" (click)="a.read = true"><i class="fas fa-check"></i> Mark as Read</button>
+        </div>
+      </div>
+      <div *ngIf="filteredAnnouncements.length === 0" class="empty-state">
+        <i class="fas fa-bullhorn"></i>
+        <p>No announcements found</p>
+      </div>
+    </div>

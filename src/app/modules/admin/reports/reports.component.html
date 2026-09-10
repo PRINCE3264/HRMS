@@ -1,0 +1,80 @@
+<app-page-header title="Reports & Analytics" subtitle="Generate and view HR analytics reports" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Reports'}]">
+      <button class="btn btn--outline"><i class="fas fa-download"></i> Export All</button>
+      <button class="btn btn--primary"><i class="fas fa-plus"></i> Custom Report</button>
+    </app-page-header>
+
+    <div class="report-tabs">
+      <button class="tab" [class.active]="activeTab === 'overview'" (click)="activeTab = 'overview'">
+        <i class="fas fa-chart-pie"></i> Overview
+      </button>
+      <button class="tab" [class.active]="activeTab === 'headcount'" (click)="activeTab = 'headcount'">
+        <i class="fas fa-users"></i> Headcount
+      </button>
+      <button class="tab" [class.active]="activeTab === 'turnover'" (click)="activeTab = 'turnover'">
+        <i class="fas fa-exchange-alt"></i> Turnover
+      </button>
+      <button class="tab" [class.active]="activeTab === 'compensation'" (click)="activeTab = 'compensation'">
+        <i class="fas fa-dollar-sign"></i> Compensation
+      </button>
+    </div>
+
+    <div class="report-grid">
+      <div class="report-card">
+        <div class="report-card__header">
+          <h3>Employee Headcount by Department</h3>
+        </div>
+        <div class="report-card__body">
+          <app-chart-bar title="" [chartData]="headcountData"></app-chart-bar>
+        </div>
+      </div>
+      <div class="report-card">
+        <div class="report-card__header">
+          <h3>Gender Distribution</h3>
+        </div>
+        <div class="report-card__body">
+          <app-chart-donut title="" [data]="genderData"></app-chart-donut>
+        </div>
+      </div>
+      <div class="report-card">
+        <div class="report-card__header">
+          <h3>Monthly Turnover Rate</h3>
+        </div>
+        <div class="report-card__body">
+          <app-chart-bar title="" [chartData]="turnoverData"></app-chart-bar>
+        </div>
+      </div>
+      <div class="report-card">
+        <div class="report-card__header">
+          <h3>Average Salary by Level</h3>
+        </div>
+        <div class="report-card__body">
+          <div class="salary-bars">
+            <div class="salary-bar" *ngFor="let item of salaryData">
+              <div class="salary-bar__label">
+                <span>{{ item.level }}</span>
+                <span>{{ item.avg | currency }}</span>
+              </div>
+              <div class="salary-bar__track">
+                <div class="salary-bar__fill" [style.width]="item.percent + '%'" [style.background]="item.color"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-reports">
+      <h3>Quick Reports</h3>
+      <div class="quick-grid">
+        <div class="quick-card" *ngFor="let report of quickReports">
+          <div class="quick-card__icon" [style.background]="report.color">
+            <i [class]="report.icon"></i>
+          </div>
+          <div class="quick-card__info">
+            <h4>{{ report.name }}</h4>
+            <span>{{ report.description }}</span>
+          </div>
+          <button class="quick-card__btn"><i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>

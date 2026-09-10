@@ -1,0 +1,232 @@
+<app-page-header title="My Tasks" subtitle="Track, manage, and collaborate on your active projects and deliverables" [breadcrumbs]="[{label:'Dashboard',link:'/employee/dashboard'},{label:'My Tasks'}]">
+  <button class="btn-add-task-header" (click)="openAddTaskModal()">
+    <i class="fas fa-plus"></i> Add New Task
+  </button>
+</app-page-header>
+
+<div class="my-tasks-page-container">
+
+  <!-- 1. Top Filter Container -->
+  <div class="filter-container-box">
+    
+    <!-- Full Width Search Input -->
+    <div class="search-input-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search by title, description, lead, department..." class="search-input" />
+    </div>
+
+    <!-- Status Filter Pills Row -->
+    <div class="status-pills-row">
+      <button class="status-pill" [class.active]="selectedStatus==='All Status'" (click)="selectedStatus='All Status'">
+        <i class="fas fa-check" *ngIf="selectedStatus==='All Status'"></i> All Status
+      </button>
+
+      <button class="status-pill" [class.active]="selectedStatus==='Active'" (click)="selectedStatus='Active'">
+        <i class="fas fa-check" *ngIf="selectedStatus==='Active'"></i> Active
+      </button>
+
+      <button class="status-pill" [class.active]="selectedStatus==='Completed'" (click)="selectedStatus='Completed'">
+        <i class="fas fa-check" *ngIf="selectedStatus==='Completed'"></i> Completed
+      </button>
+
+      <button class="status-pill" [class.active]="selectedStatus==='On Hold'" (click)="selectedStatus='On Hold'">
+        <i class="fas fa-check" *ngIf="selectedStatus==='On Hold'"></i> On Hold
+      </button>
+
+      <button class="status-pill" [class.active]="selectedStatus==='Planning'" (click)="selectedStatus='Planning'">
+        <i class="fas fa-check" *ngIf="selectedStatus==='Planning'"></i> Planning
+      </button>
+    </div>
+
+  </div>
+
+  <!-- 2. Task Cards Grid (2 Column Desktop) -->
+  <div class="tasks-grid" *ngIf="filteredTasks.length > 0">
+    <div class="task-card" *ngFor="let t of filteredTasks">
+      
+      <!-- Top Title + Badge Header -->
+      <div class="card-header-block">
+        <div class="title-row">
+          <h3 class="task-title">{{ t.title }}</h3>
+          <span class="status-badge" [class]="'badge--' + t.status.toLowerCase().replace(' ', '-')">
+            {{ t.status }}
+          </span>
+        </div>
+        <div class="department-sub">{{ t.department }}</div>
+      </div>
+
+      <!-- Description -->
+      <p class="task-desc">{{ t.description }}</p>
+
+      <!-- Existing Review Preview if present -->
+      <div class="existing-review-box" *ngIf="t.reviewRating">
+        <div class="erb-header">
+          <span class="erb-rating">
+            <i class="fas fa-star text-amber"></i> {{ t.reviewRating }}/5 Stars ({{ t.reviewQuality }})
+          </span>
+          <span class="erb-date">{{ t.reviewDate }}</span>
+        </div>
+        <p class="erb-comment" *ngIf="t.reviewComment">"{{ t.reviewComment }}"</p>
+      </div>
+
+      <!-- Divider -->
+      <div class="card-divider"></div>
+
+      <!-- Footer Info Row 1: Lead + Date Range -->
+      <div class="footer-meta-row1">
+        <div class="lead-info">
+          <div class="avatar-circle">{{ getInitial(t.leadName) }}</div>
+          <span class="lead-name">{{ t.leadName }}</span>
+        </div>
+
+        <div class="date-range">
+          <i class="far fa-calendar-alt calendar-icon"></i>
+          <span>{{ t.startDate }} - {{ t.endDate }}</span>
+        </div>
+      </div>
+
+      <!-- Footer Info Row 2: Reports & Members Tags + Review Action -->
+      <div class="footer-meta-row2">
+        <div class="tags-group">
+          <span class="tag-chip reports-chip">
+            <i class="far fa-check-square chip-icon"></i> {{ t.reportsCount }} Reports
+          </span>
+
+          <span class="tag-chip members-chip">
+            <i class="fas fa-users chip-icon"></i> {{ t.membersCount }} Members
+          </span>
+        </div>
+
+        <button class="btn-review-task" (click)="openReviewModal(t)">
+          <i class="fas fa-star"></i> {{ t.reviewRating ? 'Edit Review' : 'Review Task' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state-card" *ngIf="filteredTasks.length === 0">
+    <i class="fas fa-folder-open empty-icon"></i>
+    <p class="empty-title">No tasks found</p>
+    <p class="empty-desc">Try clearing your search filters or selecting a different status.</p>
+  </div>
+
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal-backdrop" *ngIf="showAddTaskModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-plus-circle text-blue"></i> Create New Task</h3>
+      <button class="close-btn" (click)="closeAddTaskModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Task Title <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newTask.title" placeholder="Enter task title (e.g. AI Studio)..." class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Department</label>
+          <input type="text" [(ngModel)]="newTask.department" placeholder="e.g. AI & Research" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="newTask.status" class="form-control">
+            <option value="Active">Active</option>
+            <option value="Completed">Completed</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Planning">Planning</option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Description</label>
+          <textarea [(ngModel)]="newTask.description" rows="3" placeholder="Task details and expected outcome..." class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Lead / Manager Name</label>
+          <input type="text" [(ngModel)]="newTask.leadName" placeholder="Vikram Mehta (TL)" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Team Members Count</label>
+          <input type="number" [(ngModel)]="newTask.membersCount" min="1" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="text" [(ngModel)]="newTask.startDate" placeholder="Mar 10, 2026" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="text" [(ngModel)]="newTask.endDate" placeholder="Oct 20, 2026" class="form-control" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeAddTaskModal()">Cancel</button>
+      <button class="btn-save" (click)="saveNewTask()"><i class="fas fa-check"></i> Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- Task Review / Feedback Modal -->
+<div class="modal-backdrop" *ngIf="showReviewModal && selectedTaskForReview">
+  <div class="modal-card review-modal-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-star text-amber"></i> Review Task: {{ selectedTaskForReview.title }}</h3>
+      <button class="close-btn" (click)="closeReviewModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="review-modal-body">
+        
+        <!-- Star Rating Picker -->
+        <div class="form-group full-width">
+          <label>Task Rating (1 to 5 Stars)</label>
+          <div class="star-rating-picker">
+            <i class="fas fa-star star-icon" *ngFor="let s of [1,2,3,4,5]"
+               [class.filled]="s <= reviewForm.rating"
+               (click)="setStarRating(s)"></i>
+            <span class="rating-val-badge">{{ reviewForm.rating }} / 5 Stars</span>
+          </div>
+        </div>
+
+        <!-- Task Performance Quality Dropdown -->
+        <div class="form-group full-width">
+          <label>Performance Quality</label>
+          <select [(ngModel)]="reviewForm.quality" class="form-control">
+            <option value="Excellent">Excellent (Outstanding Work)</option>
+            <option value="Good">Good (Meets All Requirements)</option>
+            <option value="Satisfactory">Satisfactory (Acceptable Output)</option>
+            <option value="Needs Improvement">Needs Improvement</option>
+          </select>
+        </div>
+
+        <!-- Review Comments -->
+        <div class="form-group full-width">
+          <label>Review Notes & Feedback</label>
+          <textarea [(ngModel)]="reviewForm.comment" rows="4" placeholder="Enter detailed review comments, performance feedback, or milestone updates..." class="form-control"></textarea>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeReviewModal()">Cancel</button>
+      <button class="btn-save btn-save-review" (click)="saveTaskReview()">
+        <i class="fas fa-paper-plane"></i> Submit Review
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-notification" [class.show]="showToast">
+  <i class="fas fa-check-circle"></i>
+  <span>{{ toastMsg }}</span>
+</div>

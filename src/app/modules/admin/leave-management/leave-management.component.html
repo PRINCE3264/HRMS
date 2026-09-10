@@ -1,0 +1,38 @@
+<app-page-header title="Leave Management" subtitle="Manage employee leave requests and balances" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Leave Management'}]">
+      <button class="btn btn--outline"><i class="fas fa-calendar-alt"></i> Leave Calendar</button>
+      <button class="btn btn--primary"><i class="fas fa-plus"></i> New Leave Policy</button>
+    </app-page-header>
+
+    <div class="leave-stats">
+      <div class="leave-stat-card pending">
+        <div class="leave-stat-card__icon"><i class="fas fa-clock"></i></div>
+        <div class="leave-stat-card__info">
+          <span class="leave-stat-card__value">14</span>
+          <span class="leave-stat-card__label">Pending Requests</span>
+        </div>
+      </div>
+      <div class="leave-stat-card approved">
+        <div class="leave-stat-card__icon"><i class="fas fa-check-circle"></i></div>
+        <div class="leave-stat-card__info">
+          <span class="leave-stat-card__value">89</span>
+          <span class="leave-stat-card__label">Approved This Month</span>
+        </div>
+      </div>
+      <div class="leave-stat-card rejected">
+        <div class="leave-stat-card__icon"><i class="fas fa-times-circle"></i></div>
+        <div class="leave-stat-card__info">
+          <span class="leave-stat-card__value">5</span>
+          <span class="leave-stat-card__label">Rejected This Month</span>
+        </div>
+      </div>
+      <div class="leave-stat-card today">
+        <div class="leave-stat-card__icon"><i class="fas fa-calendar-day"></i></div>
+        <div class="leave-stat-card__info">
+          <span class="leave-stat-card__value">18</span>
+          <span class="leave-stat-card__label">On Leave Today</span>
+        </div>
+      </div>
+    </div>
+
+    <app-data-table [columns]="columns" [data]="leaveRequests" [pageSize]="10" [actions]="tableActions" (onActionClick)="onAction($event)">
+    </app-data-table>

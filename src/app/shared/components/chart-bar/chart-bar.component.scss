@@ -1,0 +1,13 @@
+.chart-container { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #f0f0f0; }
+    .chart-header { margin-bottom: 20px; }
+    .chart-header h3 { font-size: 16px; font-weight: 600; color: #1e293b; margin: 0; }
+    .chart-subtitle { font-size: 13px; color: #64748b; }
+    .bar-chart { display: flex; gap: 8px; height: 200px; }
+    .bar-chart__y-axis { display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: #94a3b8; padding: 0 4px; }
+    .bar-chart__bars { display: flex; flex: 1; align-items: flex-end; gap: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 0; }
+    .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .bar-wrapper { height: 100%; display: flex; align-items: flex-end; width: 100%; }
+    .bar { width: 100%; min-height: 4px; border-radius: 4px 4px 0 0; transition: height 0.5s ease; position: relative; max-width: 40px; margin: 0 auto; }
+    .bar:hover { opacity: 0.85; }
+    .bar__value { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; color: #334155; white-space: nowrap; }
+    .bar__label { font-size: 11px; color: #64748b; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60px; }

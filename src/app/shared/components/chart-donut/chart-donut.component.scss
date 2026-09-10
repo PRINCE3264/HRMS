@@ -1,0 +1,29 @@
+.chart-container { 
+    background: #fff;
+     border-radius: 12px;
+      padding: 20px; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); 
+      border: 1px solid #f0f0f0;
+     }
+    .chart-header {
+         margin-bottom: 16px; 
+        }
+    .chart-header h3 
+    { font-size: 16px;
+         font-weight: 600; 
+         color: #1e293b;
+          margin: 0; 
+        }
+    .donut-chart { display: flex; align-items: center; gap: 24px; }
+    .donut-ring { width: 160px; height: 160px; position: relative; flex-shrink: 0; }
+    .donut-ring svg { transform: rotate(-90deg); }
+    .donut-segment { transition: all 0.5s ease; }
+    .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .donut-center__value { font-size: 24px; font-weight: 700; color: #1e293b; }
+    .donut-center__label { font-size: 12px; color: #94a3b8; }
+    .donut-legend { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .legend-label { color: #64748b; flex: 1; }
+    .legend-value { font-weight: 600; color: #1e293b; min-width: 30px; text-align: right; }
+    .legend-percent { color: #94a3b8; min-width: 40px; text-align: right; }

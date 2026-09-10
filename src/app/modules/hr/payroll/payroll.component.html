@@ -1,0 +1,101 @@
+<app-page-header title="Payroll" subtitle="Manage employee compensation and payroll processing" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Payroll'}]">
+      <button class="btn btn--outline"><i class="fas fa-download"></i> Export Report</button>
+      <button class="btn btn--primary"><i class="fas fa-play"></i> Run Payroll</button>
+    </app-page-header>
+    <div class="payroll-stats">
+      <div class="pay-stat"><span class="pay-val">$1,248,500</span><span class="pay-label">Total Payroll (Dec)</span></div>
+      <div class="pay-stat"><span class="pay-val">$186,200</span><span class="pay-label">Total Deductions</span></div>
+      <div class="pay-stat"><span class="pay-val">$1,062,300</span><span class="pay-label">Net Pay</span></div>
+      <div class="pay-stat"><span class="pay-val">248</span><span class="pay-label">Employees Paid</span></div>
+    </div>
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'payslips'" (click)="activeTab = 'payslips'">Payslips</button>
+      <button class="tab" [class.active]="activeTab === 'deductions'" (click)="activeTab = 'deductions'">Deductions</button>
+      <button class="tab" [class.active]="activeTab === 'bonuses'" (click)="activeTab = 'bonuses'">Bonuses</button>
+    </div>
+    <div class="table-card" *ngIf="activeTab === 'payslips'">
+      <div class="table-header">
+        <h3>December 2024 Payslips</h3>
+        <div class="table-filters">
+          <select class="filter-select">
+            <option>All Departments</option>
+            <option>Engineering</option>
+            <option>Marketing</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Employee</th><th>Department</th><th>Basic Salary</th><th>Bonuses</th><th>Deductions</th><th>Net Pay</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of payslips">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="p.color">{{ p.name.charAt(0) }}</div>
+                  <div><span class="emp-name">{{ p.name }}</span><br><span class="emp-id">{{ p.employeeId }}</span></div>
+                </div>
+              </td>
+              <td>{{ p.department }}</td>
+              <td>{{ p.basic | currency }}</td>
+              <td class="positive">+{{ p.bonus | currency }}</td>
+              <td class="negative">-{{ p.deductions | currency }}</td>
+              <td><strong>{{ p.net | currency }}</strong></td>
+              <td><span class="status-badge" [class]="p.status.toLowerCase()">{{ p.status }}</span></td>
+              <td>
+                <button class="btn-icon" title="Download Payslip"><i class="fas fa-download"></i></button>
+                <button class="btn-icon" title="View"><i class="fas fa-eye"></i></button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2"><strong>Total</strong></td>
+              <td><strong>{{ getTotal('basic') | currency }}</strong></td>
+              <td class="positive"><strong>+{{ getTotal('bonus') | currency }}</strong></td>
+              <td class="negative"><strong>-{{ getTotal('deductions') | currency }}</strong></td>
+              <td><strong>{{ getTotal('net') | currency }}</strong></td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <div class="table-card" *ngIf="activeTab === 'deductions'">
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Type</th><th>Description</th><th>Employee Share</th><th>Employer Share</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let d of deductions">
+              <td><strong>{{ d.type }}</strong></td>
+              <td>{{ d.description }}</td>
+              <td>{{ d.employeeShare }}</td>
+              <td>{{ d.employerShare }}</td>
+              <td><span class="status-badge" [class]="d.status.toLowerCase()">{{ d.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="table-card" *ngIf="activeTab === 'bonuses'">
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Employee</th><th>Bonus Type</th><th>Amount</th><th>Period</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let b of bonuses">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="b.color">{{ b.name.charAt(0) }}</div>
+                  <span class="emp-name">{{ b.name }}</span>
+                </div>
+              </td>
+              <td>{{ b.type }}</td>
+              <td class="positive"><strong>{{ b.amount | currency }}</strong></td>
+              <td>{{ b.period }}</td>
+              <td><span class="status-badge" [class]="b.status.toLowerCase()">{{ b.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

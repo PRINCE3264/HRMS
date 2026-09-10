@@ -1,0 +1,18 @@
+:host { display: block; }
+    .btn { padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .btn--primary { background: #6366f1; color: #fff; }
+    .btn--primary:hover { background: #4f46e5; }
+    .btn--outline { background: #fff; border: 1px solid #e2e8f0; color: #64748b; }
+    .btn--outline:hover { background: #f8fafc; }
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-input, .filter-select { padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; color: #334155; background: #fff; min-width: 180px; }
+    .filter-input:focus, .filter-select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+    .stats-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+    .mini-stat { background: #fff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 14px 24px; display: flex; flex-direction: column; align-items: center; min-width: 120px; }
+    .mini-stat__value { font-size: 24px; font-weight: 700; }
+    .mini-stat__value.present { color: #10b981; }
+    .mini-stat__value.absent { color: #ef4444; }
+    .mini-stat__value.late { color: #f59e0b; }
+    .mini-stat__value.leave { color: #8b5cf6; }
+    .mini-stat__value.wfh { color: #06b6d4; }
+    .mini-stat__label { font-size: 12px; color: #94a3b8; margin-top: 2px; }

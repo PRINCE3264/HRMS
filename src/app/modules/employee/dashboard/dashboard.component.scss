@@ -1,0 +1,606 @@
+.emp-dashboard-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 0 32px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* --- 1. PROFILE HEADER BAR --- */
+  .profile-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 4px;
+
+    .profile-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+      .avatar-img-box {
+        font-size: 52px;
+        color: #94a3b8;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+
+      .welcome-text {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      .user-full-name {
+        font-size: 22px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 2px 0;
+        letter-spacing: -0.3px;
+        text-transform: uppercase;
+      }
+
+      .user-meta-line {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1d64f2;
+        margin: 0;
+      }
+    }
+  }
+
+  /* --- 2. REAL-TIME CLOCK BANNER --- */
+  .clock-banner-card {
+    position: relative;
+    background: linear-gradient(135deg, #1d64f2 0%, #1757db 100%);
+    border-radius: 20px;
+    padding: 24px 32px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(29, 100, 242, 0.25);
+
+    .clock-icon-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .clock-details {
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
+
+      .clock-time-row {
+        display: flex;
+        align-items: center;
+
+        .time-digits {
+          font-size: 40px;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          line-height: 1;
+        }
+
+        .ampm-badge {
+          font-size: 12px;
+          font-weight: 700;
+          background: rgba(255, 255, 255, 0.25);
+          padding: 4px 10px;
+          border-radius: 8px;
+          margin-left: 12px;
+          text-transform: uppercase;
+        }
+      }
+
+      .clock-date-row {
+        font-size: 14px;
+        font-weight: 500;
+        color: #e0f2fe;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
+    .clock-bg-watermark {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 140px;
+      color: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+  }
+
+  /* --- 3. SHIFT STATUS CARD --- */
+  .shift-status-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .shift-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+
+      .shift-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #1d64f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .shift-text {
+        .shift-title {
+          font-size: 18px;
+          font-weight: 700;
+          color: #1e293b;
+          margin: 0 0 4px;
+        }
+
+        .shift-sub {
+          font-size: 14px;
+          color: #64748b;
+          margin: 0;
+        }
+      }
+    }
+
+    .btn-clock-in {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: #1d64f2;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(29, 100, 242, 0.35);
+
+      &:hover {
+        background: #1757db;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(29, 100, 242, 0.45);
+      }
+
+      &.clocked-in {
+        background: #ef4444;
+        box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+
+        &:hover {
+          background: #dc2626;
+        }
+      }
+    }
+  }
+
+  /* --- 4. ATTENDANCE SCORE BANNER --- */
+  .attendance-score-card {
+    background: linear-gradient(135deg, #1d64f2 0%, #1757db 100%);
+    border-radius: 20px;
+    padding: 24px 32px;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(29, 100, 242, 0.25);
+
+    .score-header {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .trophy-icon {
+        color: #facc15;
+        font-size: 18px;
+      }
+    }
+
+    .score-metrics-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      .metric-col {
+        text-align: center;
+        flex: 1;
+
+        .metric-val {
+          font-size: 24px;
+          font-weight: 800;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+
+          .emoji {
+            font-size: 20px;
+          }
+        }
+
+        .metric-lbl {
+          font-size: 13px;
+          color: #e0f2fe;
+          font-weight: 500;
+          margin-top: 4px;
+        }
+      }
+
+      .metric-divider {
+        width: 1px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.25);
+      }
+    }
+  }
+
+  /* --- 5. QUICK ACTIONS ROW --- */
+  .quick-actions-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    .btn-quick-outline {
+      padding: 14px;
+      border: 2px solid #1d64f2;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #1d64f2;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #eff6ff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(29, 100, 242, 0.15);
+      }
+    }
+  }
+
+  /* --- 6. DAILY WORK REPORT CARD --- */
+  .work-report-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .report-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+
+      .report-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #e0f2fe;
+        color: #0284c7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .report-text {
+        .report-title-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+
+          .report-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+          }
+
+          .assigned-tag {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0284c7;
+          }
+        }
+
+        .report-sub {
+          font-size: 14px;
+          color: #64748b;
+          margin: 6px 0 0;
+        }
+      }
+    }
+
+    .btn-submit-report {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: #1d64f2;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(29, 100, 242, 0.35);
+
+      &:hover {
+        background: #1757db;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(29, 100, 242, 0.45);
+      }
+    }
+  }
+
+  /* --- 7. 30-DAY ATTENDANCE OVERVIEW --- */
+  .overview-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    .overview-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+      }
+
+      .link-my-attendance {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1d64f2;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+
+      @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+
+      .overview-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 120px;
+
+        .card-top-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .badge-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+
+            &.badge-green { background: #dcfce7; color: #16a34a; }
+            &.badge-blue { background: #e0f2fe; color: #0284c7; }
+            &.badge-red { background: #fee2e2; color: #dc2626; }
+            &.badge-orange { background: #fef3c7; color: #d97706; }
+          }
+
+          .top-tag {
+            font-size: 12px;
+            font-weight: 600;
+
+            &.green-tag { color: #16a34a; }
+            &.blue-tag { color: #0284c7; }
+            &.red-tag { color: #dc2626; }
+            &.orange-tag { color: #d97706; }
+          }
+        }
+
+        .card-value {
+          font-size: 28px;
+          font-weight: 800;
+          color: #0f172a;
+          margin-top: 12px;
+          line-height: 1;
+        }
+
+        .card-label {
+          font-size: 13px;
+          color: #64748b;
+          font-weight: 500;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+
+  /* --- 8. RECENT ACTIVITY LOG SECTION --- */
+  .activity-log-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    .log-section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 8px 0 0;
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .log-item-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 18px 24px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.2s ease;
+
+        &:hover {
+          transform: translateX(4px);
+        }
+
+        .log-user-avatar {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: #cbd5e1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          color: #334155;
+          font-size: 15px;
+          flex-shrink: 0;
+        }
+
+        .log-details {
+          flex: 1;
+
+          .log-date {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 4px;
+          }
+
+          .log-meta {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0 0 8px;
+          }
+
+          .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+
+            &.pill-success {
+              background: #dcfce7;
+              color: #15803d;
+              border: 1px solid #bbf7d0;
+            }
+
+            &.pill-primary {
+              background: #eff6ff;
+              color: #1d4ed8;
+              border: 1px solid #bfdbfe;
+            }
+          }
+        }
+
+        .log-ontime-status {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 13px;
+          font-weight: 600;
+          color: #64748b;
+
+          .dot-green {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #22c55e;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .quick-actions-row {
+      grid-template-columns: 1fr;
+    }
+  }
+}
