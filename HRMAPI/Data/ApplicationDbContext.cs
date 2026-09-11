@@ -41,9 +41,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<DailyWorkUpdate> DailyWorkUpdates => Set<DailyWorkUpdate>();
     public DbSet<PerformanceFeedback> PerformanceFeedbacks => Set<PerformanceFeedback>();
     public DbSet<Interview> Interviews => Set<Interview>();
-    public DbSet<AppModule> AppModules => Set<AppModule>();
-    public DbSet<AppFeature> AppFeatures => Set<AppFeature>();
-    public DbSet<FeatureRole> FeatureRoles => Set<FeatureRole>();
+    public DbSet<Module> Modules => Set<Module>();
+    public DbSet<Feature> Features => Set<Feature>();
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -344,18 +344,5 @@ public class ApplicationDbContext : DbContext
             e.HasOne(i => i.Job).WithMany().HasForeignKey(i => i.JobId).OnDelete(DeleteBehavior.Cascade);
             e.HasOne(i => i.Interviewer).WithMany().HasForeignKey(i => i.InterviewerId).OnDelete(DeleteBehavior.SetNull);
         });
-        // Navigation
-        modelBuilder.Entity<AppFeature>(e =>
-        {
-            e.HasOne(f => f.Module).WithMany(m => m.Features).HasForeignKey(f => f.ModuleId).OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<FeatureRole>(e =>
-        {
-            e.HasIndex(fr => new { fr.FeatureId, fr.Role }).IsUnique();
-            e.Property(fr => fr.Role).HasConversion<string>().HasMaxLength(20);
-            e.HasOne(fr => fr.Feature).WithMany(f => f.FeatureRoles).HasForeignKey(fr => fr.FeatureId).OnDelete(DeleteBehavior.Cascade);
-        });
     }
 }
-

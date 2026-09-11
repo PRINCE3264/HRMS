@@ -1,63 +1,56 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using HRMAPI.Enums;
 
 namespace HRMAPI.Models;
 
-public class AppModule
+[Table("Modules")]
+public class Module
 {
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public bool IsDeleted { get; set; }
+    public string Code { get; set; }
+    public int? TenantId { get; set; }
+    public string CreatedBy { get; set; }
+    public string UpdatedBy { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public int? SortOrder { get; set; }
+    public Guid? RollId { get; set; }
+    public string Icon { get; set; }
+    public string UserType { get; set; }
+    public string DeletedBy { get; set; }
+    public DateTime? DeletedOn { get; set; }
 
-    [Required, MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
-
-    [MaxLength(100)]
-    public string Icon { get; set; } = string.Empty;
-
-    public int DisplayOrder { get; set; }
-
-    public bool IsActive { get; set; } = true;
-
-    public virtual ICollection<AppFeature> Features { get; set; } = new List<AppFeature>();
+    public ICollection<Feature> Features { get; set; }
 }
 
-public class AppFeature
+[Table("Features")]
+public class Feature
 {
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
-
+    public Guid Id { get; set; }
     public Guid ModuleId { get; set; }
+    public string Code { get; set; }
+    public string Name { get; set; }
+    public string Url { get; set; }
+    public string Icon { get; set; }
+    public string Description { get; set; }
+    public bool IsDeleted { get; set; }
+    public string CreatedBy { get; set; }
+    public string UpdatedBy { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public int? SortOrder { get; set; }
+    public Guid? RoleId { get; set; }
+    public string DeletedBy { get; set; }
+    public DateTime? DeletedOn { get; set; }
 
-    [Required, MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
-
-    [Required, MaxLength(200)]
-    public string Path { get; set; } = string.Empty;
-
-    [MaxLength(100)]
-    public string Icon { get; set; } = string.Empty;
-
-    public int DisplayOrder { get; set; }
-
-    public bool IsActive { get; set; } = true;
-
-    [ForeignKey(nameof(ModuleId))]
-    public virtual AppModule Module { get; set; } = null!;
-
-    public virtual ICollection<FeatureRole> FeatureRoles { get; set; } = new List<FeatureRole>();
+    [ForeignKey("ModuleId")]
+    public Module Module { get; set; }
 }
-
-public class FeatureRole
-{
-    [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    public Guid FeatureId { get; set; }
-
-    public UserRole Role { get; set; }
-
-    [ForeignKey(nameof(FeatureId))]
-    public virtual AppFeature Feature { get; set; } = null!;
-}
-

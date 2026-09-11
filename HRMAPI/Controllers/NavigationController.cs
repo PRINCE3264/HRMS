@@ -5,6 +5,8 @@ using HRMAPI.Data;
 using HRMAPI.Enums;
 using HRMAPI.Models;
 using System.Security.Claims;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HRMAPI.Controllers;
 
@@ -24,16 +26,11 @@ public class NavigationController : ControllerBase
     public async Task<IActionResult> GetMenu()
     {
         var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
-        if (string.IsNullOrEmpty(roleClaim) || !Enum.TryParse<UserRole>(roleClaim, true, out var userRole))
-        {
-            return Unauthorized(new { message = "Invalid role" });
-        }
 
-        var modules = await _context.AppModules
+        var modules = await _context.Modules
             .Include(m => m.Features)
-                .ThenInclude(f => f.FeatureRoles)
-            .Where(m => m.IsActive)
-            .OrderBy(m => m.DisplayOrder)
+            .Where(m => !m.IsDeleted)
+            .OrderBy(m => m.SortOrder)
             .ToListAsync();
 
         var result = modules.Select(m => new
@@ -41,21 +38,20 @@ public class NavigationController : ControllerBase
             m.Id,
             m.Name,
             m.Icon,
-            m.DisplayOrder,
+            DisplayOrder = m.SortOrder,
             Features = m.Features
-                .Where(f => f.IsActive && f.FeatureRoles.Any(fr => fr.Role == userRole))
-                .OrderBy(f => f.DisplayOrder)
+                .Where(f => !f.IsDeleted)
+                .OrderBy(f => f.SortOrder)
                 .Select(f => new
                 {
                     f.Id,
                     f.Name,
-                    f.Path,
+                    Path = f.Url,
                     f.Icon,
-                    f.DisplayOrder
+                    DisplayOrder = f.SortOrder
                 })
         }).Where(m => m.Features.Any());
 
         return Ok(result);
     }
 }
-
