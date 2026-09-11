@@ -37,10 +37,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.authService.currentUser$.subscribe(user => {
         this.user = user;
         if (user) {
-          this.navItems = this.navigationService.getNavItems(user.role);
           this.isAdmin = user.role === UserRole.ADMIN;
           this.roleLabel = user.role;
-          this.autoExpandActiveSubmenus();
+          this.loadNavigation();
         }
       }),
       this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
@@ -50,13 +49,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     );
   }
 
+  loadNavigation(): void {
+    this.navigationService.getNavItemsFromDb().subscribe({
+      next: (items) => {
+        this.navItems = items;
+        this.autoExpandActiveSubmenus();
+      },
+      error: (err) => console.error('Failed to load dynamic sidebar', err)
+    });
+  }
+
   autoExpandActiveSubmenus(): void {
     const currentUrl = this.router.url;
     this.expandedMenus.clear();
     for (const item of this.navItems) {
       if (item.children) {
         const hasActiveChild = item.children.some(child => {
-          return currentUrl.includes(child.routerLink);
+          return child.routerLink && currentUrl.includes(child.routerLink);
         });
         if (hasActiveChild) {
           this.expandedMenus.add(item.label);
