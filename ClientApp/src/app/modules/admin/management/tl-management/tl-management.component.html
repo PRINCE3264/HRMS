@@ -1,0 +1,37 @@
+<app-page-header title="TL Management" subtitle="Team Leads and the teams they manage" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'TL Management'}]">
+</app-page-header>
+
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--blue"><i class="fas fa-user-tie"></i></div>
+    <div>
+      <div class="stat-value">{{ teamLeads.length }}</div>
+      <div class="stat-label">Team Leads</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--green"><i class="fas fa-users"></i></div>
+    <div>
+      <div class="stat-value">{{ totalMembers }}</div>
+      <div class="stat-label">Team Members</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon--indigo"><i class="fas fa-project-diagram"></i></div>
+    <div>
+      <div class="stat-value">{{ totalProjects }}</div>
+      <div class="stat-label">Active Projects</div>
+    </div>
+  </div>
+</div>
+
+<app-data-table
+  [columns]="columns"
+  [data]="teamLeads"
+  [pageSize]="10"
+  [actions]="tableActions"
+  emptyTitle="No team leads found"
+  emptyMessage="Create a team and assign a team lead to see them here."
+  emptyIcon="fas fa-user-tie"
+  (onActionClick)="onAction($event)">
+</app-data-table>

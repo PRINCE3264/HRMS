@@ -1,0 +1,21 @@
+<app-page-header title="Employee Management" subtitle="View and manage every employee across the organization, grouped by role" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Employee Management'}]">
+</app-page-header>
+
+<div class="role-filter-row">
+  <button
+    *ngFor="let r of roles"
+    class="role-pill"
+    [class.active]="selectedRole === r.value"
+    (click)="onRoleChange(r.value)">
+    {{ r.label }}
+  </button>
+</div>
+
+<app-data-table
+  [columns]="columns"
+  [data]="employees"
+  [pageSize]="10"
+  emptyTitle="No employees found"
+  emptyMessage="No employees match the selected role."
+  emptyIcon="fas fa-users">
+</app-data-table>

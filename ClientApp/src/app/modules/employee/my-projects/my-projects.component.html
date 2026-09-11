@@ -1,0 +1,65 @@
+<app-page-header title="My Projects" subtitle="Projects assigned to you by your Team Lead" [breadcrumbs]="[{label:'Dashboard',link:'/employee/dashboard'},{label:'My Projects'}]">
+</app-page-header>
+
+<div class="emp-projects-page">
+
+  <div class="filter-container-box">
+    <div class="search-input-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search projects..." class="search-input" />
+    </div>
+    <div class="status-pills-row">
+      <button class="status-pill" [class.active]="selectedStatus==='ALL'" (click)="selectedStatus='ALL'">All</button>
+      <button class="status-pill" [class.active]="selectedStatus==='NOT_STARTED'" (click)="selectedStatus='NOT_STARTED'">Not Started</button>
+      <button class="status-pill" [class.active]="selectedStatus==='IN_PROGRESS'" (click)="selectedStatus='IN_PROGRESS'">In Progress</button>
+      <button class="status-pill" [class.active]="selectedStatus==='ON_HOLD'" (click)="selectedStatus='ON_HOLD'">On Hold</button>
+      <button class="status-pill" [class.active]="selectedStatus==='COMPLETED'" (click)="selectedStatus='COMPLETED'">Completed</button>
+    </div>
+  </div>
+
+  <div class="projects-grid" *ngIf="filteredProjects.length > 0; else emptyState">
+    <div class="project-card" *ngFor="let p of filteredProjects">
+      <div class="card-header-block">
+        <div class="title-row">
+          <h3 class="project-title">{{ p.name }}</h3>
+          <span class="status-badge" [class]="'badge--' + p.status.toLowerCase()">
+            {{ p.status.replace('_', ' ') }}
+          </span>
+        </div>
+        <div class="department-sub">{{ p.projectCode }} &middot; {{ p.departmentName || 'General' }}</div>
+      </div>
+
+      <p class="project-desc">{{ p.description || 'No description provided.' }}</p>
+
+      <div class="card-divider"></div>
+
+      <div class="footer-meta">
+        <div class="lead-info">
+          <div class="avatar-circle">{{ (p.teamLeadName || 'T')[0] }}</div>
+          <span class="lead-name">{{ p.teamLeadName || 'Team Lead' }}</span>
+        </div>
+        <div class="date-range">
+          <i class="far fa-calendar-alt calendar-icon"></i>
+          <span>{{ p.startDate | date:'mediumDate' }}<ng-container *ngIf="p.endDate"> - {{ p.endDate | date:'mediumDate' }}</ng-container></span>
+        </div>
+      </div>
+
+      <div class="card-progress">
+        <span class="progress-label">Team progress</span>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="progressPercent(p)"></div>
+        </div>
+        <span class="progress-value">{{ p.completedMemberCount }}/{{ p.memberCount }} members done</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state-card">
+      <i class="fas fa-folder-open empty-icon"></i>
+      <p class="empty-title">No projects yet</p>
+      <p class="empty-desc">Your Team Lead has not assigned any project to you yet.</p>
+    </div>
+  </ng-template>
+
+</div>

@@ -23,6 +23,19 @@ import { AdminUserManagementComponent } from './user-management/user-management.
 import { AdminRolesPermissionsComponent } from './roles-permissions/roles-permissions.component';
 import { AdminSystemSettingsComponent } from './system-settings/system-settings.component';
 import { AdminAuditLogsComponent } from './audit-logs/audit-logs.component';
+import { AdminProjectsComponent } from './projects/projects.component';
+import { AdminEmployeeManagementComponent } from './management/employee-management/employee-management.component';
+import { AdminTlManagementComponent } from './management/tl-management/tl-management.component';
+import { AdminHrManagementComponent } from './management/hr-management/hr-management.component';
+import { AdminReportingHierarchyComponent } from './org/reporting-hierarchy.component';
+import { AdminAttendanceCorrectionsComponent } from './attendance/attendance-corrections.component';
+import { AdminAttendanceSummaryComponent } from './attendance/attendance-summary.component';
+import { AdminAttendanceRulesComponent } from './attendance/attendance-rules.component';
+import { AdminSalaryStructuresComponent } from './payroll/salary-structures.component';
+import { AdminPayrollReportsComponent } from './payroll/payroll-reports.component';
+import { AdminCompanySettingsComponent } from './settings/company-settings.component';
+import { AdminEmailSmsConfigComponent } from './settings/email-sms-config.component';
+import { AdminNotificationSettingsComponent } from './settings/notification-settings.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -50,6 +63,19 @@ const routes: Routes = [
   { path: 'roles', component: AdminRolesPermissionsComponent },
   { path: 'settings', component: AdminSystemSettingsComponent },
   { path: 'audit-logs', component: AdminAuditLogsComponent },
+  { path: 'projects', component: AdminProjectsComponent },
+  { path: 'employee-management', component: AdminEmployeeManagementComponent },
+  { path: 'tl-management', component: AdminTlManagementComponent },
+  { path: 'hr-management', component: AdminHrManagementComponent },
+  { path: 'reporting-hierarchy', component: AdminReportingHierarchyComponent },
+  { path: 'attendance/corrections', component: AdminAttendanceCorrectionsComponent },
+  { path: 'attendance/summary', component: AdminAttendanceSummaryComponent },
+  { path: 'attendance/rules', component: AdminAttendanceRulesComponent },
+  { path: 'payroll/salary-structures', component: AdminSalaryStructuresComponent },
+  { path: 'payroll/reports', component: AdminPayrollReportsComponent },
+  { path: 'settings/company', component: AdminCompanySettingsComponent },
+  { path: 'settings/email-sms', component: AdminEmailSmsConfigComponent },
+  { path: 'settings/notifications', component: AdminNotificationSettingsComponent },
   { path: '**', redirectTo: 'dashboard' }
 ];
 

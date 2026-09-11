@@ -5,6 +5,31 @@ using HRMAPI.Models;
 
 namespace HRMAPI.Services;
 
+public static class SeedRoles
+{
+    public static readonly Guid ADMIN = new("11111111-1111-1111-1111-111111111111");
+    public static readonly Guid HR = new("22222222-2222-2222-2222-222222222222");
+    public static readonly Guid TL = new("33333333-3333-3333-3333-333333333333");
+    public static readonly Guid EMPLOYEE = new("44444444-4444-4444-4444-444444444444");
+
+    public static Guid? ForCode(string role) => role switch
+    {
+        "ADMIN" => ADMIN,
+        "HR" => HR,
+        "TL" => TL,
+        "EMPLOYEE" => EMPLOYEE,
+        _ => null
+    };
+
+    public static List<Role> All() => new()
+    {
+        new Role { Id = ADMIN, Code = "ADMIN", Name = "Admin", Description = "Full system access" },
+        new Role { Id = HR, Code = "HR", Name = "Hr", Description = "HR operations" },
+        new Role { Id = TL, Code = "TL", Name = "Team Lead", Description = "Team management" },
+        new Role { Id = EMPLOYEE, Code = "EMPLOYEE", Name = "Employee", Description = "Self-service" }
+    };
+}
+
 public class DbInitializer
 {
     private readonly ApplicationDbContext _context;
@@ -16,6 +41,12 @@ public class DbInitializer
 
     public async Task SeedAsync()
     {
+        // ============ Seed Roles ============
+        if (!await _context.Roles.AnyAsync())
+        {
+            _context.Roles.AddRange(SeedRoles.All());
+            await _context.SaveChangesAsync();
+        }
         // ============ Seed Departments ============
         if (!await _context.Departments.AnyAsync())
         {
@@ -251,6 +282,107 @@ public class DbInitializer
                 new SystemSetting { Key = "AnnualLeaveDays", Value = "15", Category = "LeavePolicy" },
                 new SystemSetting { Key = "SickLeaveDays", Value = "10", Category = "LeavePolicy" },
                 new SystemSetting { Key = "EmailNotifications", Value = "true", Category = "Notifications" });
+            await _context.SaveChangesAsync();
+        }
+
+        // ============ Seed Company Profile ============
+        if (!await _context.CompanyProfiles.AnyAsync())
+        {
+            _context.CompanyProfiles.Add(new CompanyProfile
+            {
+                CompanyName = "HRM Pro Pvt Ltd",
+                Website = "https://www.hrmpro.com",
+                Email = "admin@hrmpro.com",
+                Phone = "+91-22-12345678",
+                Address = "100 Business Park",
+                City = "Mumbai",
+                State = "Maharashtra",
+                Country = "India",
+                ZipCode = "400001",
+                RegistrationNumber = "U74999MH2020PTC345678",
+                TaxId = "GSTIN-27AAACH7409R1ZD",
+                Currency = "INR",
+                FiscalYearStart = "April",
+                WorkingDays = "Mon - Sat",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
+        }
+
+        // ============ Seed Notification Preferences ============
+        if (!await _context.NotificationPreferences.AnyAsync())
+        {
+            _context.NotificationPreferences.AddRange(
+                new NotificationPreference { EventName = "LEAVE_REQUESTED", Description = "When an employee requests leave" },
+                new NotificationPreference { EventName = "LEAVE_APPROVED", Description = "When a leave request is approved" },
+                new NotificationPreference { EventName = "LEAVE_REJECTED", Description = "When a leave request is rejected" },
+                new NotificationPreference { EventName = "ATTENDANCE_CORRECTION", Description = "When attendance is corrected or approved" },
+                new NotificationPreference { EventName = "PAYROLL_PROCESSED", Description = "When monthly payroll is processed" },
+                new NotificationPreference { EventName = "PAYSLIP_GENERATED", Description = "When a payslip is generated" },
+                new NotificationPreference { EventName = "NEW_EMPLOYEE_JOINED", Description = "When a new employee joins" },
+                new NotificationPreference { EventName = "BIRTHDAY", Description = "Employee birthday wishes" },
+                new NotificationPreference { EventName = "ANNOUNCEMENT", Description = "Company announcements" },
+                new NotificationPreference { EventName = "TASK_ASSIGNED", Description = "When a task is assigned" });
+            await _context.SaveChangesAsync();
+        }
+
+        // ============ Seed Attendance Rules ============
+        if (!await _context.AttendanceRules.AnyAsync())
+        {
+            _context.AttendanceRules.AddRange(
+                new AttendanceRule
+                {
+                    Name = "Standard Office Policy",
+                    LateThresholdTime = new TimeOnly(10, 0),
+                    GraceMinutes = 15,
+                    MinWorkHours = 8m,
+                    MaxBreakMinutes = 60,
+                    OvertimeAfterHours = 8m,
+                    OvertimePolicy = OvertimePolicy.DAILY,
+                    AutoMarkAbsentOnNoCheckIn = true,
+                    Description = "Default attendance policy for all employees"
+                },
+                new AttendanceRule
+                {
+                    Name = "Flexible Shift Policy",
+                    LateThresholdTime = new TimeOnly(11, 0),
+                    GraceMinutes = 20,
+                    MinWorkHours = 7m,
+                    MaxBreakMinutes = 45,
+                    OvertimeAfterHours = 8m,
+                    OvertimePolicy = OvertimePolicy.NONE,
+                    AutoMarkAbsentOnNoCheckIn = false,
+                    Description = "Optional flexible working hours policy"
+                });
+            await _context.SaveChangesAsync();
+        }
+
+        // ============ Seed Email/SMS System Settings ============
+        if (!await _context.SystemSettings.AnyAsync(s => s.Category == "EMAIL_SMS"))
+        {
+            var emailSmsSettings = new Dictionary<string, (string Value, string Description)>
+            {
+                ["SMTP_HOST"] = ("smtp.gmail.com", "SMTP server hostname"),
+                ["SMTP_PORT"] = ("587", "SMTP server port"),
+                ["SMTP_USERNAME"] = ("noreply@hrmpro.com", "SMTP username"),
+                ["SMTP_PASSWORD"] = ("", "SMTP password (SMTP app password)"),
+                ["SMTP_FROM"] = ("HRM Pro <noreply@hrmpro.com>", "From address for outgoing emails"),
+                ["SMS_API_URL"] = ("https://api.smsprovider.com/send", "SMS gateway API endpoint"),
+                ["SMS_API_KEY"] = ("", "SMS gateway API key"),
+                ["SMS_SENDER_ID"] = ("HRMPRO", "SMS sender identifier")
+            };
+            foreach (var kvp in emailSmsSettings)
+            {
+                _context.SystemSettings.Add(new SystemSetting
+                {
+                    Key = kvp.Key,
+                    Value = kvp.Value.Value,
+                    Category = "EMAIL_SMS",
+                    Description = kvp.Value.Description,
+                    UpdatedAt = DateTime.UtcNow
+                });
+            }
             await _context.SaveChangesAsync();
         }
 
@@ -695,7 +827,8 @@ public class DbInitializer
                         {
                             Id = Guid.NewGuid(),
                             FeatureId = feature.Id,
-                            Role = role
+                            Role = role,
+                            RoleId = SeedRoles.ForCode(role) ?? feature.RoleId
                         });
                     }
                 }
@@ -704,5 +837,336 @@ public class DbInitializer
             _context.FeatureRoles.AddRange(featureRoles);
             await _context.SaveChangesAsync();
         }
+
+        // ============ Seed Projects navigation (idempotent) ============
+        await EnsureFeatureAsync(
+            moduleCode: "PROJECTS",
+            moduleName: "Projects",
+            moduleIcon: "fas fa-project-diagram",
+            moduleSortOrder: 11,
+            featureCode: "projects",
+            featureName: "Projects",
+            featureUrl: "projects",
+            featureIcon: "fas fa-project-diagram",
+            featureSortOrder: 1,
+            roles: new[] { "ADMIN", "HR" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "MY_TEAM",
+            moduleName: "My Team",
+            moduleIcon: "fas fa-user-friends",
+            moduleSortOrder: 3,
+            featureCode: "team-projects",
+            featureName: "Projects",
+            featureUrl: "team/projects",
+            featureIcon: "fas fa-project-diagram",
+            featureSortOrder: 8,
+            roles: new[] { "TL" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "MY_WORK",
+            moduleName: "My Work",
+            moduleIcon: "fas fa-briefcase",
+            moduleSortOrder: 7,
+            featureCode: "my-projects",
+            featureName: "My Projects",
+            featureUrl: "my-projects",
+            featureIcon: "fas fa-project-diagram",
+            featureSortOrder: 3,
+            roles: new[] { "EMPLOYEE" });
+
+        // ============ Seed Management navigation (idempotent) ============
+        await EnsureFeatureAsync(
+            moduleCode: "MANAGEMENT",
+            moduleName: "Management",
+            moduleIcon: "fas fa-users-cog",
+            moduleSortOrder: 12,
+            featureCode: "employee-management",
+            featureName: "Employee Management",
+            featureUrl: "employee-management",
+            featureIcon: "fas fa-users",
+            featureSortOrder: 1,
+            roles: new[] { "ADMIN" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "MANAGEMENT",
+            moduleName: "Management",
+            moduleIcon: "fas fa-users-cog",
+            moduleSortOrder: 12,
+            featureCode: "tl-management",
+            featureName: "TL Management",
+            featureUrl: "tl-management",
+            featureIcon: "fas fa-user-tie",
+            featureSortOrder: 2,
+            roles: new[] { "ADMIN" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "MANAGEMENT",
+            moduleName: "Management",
+            moduleIcon: "fas fa-users-cog",
+            moduleSortOrder: 12,
+            featureCode: "hr-management",
+            featureName: "HR Management",
+            featureUrl: "hr-management",
+            featureIcon: "fas fa-user-shield",
+            featureSortOrder: 3,
+            roles: new[] { "ADMIN" });
+
+        // ============ Seed My Projects navigation (idempotent) ============
+        await EnsureFeatureAsync(
+            moduleCode: "MY_WORK",
+            moduleName: "My Work",
+            moduleIcon: "fas fa-briefcase",
+            moduleSortOrder: 7,
+            featureCode: "my-projects",
+            featureName: "My Projects",
+            featureUrl: "my-projects",
+            featureIcon: "fas fa-project-diagram",
+            featureSortOrder: 3,
+            roles: new[] { "EMPLOYEE" });
+
+        // ============ Seed Organization navigation (idempotent) ============
+        await EnsureFeatureAsync(
+            moduleCode: "ORGANIZATION",
+            moduleName: "Organization",
+            moduleIcon: "fas fa-sitemap",
+            moduleSortOrder: 13,
+            featureCode: "reporting-hierarchy",
+            featureName: "Reporting Hierarchy",
+            featureUrl: "reporting-hierarchy",
+            featureIcon: "fas fa-network-wired",
+            featureSortOrder: 1,
+            roles: new[] { "ADMIN", "HR" });
+
+        // ============ Seed Attendance Rules navigation ============
+        await EnsureFeatureAsync(
+            moduleCode: "TIME_ATTENDANCE",
+            moduleName: "Time & Attendance",
+            moduleIcon: "fas fa-calendar-check",
+            moduleSortOrder: 2,
+            featureCode: "attendance-corrections",
+            featureName: "Attendance Corrections",
+            featureUrl: "attendance/corrections",
+            featureIcon: "fas fa-user-edit",
+            featureSortOrder: 3,
+            roles: new[] { "ADMIN", "HR" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "TIME_ATTENDANCE",
+            moduleName: "Time & Attendance",
+            moduleIcon: "fas fa-calendar-check",
+            moduleSortOrder: 2,
+            featureCode: "attendance-summary",
+            featureName: "Attendance Reports",
+            featureUrl: "attendance/summary",
+            featureIcon: "fas fa-chart-bar",
+            featureSortOrder: 4,
+            roles: new[] { "ADMIN", "HR" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "TIME_ATTENDANCE",
+            moduleName: "Time & Attendance",
+            moduleIcon: "fas fa-calendar-check",
+            moduleSortOrder: 2,
+            featureCode: "attendance-rules",
+            featureName: "Attendance Rules",
+            featureUrl: "attendance/rules",
+            featureIcon: "fas fa-sliders-h",
+            featureSortOrder: 5,
+            roles: new[] { "ADMIN", "HR" });
+
+        // ============ Seed Payroll navigation ============
+        await EnsureFeatureAsync(
+            moduleCode: "FINANCE",
+            moduleName: "Finance & Payroll",
+            moduleIcon: "fas fa-coins",
+            moduleSortOrder: 4,
+            featureCode: "salary-structures",
+            featureName: "Salary Structures",
+            featureUrl: "payroll/salary-structures",
+            featureIcon: "fas fa-calculator",
+            featureSortOrder: 2,
+            roles: new[] { "ADMIN", "HR" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "FINANCE",
+            moduleName: "Finance & Payroll",
+            moduleIcon: "fas fa-coins",
+            moduleSortOrder: 4,
+            featureCode: "payroll-reports",
+            featureName: "Payroll Reports",
+            featureUrl: "payroll/reports",
+            featureIcon: "fas fa-file-invoice-dollar",
+            featureSortOrder: 3,
+            roles: new[] { "ADMIN", "HR" });
+
+        // ============ Seed System admin navigation ============
+        await EnsureFeatureAsync(
+            moduleCode: "ADMINISTRATION",
+            moduleName: "Administration",
+            moduleIcon: "fas fa-cogs",
+            moduleSortOrder: 14,
+            featureCode: "company-settings",
+            featureName: "Company Settings",
+            featureUrl: "settings/company",
+            featureIcon: "fas fa-building",
+            featureSortOrder: 5,
+            roles: new[] { "ADMIN" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "ADMINISTRATION",
+            moduleName: "Administration",
+            moduleIcon: "fas fa-cogs",
+            moduleSortOrder: 14,
+            featureCode: "email-sms-config",
+            featureName: "Email/SMS Configuration",
+            featureUrl: "settings/email-sms",
+            featureIcon: "fas fa-envelope-open-text",
+            featureSortOrder: 6,
+            roles: new[] { "ADMIN" });
+
+        await EnsureFeatureAsync(
+            moduleCode: "ADMINISTRATION",
+            moduleName: "Administration",
+            moduleIcon: "fas fa-cogs",
+            moduleSortOrder: 14,
+            featureCode: "notification-settings",
+            featureName: "Notification Settings",
+            featureUrl: "settings/notifications",
+            featureIcon: "fas fa-bell",
+            featureSortOrder: 7,
+            roles: new[] { "ADMIN" });
+
+        // ============ Backfill role ids on existing navigation rows ============
+        await BackfillRoleIdsAsync();
+    }
+
+    private static readonly string[] RolePriority = { "ADMIN", "HR", "TL", "EMPLOYEE" };
+
+    private async Task BackfillRoleIdsAsync()
+    {
+        if (!await _context.Roles.AnyAsync())
+        {
+            _context.Roles.AddRange(SeedRoles.All());
+            await _context.SaveChangesAsync();
+        }
+
+        var roleIdByCode = await _context.Roles.ToDictionaryAsync(r => r.Code, r => r.Id);
+
+        // 1. FeatureRoles -> RoleId
+        var featureRoles = await _context.FeatureRoles.ToListAsync();
+        foreach (var fr in featureRoles.Where(fr => fr.RoleId == null || !_context.Roles.Any(r => r.Id == fr.RoleId)))
+        {
+            var code = fr.Role.ToUpperInvariant();
+            if (roleIdByCode.TryGetValue(code, out var rid))
+                fr.RoleId = rid;
+        }
+        await _context.SaveChangesAsync();
+
+        // 2. Features -> RoleId (primary/owner role from its FeatureRoles)
+        var features = await _context.Features.ToListAsync();
+        foreach (var feature in features)
+        {
+            if (_context.FeatureRoles.Any(fr => fr.FeatureId == feature.Id))
+            {
+                var primary = _context.FeatureRoles
+                    .Where(fr => fr.FeatureId == feature.Id && fr.RoleId != null)
+                    .OrderBy(fr => Array.IndexOf(RolePriority, fr.Role))
+                    .FirstOrDefault();
+                if (primary?.RoleId != null)
+                    feature.RoleId = primary.RoleId;
+            }
+        }
+        await _context.SaveChangesAsync();
+
+        // 3. Modules -> RollId (primary/owner role across its features)
+        var modules = await _context.Modules.Include(m => m.Features).ToListAsync();
+        foreach (var module in modules)
+        {
+            var roleIds = module.Features
+                .Where(f => f.RoleId != null)
+                .Select(f => f.RoleId!.Value)
+                .Distinct()
+                .ToList();
+            if (roleIds.Count == 1)
+            {
+                module.RollId = roleIds[0];
+            }
+            else if (roleIds.Count > 1)
+            {
+                module.RollId = roleIds
+                    .Select(rid => new { rid, pos = Array.IndexOf(RolePriority, roleIdByCode.FirstOrDefault(kv => kv.Value == rid).Key ?? string.Empty) })
+                    .OrderBy(x => x.pos == -1 ? int.MaxValue : x.pos)
+                    .First().rid;
+            }
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    private async Task EnsureFeatureAsync(
+        string moduleCode,
+        string moduleName,
+        string moduleIcon,
+        int moduleSortOrder,
+        string featureCode,
+        string featureName,
+        string featureUrl,
+        string featureIcon,
+        int featureSortOrder,
+        string[] roles)
+    {
+        if (await _context.Features.AnyAsync(f => f.Code == featureCode && !f.IsDeleted))
+            return;
+
+        var module = await _context.Modules.FirstOrDefaultAsync(m => m.Code == moduleCode);
+        if (module == null)
+        {
+            module = new Module
+            {
+                Id = Guid.NewGuid(),
+                Name = moduleName,
+                Code = moduleCode,
+                Description = moduleName,
+                Icon = moduleIcon,
+                SortOrder = moduleSortOrder,
+                IsDeleted = false,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            _context.Modules.Add(module);
+            await _context.SaveChangesAsync();
+        }
+
+        var feature = new Feature
+        {
+            Id = Guid.NewGuid(),
+            ModuleId = module.Id,
+            Code = featureCode,
+            Name = featureName,
+            Url = featureUrl,
+            Icon = featureIcon,
+            Description = featureName,
+            SortOrder = featureSortOrder,
+            IsDeleted = false,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        _context.Features.Add(feature);
+        await _context.SaveChangesAsync();
+
+        foreach (var role in roles)
+        {
+            _context.FeatureRoles.Add(new FeatureRole
+            {
+                Id = Guid.NewGuid(),
+                FeatureId = feature.Id,
+                Role = role,
+                RoleId = SeedRoles.ForCode(role)
+            });
+
+            if (feature.RoleId == null)
+                feature.RoleId = SeedRoles.ForCode(role);
+        }
+        await _context.SaveChangesAsync();
     }
 }

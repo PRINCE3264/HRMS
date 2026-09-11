@@ -29,3 +29,17 @@ public enum EmploymentStatus
     RESIGNED = 4
 }
 
+public enum AttendanceCorrectionStatus
+{
+    PENDING = 0,
+    APPROVED = 1,
+    REJECTED = 2
+}
+
+public enum OvertimePolicy
+{
+    NONE = 0,
+    DAILY = 1,
+    WEEKLY = 2
+}
+

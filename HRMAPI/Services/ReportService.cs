@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
 using HRMAPI.DTOs.Common;
+using HRMAPI.DTOs.Organization;
 using HRMAPI.DTOs.Report;
+using HRMAPI.DTOs.System;
 using HRMAPI.Enums;
 using HRMAPI.Models;
 using HRMAPI.Repositories.Interfaces;
@@ -34,6 +36,14 @@ public interface IReportService
     Task<bool> MarkNotificationReadAsync(Guid id);
     Task<bool> MarkAllNotificationsReadAsync(Guid userId);
     Task<bool> DeleteNotificationAsync(Guid id);
+    Task<List<ReportingNodeDto>> GetReportingHierarchyAsync();
+    Task<List<ReportingFlatDto>> GetReportingMapAsync();
+    Task<CompanyProfileDto> GetCompanyProfileAsync();
+    Task<CompanyProfileDto> UpsertCompanyProfileAsync(UpsertCompanyProfileDto dto);
+    Task<List<NotificationPreferenceDto>> GetNotificationPreferencesAsync();
+    Task<NotificationPreferenceDto> UpdateNotificationPreferenceAsync(Guid id, UpdateNotificationPreferenceDto dto, Guid updatedBy);
+    Task<EmailSmsConfigDto> GetEmailSmsConfigAsync();
+    Task<EmailSmsConfigDto> SaveEmailSmsConfigAsync(SaveEmailSmsConfigDto dto, Guid updatedBy);
 }
 
 public class ReportService : IReportService
@@ -70,20 +80,67 @@ public class ReportService : IReportService
     public async Task<DashboardStatsDto> GetDashboardStatsAsync()
     {
         var today = DateTime.UtcNow.Date;
+        var monthStart = new DateTime(today.Year, today.Month, 1);
+        var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+        var todayAttendance = await _context.Attendances
+            .Where(a => a.Date.Date == today)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var presentCount = todayAttendance.Count(a =>
+            a.Status == AttendanceStatus.PRESENT ||
+            a.Status == AttendanceStatus.LATE ||
+            a.Status == AttendanceStatus.HALF_DAY);
+
+        var reviews = await _context.PerformanceReviews
+            .Where(p => p.Status == ReviewStatus.COMPLETED || p.Status == ReviewStatus.PUBLISHED)
+            .AsNoTracking()
+            .ToListAsync();
+        var avgPerformance = reviews.Count > 0
+            ? Math.Round(reviews.Average(p => p.OverallRating), 1)
+            : 0m;
+
+        var activeEmployees = await _context.Employees.CountAsync(e => e.EmploymentStatus == EmploymentStatus.ACTIVE);
+
         return new DashboardStatsDto
         {
             TotalEmployees = await _context.Employees.CountAsync(),
-            ActiveEmployees = await _context.Employees.CountAsync(e => e.EmploymentStatus == EmploymentStatus.ACTIVE),
-            PresentToday = await _context.Attendances.CountAsync(a => a.Date.Date == today &&
-                (a.Status == AttendanceStatus.PRESENT ||
-                 a.Status == AttendanceStatus.LATE ||
-                 a.Status == AttendanceStatus.HALF_DAY)),
-            AbsentToday = await _context.Attendances.CountAsync(a => a.Date.Date == today && a.Status == AttendanceStatus.ABSENT),
+            ActiveEmployees = activeEmployees,
+            PresentToday = presentCount,
+            AbsentToday = todayAttendance.Count(a => a.Status == AttendanceStatus.ABSENT),
+            LateArrivalsToday = todayAttendance.Count(a => a.Status == AttendanceStatus.LATE),
+            OnLeaveToday = todayAttendance.Count(a => a.Status == AttendanceStatus.ON_LEAVE),
+            TotalWorkHoursToday = todayAttendance.Where(a => a.CheckOut.HasValue).Sum(a => a.WorkHours),
+            TotalOvertimeToday = todayAttendance.Sum(a => a.Overtime),
             Departments = await _context.Departments.CountAsync(d => d.IsActive),
             PendingLeaves = await _context.LeaveRequests.CountAsync(l => l.Status == LeaveStatus.PENDING),
             NewJoiners = await _context.Employees.CountAsync(e => e.JoiningDate >= today.AddDays(-30)),
             PendingRequests = await _context.Candidates.CountAsync(c => c.Status == CandidateStatus.NEW ||
-                c.Status == CandidateStatus.SCREENING)
+                c.Status == CandidateStatus.SCREENING),
+            OpenPositions = await _context.JobOpenings.CountAsync(j => j.Status == JobStatus.OPEN),
+            CandidatesInPipeline = await _context.Candidates.CountAsync(c =>
+                c.Status == CandidateStatus.SCREENING ||
+                c.Status == CandidateStatus.INTERVIEW_SCHEDULED ||
+                c.Status == CandidateStatus.INTERVIEWED),
+            HiredThisMonth = await _context.Candidates.CountAsync(c =>
+                c.Status == CandidateStatus.HIRED && c.CreatedAt >= monthStart),
+            MonthlyPayrollNet = (int)(await _context.PayrollRecords
+                .Where(p => p.Month == today.ToString("MMM") && p.Year == today.Year)
+                .SumAsync(p => (decimal?)p.NetPay) ?? 0),
+            PayrollProcessedThisMonth = await _context.PayrollRecords.CountAsync(p =>
+                p.Month == today.ToString("MMM") && p.Year == today.Year &&
+                p.Status == PayrollStatus.PROCESSED),
+            AverageAttendanceRate = activeEmployees > 0
+                ? Math.Round((decimal)presentCount / activeEmployees * 100, 1)
+                : 0m,
+            AveragePerformance = avgPerformance,
+            CompanyName = await _context.CompanyProfiles
+                .OrderByDescending(c => c.UpdatedAt)
+                .Select(c => c.CompanyName)
+                .FirstOrDefaultAsync() ?? "HRM Pro",
+            Branches = await _context.Branches.CountAsync(b => b.IsActive),
+            Teams = await _context.Teams.CountAsync(t => t.IsActive)
         };
     }
 
@@ -755,6 +812,210 @@ public class ReportService : IReportService
         };
         return await _notificationRepository.AddAsync(notification);
     }
+
+    public async Task<List<ReportingNodeDto>> GetReportingHierarchyAsync()
+    {
+        var employees = await _context.Employees
+            .Include(e => e.Designation)
+            .Include(e => e.Department)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var lookup = employees.ToDictionary(e => e.Id);
+        var nodes = employees.ToDictionary(e => e.Id, e => new ReportingNodeDto
+        {
+            Id = e.Id,
+            EmployeeId = e.EmployeeId,
+            Name = $"{e.FirstName} {e.LastName}",
+            Avatar = e.Avatar,
+            Designation = e.Designation?.Title,
+            Department = e.Department?.Name,
+            EmploymentStatus = e.EmploymentStatus.ToString()
+        });
+
+        foreach (var emp in employees.Where(e => e.ReportingManagerId.HasValue && e.ReportingManagerId.Value != e.Id))
+        {
+            if (nodes.ContainsKey(emp.Id) && nodes.ContainsKey(emp.ReportingManagerId!.Value))
+            {
+                nodes[emp.ReportingManagerId!.Value].Children.Add(nodes[emp.Id]);
+            }
+        }
+
+        foreach (var node in nodes.Values)
+        {
+            node.DirectReportCount = node.Children.Count;
+            node.Children = node.Children.OrderBy(c => c.Name).ToList();
+        }
+
+        return nodes.Values
+            .Where(n => n.Children.Count > 0 || !lookup[n.Id].ReportingManagerId.HasValue)
+            .OrderByDescending(n => n.Children.Count)
+            .ToList();
+    }
+
+    public async Task<List<ReportingFlatDto>> GetReportingMapAsync()
+    {
+        var employees = await _context.Employees
+            .Include(e => e.Designation)
+            .Include(e => e.Department)
+            .AsNoTracking()
+            .ToListAsync();
+
+        return employees.Select(e => new ReportingFlatDto
+        {
+            Id = e.Id,
+            EmployeeId = e.EmployeeId,
+            Name = $"{e.FirstName} {e.LastName}",
+            Designation = e.Designation?.Title,
+            Department = e.Department?.Name,
+            ManagerId = e.ReportingManagerId,
+            ManagerName = e.ReportingManagerId.HasValue
+                ? employees.FirstOrDefault(m => m.Id == e.ReportingManagerId.Value) is { } mgr
+                    ? $"{mgr.FirstName} {mgr.LastName}"
+                    : null
+                : null
+        }).OrderBy(e => e.Name).ToList();
+    }
+
+    public async Task<CompanyProfileDto> GetCompanyProfileAsync()
+    {
+        var profile = await _context.CompanyProfiles.AsNoTracking().FirstOrDefaultAsync();
+        return profile == null
+            ? new CompanyProfileDto { CompanyName = "HRM Pro" }
+            : MapCompanyProfile(profile);
+    }
+
+    public async Task<CompanyProfileDto> UpsertCompanyProfileAsync(UpsertCompanyProfileDto dto)
+    {
+        var profile = await _context.CompanyProfiles.FirstOrDefaultAsync();
+        if (profile == null)
+        {
+            profile = new CompanyProfile
+            {
+                CompanyName = dto.CompanyName,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            _context.CompanyProfiles.Add(profile);
+        }
+
+        profile.CompanyName = dto.CompanyName;
+        profile.Website = dto.Website;
+        profile.Email = dto.Email;
+        profile.Phone = dto.Phone;
+        profile.Address = dto.Address;
+        profile.City = dto.City;
+        profile.State = dto.State;
+        profile.Country = dto.Country;
+        profile.ZipCode = dto.ZipCode;
+        profile.RegistrationNumber = dto.RegistrationNumber;
+        profile.TaxId = dto.TaxId;
+        profile.Currency = dto.Currency;
+        profile.LogoUrl = dto.LogoUrl;
+        profile.FiscalYearStart = dto.FiscalYearStart;
+        profile.WorkingDays = dto.WorkingDays;
+        profile.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+        return MapCompanyProfile(profile);
+    }
+
+    public async Task<List<NotificationPreferenceDto>> GetNotificationPreferencesAsync()
+    {
+        var prefs = await _context.NotificationPreferences.AsNoTracking().ToListAsync();
+        return prefs.Select(p => new NotificationPreferenceDto
+        {
+            Id = p.Id,
+            EventName = p.EventName,
+            Description = p.Description,
+            EmailEnabled = p.EmailEnabled,
+            SmsEnabled = p.SmsEnabled,
+            InAppEnabled = p.InAppEnabled,
+            UpdatedAt = p.UpdatedAt
+        }).ToList();
+    }
+
+    public async Task<NotificationPreferenceDto> UpdateNotificationPreferenceAsync(Guid id, UpdateNotificationPreferenceDto dto, Guid updatedBy)
+    {
+        var pref = await _context.NotificationPreferences.FindAsync(id)
+            ?? throw new KeyNotFoundException("Notification preference not found.");
+        pref.EmailEnabled = dto.EmailEnabled;
+        pref.SmsEnabled = dto.SmsEnabled;
+        pref.InAppEnabled = dto.InAppEnabled;
+        pref.UpdatedById = updatedBy;
+        pref.UpdatedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+        return new NotificationPreferenceDto
+        {
+            Id = pref.Id,
+            EventName = pref.EventName,
+            Description = pref.Description,
+            EmailEnabled = pref.EmailEnabled,
+            SmsEnabled = pref.SmsEnabled,
+            InAppEnabled = pref.InAppEnabled,
+            UpdatedAt = pref.UpdatedAt
+        };
+    }
+
+    public async Task<EmailSmsConfigDto> GetEmailSmsConfigAsync()
+    {
+        var settings = await _context.SystemSettings
+            .Where(s => s.Category == "EMAIL_SMS")
+            .AsNoTracking()
+            .ToListAsync();
+        return new EmailSmsConfigDto
+        {
+            Settings = settings.ToDictionary(s => s.Key, s => s.Value)
+        };
+    }
+
+    public async Task<EmailSmsConfigDto> SaveEmailSmsConfigAsync(SaveEmailSmsConfigDto dto, Guid updatedBy)
+    {
+        foreach (var kvp in dto.Settings)
+        {
+            var setting = await _context.SystemSettings
+                .FirstOrDefaultAsync(s => s.Category == "EMAIL_SMS" && s.Key == kvp.Key);
+            if (setting == null)
+            {
+                _context.SystemSettings.Add(new SystemSetting
+                {
+                    Key = kvp.Key,
+                    Value = kvp.Value,
+                    Category = "EMAIL_SMS",
+                    UpdatedById = updatedBy,
+                    UpdatedAt = DateTime.UtcNow
+                });
+            }
+            else
+            {
+                setting.Value = kvp.Value;
+                setting.UpdatedById = updatedBy;
+                setting.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+        await _context.SaveChangesAsync();
+        return await GetEmailSmsConfigAsync();
+    }
+
+    private static CompanyProfileDto MapCompanyProfile(CompanyProfile p) => new()
+    {
+        Id = p.Id,
+        CompanyName = p.CompanyName,
+        Website = p.Website,
+        Email = p.Email,
+        Phone = p.Phone,
+        Address = p.Address,
+        City = p.City,
+        State = p.State,
+        Country = p.Country,
+        ZipCode = p.ZipCode,
+        RegistrationNumber = p.RegistrationNumber,
+        TaxId = p.TaxId,
+        Currency = p.Currency,
+        LogoUrl = p.LogoUrl,
+        FiscalYearStart = p.FiscalYearStart,
+        WorkingDays = p.WorkingDays
+    };
 
     private AnnouncementDto MapAnnouncement(Announcement a) => new()
     {

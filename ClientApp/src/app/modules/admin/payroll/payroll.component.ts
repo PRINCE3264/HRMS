@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { PayrollService, ToastService } from '../../../core/services';
 import { TableColumn } from '../../../core/models';
 
@@ -24,7 +25,11 @@ export class AdminPayrollComponent implements OnInit {
   ];
   payrollData: any[] = [];
 
-  constructor(private payrollService: PayrollService, private toast: ToastService) {}
+  constructor(
+    private payrollService: PayrollService,
+    private toast: ToastService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadPayroll();
@@ -47,6 +52,23 @@ export class AdminPayrollComponent implements OnInit {
   }
 
   onAction(event: { action: string; row: any }): void {
-    console.log(event.action, event.row);
+    if (event.action === 'payslip') {
+      this.payrollService.getPayslip(event.row.id || event.row.employeeId).subscribe({
+        next: () => {
+          this.toast.success('Payslip available in payroll record');
+        },
+        error: () => this.toast.error('Failed to load payslip')
+      });
+    } else if (event.action === 'edit') {
+      this.router.navigate(['/admin/payroll/salary-structures']);
+    }
+  }
+
+  goToSalaryStructures(): void {
+    this.router.navigate(['/admin/payroll/salary-structures']);
+  }
+
+  goToReports(): void {
+    this.router.navigate(['/admin/payroll/reports']);
   }
 }

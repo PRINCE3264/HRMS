@@ -32,10 +32,18 @@ public class NavigationController : ControllerBase
             return Ok(Array.Empty<object>());
         }
 
-        var allowedFeatureIds = (await _context.FeatureRoles
-            .Where(fr => fr.Role == role)
+        var roleId = await _context.Roles
+            .Where(r => r.Code == role)
+            .Select(r => (Guid?)r.Id)
+            .FirstOrDefaultAsync();
+
+        var allowedFeatureIds = await _context.FeatureRoles
+            .Where(fr => fr.Role == role
+                || (fr.RoleId != null && fr.RoleId == roleId))
             .Select(fr => fr.FeatureId)
-            .ToListAsync()).ToHashSet();
+            .Distinct()
+            .ToListAsync();
+        var allowedSet = allowedFeatureIds.ToHashSet();
 
         var modules = await _context.Modules
             .Include(m => m.Features)
@@ -48,9 +56,10 @@ public class NavigationController : ControllerBase
             m.Id,
             m.Name,
             m.Icon,
+            m.RollId,
             DisplayOrder = m.SortOrder,
             Features = m.Features
-                .Where(f => !f.IsDeleted && allowedFeatureIds.Contains(f.Id))
+                .Where(f => !f.IsDeleted && allowedSet.Contains(f.Id))
                 .OrderBy(f => f.SortOrder)
                 .Select(f => new
                 {
@@ -58,6 +67,7 @@ public class NavigationController : ControllerBase
                     f.Name,
                     Path = f.Url,
                     f.Icon,
+                    f.RoleId,
                     DisplayOrder = f.SortOrder
                 })
         }).Where(m => m.Features.Any());

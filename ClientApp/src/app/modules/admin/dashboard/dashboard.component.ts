@@ -16,7 +16,21 @@ export class AdminDashboardComponent implements OnInit {
     departments: 0,
     presentToday: 0,
     absentToday: 0,
-    pendingLeaves: 0
+    pendingLeaves: 0,
+    lateArrivalsToday: 0,
+    onLeaveToday: 0,
+    totalWorkHoursToday: 0,
+    totalOvertimeToday: 0,
+    openPositions: 0,
+    candidatesInPipeline: 0,
+    hiredThisMonth: 0,
+    monthlyPayrollNet: 0,
+    payrollProcessedThisMonth: 0,
+    averageAttendanceRate: 0,
+    averagePerformance: 0,
+    companyName: '',
+    branches: 0,
+    teams: 0
   };
 
   quickActions = [
@@ -63,10 +77,32 @@ export class AdminDashboardComponent implements OnInit {
         departments: s.departments,
         presentToday: s.presentToday,
         absentToday: s.absentToday,
-        pendingLeaves: s.pendingLeaves
+        pendingLeaves: s.pendingLeaves,
+        lateArrivalsToday: s.lateArrivalsToday || 0,
+        onLeaveToday: s.onLeaveToday || 0,
+        totalWorkHoursToday: s.totalWorkHoursToday || 0,
+        totalOvertimeToday: s.totalOvertimeToday || 0,
+        openPositions: s.openPositions || 0,
+        candidatesInPipeline: s.candidatesInPipeline || 0,
+        hiredThisMonth: s.hiredThisMonth || 0,
+        monthlyPayrollNet: s.monthlyPayrollNet || 0,
+        payrollProcessedThisMonth: s.payrollProcessedThisMonth || 0,
+        averageAttendanceRate: s.averageAttendanceRate || 0,
+        averagePerformance: s.averagePerformance || 0,
+        companyName: s.companyName || this.stats.companyName,
+        branches: s.branches || 0,
+        teams: s.teams || 0
       },
       error: () => this.toast.error('Failed to load dashboard stats')
     });
+  }
+
+  get monthlyNet(): number {
+    return this.stats.monthlyPayrollNet;
+  }
+
+  get processedCount(): number {
+    return this.stats.payrollProcessedThisMonth;
   }
 
   loadTrends(): void {

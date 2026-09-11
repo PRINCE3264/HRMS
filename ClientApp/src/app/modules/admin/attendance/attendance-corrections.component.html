@@ -1,0 +1,60 @@
+<app-page-header title="Attendance Corrections" subtitle="Review and approve employee attendance correction requests" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Attendance'},{label:'Corrections'}]">
+  <button class="btn btn--primary" (click)="showForm = !showForm"><i class="fas fa-calendar-plus"></i> Manual Correction</button>
+</app-page-header>
+
+<div *ngIf="showForm" class="filter-card correction-form">
+  <h3 class="form-title"><i class="fas fa-pen-alt"></i> Add Manual Attendance Correction</h3>
+  <div class="form-grid">
+    <div class="filter-group">
+      <i class="fas fa-user filter-icon"></i>
+      <select class="filter-select" [(ngModel)]="form.employeeId">
+        <option value="">Select Employee</option>
+        <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <i class="far fa-calendar-alt filter-icon"></i>
+      <input type="date" class="filter-input" [(ngModel)]="form.date" />
+    </div>
+    <div class="filter-group">
+      <i class="fas fa-sign-in-alt filter-icon"></i>
+      <input type="time" class="filter-input" [(ngModel)]="form.checkIn" placeholder="Check in" />
+    </div>
+    <div class="filter-group">
+      <i class="fas fa-sign-out-alt filter-icon"></i>
+      <input type="time" class="filter-input" [(ngModel)]="form.checkOut" placeholder="Check out" />
+    </div>
+    <div class="filter-group filter-group--wide">
+      <i class="fas fa-comment filter-icon"></i>
+      <input type="text" class="filter-input" [(ngModel)]="form.reason" placeholder="Reason for correction" />
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn--outline" (click)="showForm = false">Cancel</button>
+    <button class="btn btn--primary" (click)="submitCorrection()"><i class="fas fa-check"></i> Submit Correction</button>
+  </div>
+</div>
+
+<div class="filter-card">
+  <div class="filter-bar">
+    <div class="filter-group">
+      <i class="fas fa-filter filter-icon"></i>
+      <select class="filter-select" [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+        <option value="">All Statuses</option>
+        <option value="PENDING">Pending</option>
+        <option value="APPROVED">Approved</option>
+        <option value="REJECTED">Rejected</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="table-card">
+  <app-data-table
+    [columns]="columns"
+    [data]="corrections"
+    [pageSize]="pageSize"
+    [actions]="tableActions"
+    (onActionClick)="onAction($event)">
+  </app-data-table>
+</div>

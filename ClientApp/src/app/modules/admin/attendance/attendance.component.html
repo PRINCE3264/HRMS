@@ -83,3 +83,38 @@
     (onActionClick)="onAction($event)">
   </app-data-table>
 </div>
+
+<!-- Correction Request Modal -->
+<div class="modal-overlay" *ngIf="showCorrection" (click)="showCorrection = false">
+  <div class="correction-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-edit"></i> Attendance Correction</h3>
+      <button class="modal-close" (click)="showCorrection = false"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" class="filter-input" [(ngModel)]="correctionForm.date" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Corrected Check In</label>
+          <input type="time" class="filter-input" [(ngModel)]="correctionForm.checkIn" />
+        </div>
+        <div class="form-group">
+          <label>Corrected Check Out</label>
+          <input type="time" class="filter-input" [(ngModel)]="correctionForm.checkOut" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Reason *</label>
+        <input type="text" class="filter-input" [(ngModel)]="correctionForm.reason" placeholder="Why is this correction needed?" />
+      </div>
+      <div class="form-note"><i class="fas fa-info-circle"></i> The request will be sent for approval by HR.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--outline" (click)="showCorrection = false">Cancel</button>
+      <button class="btn btn--primary" (click)="submitCorrection()"><i class="fas fa-check"></i> Submit Request</button>
+    </div>
+  </div>
+</div>

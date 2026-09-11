@@ -18,6 +18,10 @@
         <button class="btn btn-primary" [routerLink]="['/admin/employees', employee.employeeId, 'edit']">
           <i class="fas fa-edit"></i> Edit
         </button>
+        <button class="btn" [class.btn-danger]="isActive" [class.btn-success]="!isActive" (click)="changeStatus()">
+          <i [class]="isActive ? 'fas fa-user-slash' : 'fas fa-user-check'"></i>
+          {{ isActive ? 'Deactivate' : 'Reactivate' }}
+        </button>
       </div>
     </div>
   </div>
@@ -34,11 +38,16 @@
       <div class="profile-info">
         <div class="profile-name-row">
           <h2>{{ getFullName() }}</h2>
-          <span class="status-badge" [class.active]="employee.status === 'ACTIVE'">
+          <span class="status-badge" [class.active]="isActive">
             {{ employee.status }}
           </span>
         </div>
         <p class="profile-subtitle">{{ employee.designation }}</p>
+        <div class="profile-meta" *ngIf="!isActive && employee.exitDate">
+          <span class="meta-item"><i class="fas fa-sign-out-alt"></i> Exited {{ employee.exitDate }}
+            <span class="text-muted" *ngIf="employee.exitReason">— {{ employee.exitReason }}</span>
+          </span>
+        </div>
         <div class="profile-meta">
           <span class="meta-item">
             <i class="fas fa-id-badge"></i> {{ employee.employeeId }}

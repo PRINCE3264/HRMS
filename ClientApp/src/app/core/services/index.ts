@@ -18,3 +18,7 @@ export { NotificationService } from './notification.service';
 export { ReportService, DashboardService, SettingsService, UserManagementService } from './report.service';
 export { WorkUpdateService } from './work-update.service';
 export { RolesService } from './roles.service';
+export { ProjectService } from './project.service';
+export { ManagementService } from './management.service';
+export { OrganizationService } from './organization.service';
+export { SystemConfigService } from './system-config.service';

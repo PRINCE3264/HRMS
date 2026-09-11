@@ -1,0 +1,135 @@
+<app-page-header title="Projects" subtitle="Add new projects, assign a Team Lead, and manage the team" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Projects'}]">
+  <button class="btn btn--primary" (click)="openAdd()"><i class="fas fa-plus"></i> Add Project</button>
+</app-page-header>
+
+<app-data-table
+  [columns]="columns"
+  [data]="projects"
+  [pageSize]="10"
+  [actions]="tableActions"
+  emptyTitle="No projects found"
+  emptyMessage="Create your first project to get started."
+  emptyIcon="fas fa-project-diagram"
+  (onActionClick)="onAction($event)">
+</app-data-table>
+
+<!-- Create / Edit Project Modal -->
+<div class="modal-backdrop" *ngIf="showForm">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-tasks text-blue"></i> {{ isEdit ? 'Edit Project' : 'Create New Project' }}</h3>
+      <button class="close-btn" (click)="closeForm()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Project Name <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="form.name" placeholder="e.g. HRM Mobile App" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Project Code</label>
+          <input type="text" [(ngModel)]="form.projectCode" placeholder="Auto-generated if blank" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Department <span class="required">*</span></label>
+          <select [(ngModel)]="form.departmentId" class="form-control">
+            <option value="">Select department</option>
+            <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Priority</label>
+          <select [(ngModel)]="form.priority" class="form-control">
+            <option value="LOW">Low</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HIGH">High</option>
+            <option value="CRITICAL">Critical</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" [(ngModel)]="form.startDate" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" [(ngModel)]="form.endDate" class="form-control" />
+        </div>
+
+        <div class="form-group full-width">
+          <label>Assign Team Lead (optional)</label>
+          <select [(ngModel)]="form.teamLeadId" class="form-control">
+            <option value="">-- Select a Team Lead --</option>
+            <option *ngFor="let tl of teamLeads" [value]="tl.id">{{ tl.name }} ({{ tl.teamName || tl.designation || tl.department }})</option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Description</label>
+          <textarea [(ngModel)]="form.description" rows="3" placeholder="Project goals and scope..." class="form-control"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeForm()">Cancel</button>
+      <button class="btn-save" (click)="saveForm()"><i class="fas fa-check"></i> {{ isEdit ? 'Update Project' : 'Create Project' }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Team Lead Modal -->
+<div class="modal-backdrop" *ngIf="showAssignTl && assignTarget">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-tie text-blue"></i> Assign Team Lead: {{ assignTarget.name }}</h3>
+      <button class="close-btn" (click)="closeAssignTl()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group full-width">
+        <label>Team Lead</label>
+        <select [(ngModel)]="selectedTeamLeadId" class="form-control">
+          <option value="">-- Unassign (remove TL) --</option>
+          <option *ngFor="let tl of teamLeads" [value]="tl.id">{{ tl.name }} ({{ tl.teamName || tl.designation || tl.department }})</option>
+        </select>
+        <p class="form-hint">The Team Lead will then assign this project to the members of their team.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeAssignTl()">Cancel</button>
+      <button class="btn-save" (click)="saveAssignTl()"><i class="fas fa-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Members Modal -->
+<div class="modal-backdrop" *ngIf="showMembers && membersTarget">
+  <div class="modal-card members-modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-users text-blue"></i> Project Members: {{ membersTarget.name }}</h3>
+      <button class="close-btn" (click)="closeMembers()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="members-list" *ngIf="members.length > 0; else noMembers">
+        <div class="member-row" *ngFor="let m of members">
+          <div class="member-avatar">{{ getMemberInitial(m.employeeName) }}</div>
+          <div class="member-info">
+            <div class="member-name">{{ m.employeeName }}</div>
+            <div class="member-meta">{{ m.designation || 'Employee' }}<span *ngIf="m.teamName"> &middot; {{ m.teamName }}</span></div>
+          </div>
+          <span class="member-status" [class.done]="m.status === 'COMPLETED'">{{ m.status.replace('_', ' ') }}</span>
+          <button class="btn-remove" (click)="removeMember(m)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <ng-template #noMembers>
+        <div class="empty-members"><i class="fas fa-user-plus"></i><p>No members yet. The Team Lead will assign the team from this page.</p></div>
+      </ng-template>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" (click)="closeMembers()">Close</button>
+    </div>
+  </div>
+</div>

@@ -7,6 +7,20 @@ export interface DashboardStats {
   pendingLeaves: number;
   newJoiners: number;
   pendingRequests: number;
+  lateArrivalsToday?: number;
+  onLeaveToday?: number;
+  totalWorkHoursToday?: number;
+  totalOvertimeToday?: number;
+  openPositions?: number;
+  candidatesInPipeline?: number;
+  hiredThisMonth?: number;
+  monthlyPayrollNet?: number;
+  payrollProcessedThisMonth?: number;
+  averageAttendanceRate?: number;
+  averagePerformance?: number;
+  companyName?: string;
+  branches?: number;
+  teams?: number;
 }
 
 export interface ChartData {

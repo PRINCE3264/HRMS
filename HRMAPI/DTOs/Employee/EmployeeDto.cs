@@ -30,6 +30,10 @@ public class EmployeeDto
     public string? EmploymentStatus { get; set; }
     public string? WorkLocation { get; set; }
 
+    public DateTime? ExitDate { get; set; }
+    public string? ExitReason { get; set; }
+    public string? ResignationReference { get; set; }
+
     public string? Address { get; set; }
     public string? City { get; set; }
     public string? State { get; set; }
@@ -69,7 +73,11 @@ public class CreateEmployeeDto
 
     public DateTime JoiningDate { get; set; } = DateTime.UtcNow;
     public string? EmploymentType { get; set; }
+    public string? EmploymentStatus { get; set; }
     public string? WorkLocation { get; set; }
+    public DateTime? ExitDate { get; set; }
+    public string? ExitReason { get; set; }
+    public string? ResignationReference { get; set; }
 
     public string? Address { get; set; }
     public string? City { get; set; }
@@ -86,6 +94,13 @@ public class CreateEmployeeDto
     public string? IfscCode { get; set; }
     public string? TaxId { get; set; }
     public decimal? Salary { get; set; }
+}
+
+public class SetEmployeeStatusDto
+{
+    public string Status { get; set; } = string.Empty;
+    public DateTime? ExitDate { get; set; }
+    public string? ExitReason { get; set; }
 }
 
 public class UpdateEmployeeDto

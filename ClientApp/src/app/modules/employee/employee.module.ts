@@ -17,13 +17,14 @@ import { EmpAnnouncementsComponent } from './announcements/announcements.compone
 import { EmpNotificationsComponent } from './notifications/notifications.component';
 import { EmpBreakTrackerComponent } from './break-tracker/break-tracker.component';
 import { EmpDailyWorkUpdateComponent } from './daily-work-update/daily-work-update.component';
+import { EmpProjectsComponent } from './my-projects/my-projects.component';
 
 @NgModule({
   declarations: [
     EmpDashboardComponent, EmpProfileComponent, EmpAttendanceComponent, EmpCheckInOutComponent,
     EmpLeaveComponent, EmpApplyLeaveComponent, EmpPayslipsComponent, EmpTasksComponent,
     EmpPerformanceComponent, EmpDocumentsComponent, EmpAnnouncementsComponent, EmpNotificationsComponent,
-    EmpBreakTrackerComponent, EmpDailyWorkUpdateComponent
+    EmpBreakTrackerComponent, EmpDailyWorkUpdateComponent, EmpProjectsComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, EmployeeRoutingModule, SharedModule]
 })

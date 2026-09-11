@@ -1,0 +1,40 @@
+<app-page-header title="Reporting Hierarchy" subtitle="Organizational structure and reporting lines" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Organization'},{label:'Reporting Hierarchy'}]">
+  <div class="view-switcher">
+    <button class="btn btn--sm" [class.active]="viewMode === 'tree'" (click)="switchView('tree')"><i class="fas fa-sitemap"></i> Org Chart</button>
+    <button class="btn btn--sm" [class.active]="viewMode === 'map'" (click)="switchView('map')"><i class="fas fa-list"></i> Flat Map</button>
+  </div>
+</app-page-header>
+
+<div *ngIf="viewMode === 'tree'" class="section-card">
+  <div class="section-toolbar">
+    <div class="filter-group">
+      <i class="fas fa-user-tie filter-icon"></i>
+      <select class="filter-select" [(ngModel)]="selectedRoot" (ngModelChange)="loadTree()">
+        <option value="">Show Full Organization</option>
+        <option *ngFor="let e of allEmployees" [value]="e.employeeId">{{ e.name }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-box"><i class="fas fa-circle-notch fa-spin"></i> Loading org chart...</div>
+
+  <div class="org-tree" *ngIf="!loading">
+    <ng-container *ngIf="tree.length === 0">
+      <div class="empty-state">
+        <i class="fas fa-network-wired"></i>
+        <p>No reporting structure found. Assign managers to employees to build the hierarchy.</p>
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let node of tree; trackBy: trackById">
+      <app-tree-node [node]="node"></app-tree-node>
+    </ng-container>
+  </div>
+</div>
+
+<div *ngIf="viewMode === 'map'" class="table-card">
+  <app-data-table
+    [columns]="mapColumns"
+    [data]="flatMap"
+    [pageSize]="10">
+  </app-data-table>
+</div>

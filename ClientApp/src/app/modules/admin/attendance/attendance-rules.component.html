@@ -1,0 +1,71 @@
+<app-page-header title="Attendance Rules" subtitle="Configure attendance policies, grace periods and overtime" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Attendance'},{label:'Rules'}]">
+  <button class="btn btn--primary" (click)="openCreate()"><i class="fas fa-plus"></i> New Rule</button>
+</app-page-header>
+
+<div *ngIf="showForm" class="filter-card rule-form">
+  <h3 class="form-title"><i class="fas fa-sliders-h"></i> {{ editingId ? 'Edit' : 'New' }} Attendance Rule</h3>
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Policy Name *</label>
+      <input type="text" class="filter-input" [(ngModel)]="form.name" placeholder="e.g. Standard Office Policy" />
+    </div>
+    <div class="form-field">
+      <label>Late Threshold</label>
+      <input type="time" class="filter-input" [(ngModel)]="form.lateThresholdTime" />
+    </div>
+    <div class="form-field">
+      <label>Grace Minutes</label>
+      <input type="number" class="filter-input" [(ngModel)]="form.graceMinutes" />
+    </div>
+    <div class="form-field">
+      <label>Min Work Hours</label>
+      <input type="number" class="filter-input" [(ngModel)]="form.minWorkHours" />
+    </div>
+    <div class="form-field">
+      <label>Max Break Minutes</label>
+      <input type="number" class="filter-input" [(ngModel)]="form.maxBreakMinutes" />
+    </div>
+    <div class="form-field">
+      <label>Overtime After (hrs)</label>
+      <input type="number" class="filter-input" [(ngModel)]="form.overtimeAfterHours" />
+    </div>
+    <div class="form-field">
+      <label>Overtime Policy</label>
+      <select class="filter-input" [(ngModel)]="form.overtimePolicy">
+        <option *ngFor="let p of overtimePolicies" [value]="p">{{ p }}</option>
+      </select>
+    </div>
+    <div class="form-field form-field--check">
+      <label class="check-label">
+        <input type="checkbox" [(ngModel)]="form.autoMarkAbsentOnNoCheckIn" />
+        Auto-mark absent when no check-in
+      </label>
+      <label class="check-label">
+        <input type="checkbox" [(ngModel)]="form.isActive" />
+        Active
+      </label>
+    </div>
+    <div class="form-field form-field--wide">
+      <label>Description</label>
+      <input type="text" class="filter-input" [(ngModel)]="form.description" placeholder="Optional description" />
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn--outline" (click)="showForm = false">Cancel</button>
+    <button class="btn btn--primary" (click)="saveRule()"><i class="fas fa-check"></i> Save Rule</button>
+  </div>
+</div>
+
+<div class="table-card">
+  <app-data-table
+    [columns]="columns"
+    [data]="rules"
+    [pageSize]="10"
+    [actions]="tableActions"
+    (onActionClick)="onAction($event)">
+  </app-data-table>
+  <div class="empty-state" *ngIf="rules.length === 0">
+    <i class="fas fa-sliders-h"></i>
+    <p>No attendance rules configured yet.</p>
+  </div>
+</div>

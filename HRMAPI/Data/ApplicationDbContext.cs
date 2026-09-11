@@ -44,6 +44,14 @@ public class ApplicationDbContext : DbContext
     public DbSet<Module> Modules => Set<Module>();
     public DbSet<Feature> Features => Set<Feature>();
     public DbSet<FeatureRole> FeatureRoles => Set<FeatureRole>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Project> Projects => Set<Project>();
+    public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
+    public DbSet<SalaryStructure> SalaryStructures => Set<SalaryStructure>();
+    public DbSet<AttendanceRule> AttendanceRules => Set<AttendanceRule>();
+    public DbSet<AttendanceCorrection> AttendanceCorrections => Set<AttendanceCorrection>();
+    public DbSet<CompanyProfile> CompanyProfiles => Set<CompanyProfile>();
+    public DbSet<NotificationPreference> NotificationPreferences => Set<NotificationPreference>();
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -352,6 +360,91 @@ public class ApplicationDbContext : DbContext
             e.HasIndex(fr => new { fr.FeatureId, fr.Role }).IsUnique();
             e.Property(fr => fr.Role).HasMaxLength(20);
             e.HasOne(fr => fr.Feature).WithMany().HasForeignKey(fr => fr.FeatureId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(fr => fr.RoleRef).WithMany().HasForeignKey(fr => fr.RoleId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Role
+        modelBuilder.Entity<Role>(e =>
+        {
+            e.HasIndex(r => r.Code).IsUnique();
+            e.HasIndex(r => r.Name).IsUnique();
+        });
+
+        // Project
+        modelBuilder.Entity<Project>(e =>
+        {
+            e.Property(p => p.ProjectCode).HasMaxLength(50);
+            e.HasIndex(p => p.ProjectCode).IsUnique();
+            e.Property(p => p.Name).HasMaxLength(200);
+            e.Property(p => p.Status).HasConversion<string>().HasMaxLength(20);
+            e.Property(p => p.Priority).HasConversion<string>().HasMaxLength(20);
+            e.Property(p => p.StartDate);
+            e.HasOne(p => p.Department).WithMany().HasForeignKey(p => p.DepartmentId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(p => p.Team).WithMany().HasForeignKey(p => p.TeamId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(p => p.TeamLead).WithMany().HasForeignKey(p => p.TeamLeadId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(p => p.CreatedBy).WithMany().HasForeignKey(p => p.CreatedById).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ProjectMember
+        modelBuilder.Entity<ProjectMember>(e =>
+        {
+            e.HasIndex(pm => new { pm.ProjectId, pm.EmployeeId }).IsUnique();
+            e.Property(pm => pm.Status).HasConversion<string>().HasMaxLength(20);
+            e.Property(pm => pm.RoleInProject).HasMaxLength(200);
+            e.HasOne(pm => pm.Project).WithMany(p => p.Members).HasForeignKey(pm => pm.ProjectId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(pm => pm.Employee).WithMany().HasForeignKey(pm => pm.EmployeeId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(pm => pm.AssignedBy).WithMany().HasForeignKey(pm => pm.AssignedById).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // SalaryStructure
+        modelBuilder.Entity<SalaryStructure>(e =>
+        {
+            e.HasIndex(s => new { s.EmployeeId, s.IsActive });
+            e.Property(s => s.BasicSalary).HasPrecision(18, 2);
+            e.Property(s => s.Hra).HasPrecision(18, 2);
+            e.Property(s => s.Conveyance).HasPrecision(18, 2);
+            e.Property(s => s.MedicalAllowance).HasPrecision(18, 2);
+            e.Property(s => s.SpecialAllowance).HasPrecision(18, 2);
+            e.Property(s => s.PfPercent).HasPrecision(5, 2);
+            e.Property(s => s.EsiPercent).HasPrecision(5, 2);
+            e.Property(s => s.TdsPercent).HasPrecision(5, 2);
+            e.Property(s => s.ProfessionalTax).HasPrecision(18, 2);
+            e.HasOne(s => s.Employee).WithMany().HasForeignKey(s => s.EmployeeId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // AttendanceRule
+        modelBuilder.Entity<AttendanceRule>(e =>
+        {
+            e.Property(r => r.GraceMinutes);
+            e.Property(r => r.MinWorkHours).HasPrecision(5, 2);
+            e.Property(r => r.OvertimeAfterHours).HasPrecision(5, 2);
+            e.Property(r => r.OvertimePolicy).HasConversion<string>().HasMaxLength(20);
+            e.Property(r => r.LateThresholdTime).HasPrecision(0);
+        });
+
+        // AttendanceCorrection
+        modelBuilder.Entity<AttendanceCorrection>(e =>
+        {
+            e.HasIndex(c => new { c.EmployeeId, c.Status });
+            e.Property(c => c.Status).HasConversion<string>().HasMaxLength(20);
+            e.HasOne(c => c.Attendance).WithMany().HasForeignKey(c => c.AttendanceId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(c => c.Employee).WithMany().HasForeignKey(c => c.EmployeeId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(c => c.RequestedBy).WithMany().HasForeignKey(c => c.RequestedById).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(c => c.ApprovedBy).WithMany().HasForeignKey(c => c.ApprovedById).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // CompanyProfile
+        modelBuilder.Entity<CompanyProfile>(e =>
+        {
+            e.HasIndex(c => c.CompanyName).IsUnique();
+            e.Property(c => c.Currency).HasMaxLength(20);
+        });
+
+        // NotificationPreference
+        modelBuilder.Entity<NotificationPreference>(e =>
+        {
+            e.HasIndex(n => n.EventName).IsUnique();
+            e.HasOne(n => n.UpdatedBy).WithMany().HasForeignKey(n => n.UpdatedById).OnDelete(DeleteBehavior.SetNull);
         });
     }
 }

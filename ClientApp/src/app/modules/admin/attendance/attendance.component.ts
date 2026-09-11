@@ -24,6 +24,15 @@ export class AdminAttendanceComponent implements OnInit {
   ];
   attendanceRecords: any[] = [];
 
+  showCorrection = false;
+  correctionForm = {
+    employeeId: '',
+    date: '',
+    checkIn: '',
+    checkOut: '',
+    reason: ''
+  };
+
   constructor(private attendanceService: AttendanceService, private toast: ToastService) {}
 
   ngOnInit(): void {
@@ -47,6 +56,25 @@ export class AdminAttendanceComponent implements OnInit {
   }
 
   onAction(event: { action: string; row: any }): void {
-    console.log(event.action, event.row);
+    if (event.action === 'edit') {
+      this.correctionForm = {
+        employeeId: event.row.employeeId,
+        date: String(event.row.date).slice(0, 10),
+        checkIn: '',
+        checkOut: '',
+        reason: ''
+      };
+      this.showCorrection = true;
+    }
+  }
+
+  submitCorrection(): void {
+    this.attendanceService.requestCorrection(this.correctionForm).subscribe({
+      next: () => {
+        this.toast.success('Correction request submitted for approval');
+        this.showCorrection = false;
+      },
+      error: () => this.toast.error('Failed to submit correction request')
+    });
   }
 }

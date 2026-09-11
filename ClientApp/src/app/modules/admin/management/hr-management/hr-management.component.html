@@ -1,0 +1,11 @@
+<app-page-header title="HR Management" subtitle="Employees with HR roles and responsibilities" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'HR Management'}]">
+</app-page-header>
+
+<app-data-table
+  [columns]="columns"
+  [data]="hrMembers"
+  [pageSize]="10"
+  emptyTitle="No HR members found"
+  emptyMessage="No employees have an HR role in the system yet."
+  emptyIcon="fas fa-user-shield">
+</app-data-table>

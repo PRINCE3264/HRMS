@@ -1,0 +1,88 @@
+<app-page-header title="Company Settings" subtitle="Organization profile used across the HRM system" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Settings'},{label:'Company'}]">
+  <button class="btn btn--primary" (click)="save()" [disabled]="saving || !isAdmin">
+    <i class="fas fa-save"></i> {{ saving ? 'Saving...' : 'Save Changes' }}
+  </button>
+</app-page-header>
+
+<div class="section-card">
+  <div class="section-title"><i class="fas fa-building"></i> General Information</div>
+  <div class="form-grid">
+    <div class="form-field form-field--wide">
+      <label>Company Name *</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.companyName" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>Website</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.website" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>Email</label>
+      <input type="email" class="filter-input" [(ngModel)]="profile.email" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>Phone</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.phone" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field form-field--wide">
+      <label>Address</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.address" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>City</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.city" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>State</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.state" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>Country</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.country" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>ZIP / Postal Code</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.zipCode" [disabled]="!isAdmin" />
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-title"><i class="fas fa-stamp"></i> Registration & Taxation</div>
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Registration Number</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.registrationNumber" [disabled]="!isAdmin" />
+    </div>
+    <div class="form-field">
+      <label>Tax ID / GSTIN</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.taxId" [disabled]="!isAdmin" />
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-title"><i class="fas fa-cogs"></i> Preferences</div>
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Currency</label>
+      <select class="filter-input" [(ngModel)]="profile.currency" [disabled]="!isAdmin">
+        <option value="INR">INR (₹)</option>
+        <option value="USD">USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+        <option value="AED">AED (د.إ)</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Fiscal Year Starts</label>
+      <select class="filter-input" [(ngModel)]="profile.fiscalYearStart" [disabled]="!isAdmin">
+        <option *ngFor="let m of ['January','February','March','April','May','June','July','August','September','October','November','December']" [value]="m">{{ m }}</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Working Days</label>
+      <input type="text" class="filter-input" [(ngModel)]="profile.workingDays" [disabled]="!isAdmin" placeholder="e.g. Mon - Sat" />
+    </div>
+  </div>
+  <div class="hint" *ngIf="!isAdmin">Read-only: only System Admins can modify company settings.</div>
+</div>

@@ -51,6 +51,15 @@ public class Employee
     [MaxLength(100)]
     public string? WorkLocation { get; set; }
 
+    // Exit Details
+    public DateTime? ExitDate { get; set; }
+
+    [MaxLength(500)]
+    public string? ExitReason { get; set; }
+
+    [MaxLength(200)]
+    public string? ResignationReference { get; set; }
+
     // Address
     [MaxLength(500)]
     public string? Address { get; set; }

@@ -53,3 +53,83 @@ public class SystemSetting
     public virtual User? UpdatedBy { get; set; }
 }
 
+public class CompanyProfile
+{
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    [MaxLength(200)]
+    public string CompanyName { get; set; } = string.Empty;
+
+    [MaxLength(200)]
+    public string? Website { get; set; }
+
+    [MaxLength(100)]
+    public string? Email { get; set; }
+
+    [MaxLength(30)]
+    public string? Phone { get; set; }
+
+    [MaxLength(500)]
+    public string? Address { get; set; }
+
+    [MaxLength(100)]
+    public string? City { get; set; }
+
+    [MaxLength(100)]
+    public string? State { get; set; }
+
+    [MaxLength(100)]
+    public string? Country { get; set; }
+
+    [MaxLength(20)]
+    public string? ZipCode { get; set; }
+
+    [MaxLength(100)]
+    public string? RegistrationNumber { get; set; }
+
+    [MaxLength(100)]
+    public string? TaxId { get; set; }
+
+    [MaxLength(20)]
+    public string Currency { get; set; } = "INR";
+
+    [MaxLength(500)]
+    public string? LogoUrl { get; set; }
+
+    [MaxLength(200)]
+    public string? FiscalYearStart { get; set; }
+
+    [MaxLength(200)]
+    public string? WorkingDays { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+}
+
+public class NotificationPreference
+{
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    [Required, MaxLength(100)]
+    public string EventName { get; set; } = string.Empty;
+
+    [MaxLength(200)]
+    public string? Description { get; set; }
+
+    public bool EmailEnabled { get; set; } = true;
+
+    public bool SmsEnabled { get; set; } = false;
+
+    public bool InAppEnabled { get; set; } = true;
+
+    public Guid? UpdatedById { get; set; }
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [ForeignKey(nameof(UpdatedById))]
+    public virtual User? UpdatedBy { get; set; }
+}
+

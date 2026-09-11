@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from './base-api.service';
 import { PayrollRecord, Payslip, PaginatedResponse } from '../models';
+import { SalaryStructure, PayrollReport } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class PayrollService extends BaseApiService {
@@ -45,5 +46,40 @@ export class PayrollService extends BaseApiService {
   delete(id: string): Observable<boolean> {
     return this.http.delete<any>(`${this.apiBase}/payroll/${id}`)
       .pipe(map(res => true));
+  }
+
+  getSalaryStructures(query: { search?: string; isActive?: boolean; page?: number; pageSize?: number } = {}): Observable<PaginatedResponse<SalaryStructure>> {
+    return this.http.get<any>(`${this.apiBase}/payroll/salary-structures`, { params: this.buildParams(query) })
+      .pipe(map(res => this.unwrapPaginated<SalaryStructure>(res)));
+  }
+
+  getSalaryStructure(id: string): Observable<SalaryStructure> {
+    return this.http.get<any>(`${this.apiBase}/payroll/salary-structures/${id}`)
+      .pipe(map(res => this.unwrap<SalaryStructure>(res)));
+  }
+
+  getEmployeeSalaryStructure(employeeId: string): Observable<SalaryStructure> {
+    return this.http.get<any>(`${this.apiBase}/payroll/salary-structures/employee/${employeeId}`)
+      .pipe(map(res => this.unwrap<SalaryStructure>(res)));
+  }
+
+  saveSalaryStructure(data: Partial<SalaryStructure>): Observable<SalaryStructure> {
+    return this.http.put<any>(`${this.apiBase}/payroll/salary-structures`, data)
+      .pipe(map(res => this.unwrap<SalaryStructure>(res)));
+  }
+
+  deactivateSalaryStructure(id: string): Observable<boolean> {
+    return this.http.delete<any>(`${this.apiBase}/payroll/salary-structures/${id}`)
+      .pipe(map(res => true));
+  }
+
+  getPayrollReport(year?: number, month?: string): Observable<PayrollReport> {
+    return this.http.get<any>(`${this.apiBase}/payroll/report`, { params: this.buildParams({ year, month }) })
+      .pipe(map(res => this.unwrap<PayrollReport>(res)));
+  }
+
+  getSalaryBreakdown(employeeId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiBase}/payroll/salary-breakdown/${employeeId}`)
+      .pipe(map(res => this.unwrap<any>(res)));
   }
 }

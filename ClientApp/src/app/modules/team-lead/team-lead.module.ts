@@ -12,11 +12,13 @@ import { TlPerformanceComponent } from './team-performance/team-performance.comp
 import { TlKpiComponent } from './kpi/kpi.component';
 import { TlReportsComponent } from './team-reports/team-reports.component';
 import { TlAnnouncementsComponent } from './announcements/announcements.component';
+import { TlProjectsComponent } from './team-projects/team-projects.component';
 
 @NgModule({
   declarations: [
     TlDashboardComponent, TlMyTeamComponent, TlAttendanceComponent, TlLeaveComponent,
-    TlTasksComponent, TlPerformanceComponent, TlKpiComponent, TlReportsComponent, TlAnnouncementsComponent
+    TlTasksComponent, TlPerformanceComponent, TlKpiComponent, TlReportsComponent, TlAnnouncementsComponent,
+    TlProjectsComponent
   ],
   imports: [CommonModule, FormsModule, TeamLeadRoutingModule, SharedModule]
 })

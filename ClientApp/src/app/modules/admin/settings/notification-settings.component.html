@@ -1,0 +1,49 @@
+<app-page-header title="Notification Settings" subtitle="Control which events trigger Email, SMS and in-app notifications" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Settings'},{label:'Notifications'}]">
+  <button class="btn btn--outline" (click)="loadPreferences()"><i class="fas fa-sync-alt"></i> Refresh</button>
+</app-page-header>
+
+<div class="section-card">
+  <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+  <table class="notification-table" *ngIf="!loading && preferences.length > 0">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th class="center">Email</th>
+        <th class="center">SMS</th>
+        <th class="center">In-App</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pref of preferences">
+        <td>
+          <div class="event-name">{{ pretty(pref.eventName) }}</div>
+          <div class="event-desc">{{ pref.description }}</div>
+        </td>
+        <td class="center">
+          <label class="switch">
+            <input type="checkbox" [checked]="pref.emailEnabled" [disabled]="savingId === pref.id" (change)="toggle(pref, 'emailEnabled')" />
+            <span class="slider"></span>
+          </label>
+        </td>
+        <td class="center">
+          <label class="switch">
+            <input type="checkbox" [checked]="pref.smsEnabled" [disabled]="savingId === pref.id" (change)="toggle(pref, 'smsEnabled')" />
+            <span class="slider"></span>
+          </label>
+        </td>
+        <td class="center">
+          <label class="switch">
+            <input type="checkbox" [checked]="pref.inAppEnabled" [disabled]="savingId === pref.id" (change)="toggle(pref, 'inAppEnabled')" />
+            <span class="slider"></span>
+          </label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="empty-state" *ngIf="!loading && preferences.length === 0">
+    <i class="fas fa-bell-slash"></i>
+    <p>No notification preferences configured.</p>
+  </div>
+</div>

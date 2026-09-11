@@ -15,6 +15,7 @@ public interface IEmployeeService
     Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeDto dto);
     Task<EmployeeDto> UpdateEmployeeAsync(Guid id, UpdateEmployeeDto dto);
     Task<bool> DeleteEmployeeAsync(Guid id);
+    Task<EmployeeDto> SetEmploymentStatusAsync(Guid id, string status, DateTime? exitDate = null, string? exitReason = null);
     Task<List<EmployeeDto>> GetByDepartmentAsync(Guid departmentId);
     Task<List<EmployeeDto>> GetByTeamAsync(Guid teamId);
 }
@@ -191,9 +192,36 @@ public class EmployeeService : IEmployeeService
         var employee = await _employeeRepository.GetByIdAsync(id)
             ?? throw new KeyNotFoundException("Employee not found.");
         employee.EmploymentStatus = Enums.EmploymentStatus.TERMINATED;
+        employee.ExitDate = DateTime.UtcNow;
         employee.UpdatedAt = DateTime.UtcNow;
         await _employeeRepository.UpdateAsync(employee);
         return true;
+    }
+
+    public async Task<EmployeeDto> SetEmploymentStatusAsync(Guid id, string status, DateTime? exitDate = null, string? exitReason = null)
+    {
+        var employee = await _employeeRepository.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException("Employee not found.");
+
+        var newStatus = ParseEnum(status, Enums.EmploymentStatus.ACTIVE);
+        var isInactive = newStatus != Enums.EmploymentStatus.ACTIVE;
+
+        employee.EmploymentStatus = newStatus;
+        employee.ExitDate = exitDate ?? (isInactive ? DateTime.UtcNow : (DateTime?)null);
+        employee.ExitReason = isInactive ? exitReason : null;
+        employee.UpdatedAt = DateTime.UtcNow;
+
+        await _employeeRepository.UpdateAsync(employee);
+
+        // Deactivate the linked user account too
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.EmployeeId == id);
+        if (user != null)
+        {
+            user.IsActive = !isInactive;
+            await _context.SaveChangesAsync();
+        }
+
+        return await GetEmployeeAsync(id);
     }
 
     public async Task<List<EmployeeDto>> GetByDepartmentAsync(Guid departmentId)
@@ -271,6 +299,9 @@ public class EmployeeService : IEmployeeService
         EmploymentType = e.EmploymentType.ToString(),
         EmploymentStatus = e.EmploymentStatus.ToString(),
         WorkLocation = e.WorkLocation,
+        ExitDate = e.ExitDate,
+        ExitReason = e.ExitReason,
+        ResignationReference = e.ResignationReference,
         Address = e.Address,
         City = e.City,
         State = e.State,

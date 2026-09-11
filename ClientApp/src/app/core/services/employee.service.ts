@@ -56,4 +56,9 @@ export class EmployeeService extends BaseApiService {
     return this.http.delete<any>(`${this.apiBase}/employees/${id}`)
       .pipe(map(res => true));
   }
+
+  setEmploymentStatus(id: string, status: string, exitDate?: string, exitReason?: string): Observable<Employee> {
+    return this.http.put<any>(`${this.apiBase}/employees/${id}/status`, { status, exitDate, exitReason })
+      .pipe(map(res => this.unwrap<Employee>(res)));
+  }
 }

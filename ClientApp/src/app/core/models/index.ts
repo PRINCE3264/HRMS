@@ -12,3 +12,6 @@ export * from './report.model';
 export * from './api-response.model';
 export * from './work.model';
 export * from './roles.model';
+export * from './project.model';
+export * from './management.model';
+export * from './system.model';

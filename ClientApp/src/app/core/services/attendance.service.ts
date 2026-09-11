@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiService } from './base-api.service';
 import { Attendance, Shift, ShiftAssignment, PaginatedResponse } from '../models';
+import { AttendanceCorrection, AttendanceSummary, AttendanceRule } from '../models';
 
 export interface AttendanceQuery {
   page?: number;
@@ -83,5 +84,55 @@ export class AttendanceService extends BaseApiService {
   createAssignment(data: Partial<ShiftAssignment>): Observable<ShiftAssignment> {
     return this.http.post<any>(`${this.apiBase}/shifts/assignments`, data)
       .pipe(map(res => this.unwrap<ShiftAssignment>(res)));
+  }
+
+  getSummary(query: { startDate?: string; endDate?: string } = {}): Observable<AttendanceSummary[]> {
+    return this.http.get<any>(`${this.apiBase}/attendance/summary`, { params: this.buildParams(query) })
+      .pipe(map(res => this.unwrap<AttendanceSummary[]>(res)));
+  }
+
+  getTeamSummary(startDate?: string, endDate?: string): Observable<AttendanceSummary[]> {
+    return this.http.get<any>(`${this.apiBase}/attendance/summary/team`, { params: this.buildParams({ startDate, endDate }) })
+      .pipe(map(res => this.unwrap<AttendanceSummary[]>(res)));
+  }
+
+  getLateArrivals(query: { employeeId?: string; from?: string; to?: string; page?: number; pageSize?: number } = {}): Observable<PaginatedResponse<any>> {
+    return this.http.get<any>(`${this.apiBase}/attendance/late-arrivals`, { params: this.buildParams(query) })
+      .pipe(map(res => this.unwrapPaginated<any>(res)));
+  }
+
+  getCorrections(query: { status?: string; employeeId?: string; page?: number; pageSize?: number } = {}): Observable<PaginatedResponse<AttendanceCorrection>> {
+    return this.http.get<any>(`${this.apiBase}/attendance/corrections`, { params: this.buildParams(query) })
+      .pipe(map(res => this.unwrapPaginated<AttendanceCorrection>(res)));
+  }
+
+  requestCorrection(data: Partial<AttendanceCorrection>): Observable<AttendanceCorrection> {
+    return this.http.post<any>(`${this.apiBase}/attendance/corrections`, data)
+      .pipe(map(res => this.unwrap<AttendanceCorrection>(res)));
+  }
+
+  reviewCorrection(id: string, data: { status: string; rejectionReason?: string }): Observable<AttendanceCorrection> {
+    return this.http.put<any>(`${this.apiBase}/attendance/corrections/${id}`, data)
+      .pipe(map(res => this.unwrap<AttendanceCorrection>(res)));
+  }
+
+  getRules(): Observable<AttendanceRule[]> {
+    return this.http.get<any>(`${this.apiBase}/attendance/rules`)
+      .pipe(map(res => this.unwrap<AttendanceRule[]>(res)));
+  }
+
+  createRule(data: Partial<AttendanceRule>): Observable<AttendanceRule> {
+    return this.http.post<any>(`${this.apiBase}/attendance/rules`, data)
+      .pipe(map(res => this.unwrap<AttendanceRule>(res)));
+  }
+
+  updateRule(id: string, data: Partial<AttendanceRule>): Observable<AttendanceRule> {
+    return this.http.put<any>(`${this.apiBase}/attendance/rules/${id}`, data)
+      .pipe(map(res => this.unwrap<AttendanceRule>(res)));
+  }
+
+  deleteRule(id: string): Observable<boolean> {
+    return this.http.delete<any>(`${this.apiBase}/attendance/rules/${id}`)
+      .pipe(map(res => true));
   }
 }

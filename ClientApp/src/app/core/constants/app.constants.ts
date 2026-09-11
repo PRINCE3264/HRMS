@@ -105,5 +105,12 @@ export const STATUS_COLORS: Record<string, string> = {
   'COMPLETED': '#10b981',
   'IN_PROGRESS': '#3b82f6',
   'TODO': '#94a3b8',
-  'BLOCKED': '#ef4444'
+  'BLOCKED': '#ef4444',
+  'NOT_STARTED': '#94a3b8',
+  'ON_HOLD': '#f59e0b',
+  'CANCELLED': '#ef4444',
+  'LOW': '#94a3b8',
+  'MEDIUM': '#3b82f6',
+  'HIGH': '#f59e0b',
+  'CRITICAL': '#ef4444'
 };

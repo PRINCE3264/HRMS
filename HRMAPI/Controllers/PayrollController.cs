@@ -98,6 +98,54 @@ public class PayrollController : BaseController
         return Ok(ApiResponse<List<PayrollBonusDto>>.Ok(result));
     }
 
+    [HttpGet("salary-structures")]
+    [Authorize(Roles = "ADMIN,HR")]
+    public async Task<ActionResult<ApiResponse<List<SalaryStructureDto>>>> GetSalaryStructures([FromQuery] bool? activeOnly = null)
+    {
+        var result = await _payrollService.GetSalaryStructuresAsync(activeOnly);
+        return Ok(ApiResponse<List<SalaryStructureDto>>.Ok(result));
+    }
+
+    [HttpGet("salary-structures/employee/{employeeId:guid}")]
+    [Authorize(Roles = "ADMIN,HR")]
+    public async Task<ActionResult<ApiResponse<SalaryStructureDto>>> GetEmployeeSalaryStructure(Guid employeeId)
+    {
+        var result = await _payrollService.GetEmployeeSalaryStructureAsync(employeeId);
+        return Ok(ApiResponse<SalaryStructureDto>.Ok(result));
+    }
+
+    [HttpPut("salary-structures")]
+    [Authorize(Roles = "ADMIN,HR")]
+    public async Task<ActionResult<ApiResponse<SalaryStructureDto>>> UpsertSalaryStructure([FromBody] UpsertSalaryStructureDto dto)
+    {
+        var result = await _payrollService.UpsertSalaryStructureAsync(dto);
+        return Ok(ApiResponse<SalaryStructureDto>.Ok(result, "Salary structure saved."));
+    }
+
+    [HttpDelete("salary-structures/{id:guid}")]
+    [Authorize(Roles = "ADMIN")]
+    public async Task<ActionResult<ApiResponse<object>>> DeactivateSalaryStructure(Guid id)
+    {
+        var success = await _payrollService.DeactivateSalaryStructureAsync(id);
+        return Ok(ApiResponse<object>.Ok(new { success }, "Salary structure deactivated."));
+    }
+
+    [HttpGet("report")]
+    [Authorize(Roles = "ADMIN,HR")]
+    public async Task<ActionResult<ApiResponse<PayrollReportDto>>> GetPayrollReport([FromQuery] string? month = null, [FromQuery] int? year = null)
+    {
+        var result = await _payrollService.GetPayrollReportAsync(month, year);
+        return Ok(ApiResponse<PayrollReportDto>.Ok(result));
+    }
+
+    [HttpGet("salary-breakdown")]
+    [Authorize(Roles = "ADMIN,HR")]
+    public async Task<ActionResult<ApiResponse<PayrollReportDto>>> GetSalaryBreakdown()
+    {
+        var result = await _payrollService.GetSalaryBreakdownAsync();
+        return Ok(ApiResponse<PayrollReportDto>.Ok(result));
+    }
+
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = "ADMIN")]
     public async Task<ActionResult<ApiResponse<object>>> Delete(Guid id)

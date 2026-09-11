@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
 using HRMAPI.DTOs.Common;
 using HRMAPI.DTOs.Payroll;
+using HRMAPI.DTOs.Report;
 using HRMAPI.Enums;
 using HRMAPI.Models;
 using HRMAPI.Repositories.Interfaces;
@@ -19,6 +20,13 @@ public interface IPayrollService
     Task<List<PayrollDeductionDto>> GetDeductionsAsync();
     Task<List<PayrollBonusDto>> GetBonusesAsync();
     Task<bool> DeleteAsync(Guid id);
+    Task<List<SalaryStructureDto>> GetSalaryStructuresAsync(bool? activeOnly = null);
+    Task<SalaryStructureDto> GetSalaryStructureAsync(Guid id);
+    Task<SalaryStructureDto> GetEmployeeSalaryStructureAsync(Guid employeeId);
+    Task<SalaryStructureDto> UpsertSalaryStructureAsync(UpsertSalaryStructureDto dto);
+    Task<bool> DeactivateSalaryStructureAsync(Guid id);
+    Task<PayrollReportDto> GetPayrollReportAsync(string? month = null, int? year = null);
+    Task<PayrollReportDto> GetSalaryBreakdownAsync();
 }
 
 public class PayrollService : IPayrollService
@@ -230,6 +238,275 @@ public class PayrollService : IPayrollService
             ?? throw new KeyNotFoundException("Payroll record not found.");
         await _payrollRecordRepository.DeleteAsync(record);
         return true;
+    }
+
+    public async Task<List<SalaryStructureDto>> GetSalaryStructuresAsync(bool? activeOnly = null)
+    {
+        var query = _context.SalaryStructures
+            .Include(s => s.Employee)
+            .ThenInclude(e => e.Department)
+            .AsNoTracking()
+            .AsQueryable();
+
+        if (activeOnly.HasValue) query = query.Where(s => s.IsActive == activeOnly.Value);
+
+        var items = await query.OrderByDescending(s => s.UpdatedAt).ToListAsync();
+        return items.Select(MapSalary).ToList();
+    }
+
+    public async Task<SalaryStructureDto> GetSalaryStructureAsync(Guid id)
+    {
+        var item = await _context.SalaryStructures
+            .Include(s => s.Employee)
+            .ThenInclude(e => e.Department)
+            .FirstOrDefaultAsync(s => s.Id == id)
+            ?? throw new KeyNotFoundException("Salary structure not found.");
+        return MapSalary(item);
+    }
+
+    public async Task<SalaryStructureDto> GetEmployeeSalaryStructureAsync(Guid employeeId)
+    {
+        var item = await _context.SalaryStructures
+            .Include(s => s.Employee)
+            .ThenInclude(e => e.Department)
+            .Where(s => s.EmployeeId == employeeId && s.IsActive)
+            .OrderByDescending(s => s.EffectiveFrom)
+            .FirstOrDefaultAsync();
+        if (item == null) return null!;
+        return MapSalary(item);
+    }
+
+    public async Task<SalaryStructureDto> UpsertSalaryStructureAsync(UpsertSalaryStructureDto dto)
+    {
+        var effectiveFrom = dto.EffectiveFrom == default ? DateTime.UtcNow : dto.EffectiveFrom;
+
+        var existing = await _context.SalaryStructures
+            .Include(s => s.Employee)
+            .Where(s => s.EmployeeId == dto.EmployeeId && s.IsActive)
+            .FirstOrDefaultAsync();
+
+        if (existing != null)
+        {
+            existing.BasicSalary = dto.BasicSalary;
+            existing.Hra = dto.Hra;
+            existing.Conveyance = dto.Conveyance;
+            existing.MedicalAllowance = dto.MedicalAllowance;
+            existing.SpecialAllowance = dto.SpecialAllowance;
+            existing.PfPercent = dto.PfPercent;
+            existing.EsiPercent = dto.EsiPercent;
+            existing.TdsPercent = dto.TdsPercent;
+            existing.ProfessionalTax = dto.ProfessionalTax;
+            existing.EffectiveFrom = effectiveFrom;
+            existing.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            var updated = await _context.SalaryStructures
+                .Include(s => s.Employee)
+                .FirstOrDefaultAsync(s => s.Id == existing.Id);
+            return MapSalary(updated!);
+        }
+
+        var structure = new SalaryStructure
+        {
+            EmployeeId = dto.EmployeeId,
+            BasicSalary = dto.BasicSalary,
+            Hra = dto.Hra,
+            Conveyance = dto.Conveyance,
+            MedicalAllowance = dto.MedicalAllowance,
+            SpecialAllowance = dto.SpecialAllowance,
+            PfPercent = dto.PfPercent,
+            EsiPercent = dto.EsiPercent,
+            TdsPercent = dto.TdsPercent,
+            ProfessionalTax = dto.ProfessionalTax,
+            EffectiveFrom = effectiveFrom,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            IsActive = true
+        };
+        _context.SalaryStructures.Add(structure);
+        await _context.SaveChangesAsync();
+
+        var fresh = await _context.SalaryStructures
+            .Include(s => s.Employee)
+            .FirstOrDefaultAsync(s => s.Id == structure.Id);
+        return MapSalary(fresh!);
+    }
+
+    public async Task<bool> DeactivateSalaryStructureAsync(Guid id)
+    {
+        var item = await _context.SalaryStructures.FindAsync(id)
+            ?? throw new KeyNotFoundException("Salary structure not found.");
+        item.IsActive = false;
+        item.EffectiveTo = DateTime.UtcNow;
+        item.UpdatedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<PayrollReportDto> GetPayrollReportAsync(string? month = null, int? year = null)
+    {
+        var currentMonth = DateTime.UtcNow.ToString("MMM");
+        var currentYear = DateTime.UtcNow.Year;
+        month ??= currentMonth;
+        year ??= currentYear;
+
+        var records = await _context.PayrollRecords
+            .Include(pr => pr.Payslip)
+            .Include(pr => pr.Employee)
+            .Where(pr => pr.Month == month && pr.Year == year)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var earnings = new List<SalaryComponentDto>();
+        var deductions = new List<SalaryComponentDto>();
+        decimal totalEarnings = 0m, totalDeductions = 0m;
+
+        foreach (var r in records)
+        {
+            if (r.Payslip == null) continue;
+            totalEarnings += r.Payslip.TotalEarnings;
+            totalDeductions += r.Payslip.TotalDeductions;
+        }
+
+        if (records.Count > 0)
+        {
+            earnings = new List<SalaryComponentDto>
+            {
+                new() { Name = "Basic Salary", Type = "EARNING", Amount = records.Sum(r => r.Payslip?.BasicSalary ?? 0) },
+                new() { Name = "HRA", Type = "EARNING", Amount = records.Sum(r => r.Payslip?.Hra ?? 0) },
+                new() { Name = "Conveyance", Type = "EARNING", Amount = records.Sum(r => r.Payslip?.Conveyance ?? 0) },
+                new() { Name = "Medical Allowance", Type = "EARNING", Amount = records.Sum(r => r.Payslip?.MedicalAllowance ?? 0) },
+                new() { Name = "Special Allowance", Type = "EARNING", Amount = records.Sum(r => r.Payslip?.SpecialAllowance ?? 0) }
+            };
+            deductions = new List<SalaryComponentDto>
+            {
+                new() { Name = "Provident Fund", Type = "DEDUCTION", Amount = records.Sum(r => r.Payslip?.Pf ?? 0) },
+                new() { Name = "ESI", Type = "DEDUCTION", Amount = records.Sum(r => r.Payslip?.Esi ?? 0) },
+                new() { Name = "TDS / Income Tax", Type = "DEDUCTION", Amount = records.Sum(r => r.Payslip?.Tds ?? 0) },
+                new() { Name = "Professional Tax", Type = "DEDUCTION", Amount = records.Sum(r => r.Payslip?.ProfessionalTax ?? 0) }
+            };
+        }
+
+        return new PayrollReportDto
+        {
+            TotalBasic = records.Sum(r => r.BasicSalary),
+            TotalEarnings = totalEarnings,
+            TotalDeductions = totalDeductions,
+            TotalNetPay = records.Sum(r => r.NetPay),
+            EmployeeCount = records.Count,
+            ProcessedCount = records.Count(r => r.Status == PayrollStatus.PAID || r.Status == PayrollStatus.APPROVED || r.Status == PayrollStatus.PROCESSED),
+            AverageSalary = records.Count > 0 ? Math.Round(records.Average(r => r.NetPay), 2) : 0,
+            HighestSalary = records.Any() ? records.Max(r => r.NetPay) : 0,
+            LowestSalary = records.Any() ? records.Min(r => r.NetPay) : 0,
+            EarningsComponents = earnings,
+            DeductionComponents = deductions,
+            Chart = new ChartDataDto
+            {
+                Labels = earnings.Concat(deductions).Select(c => c.Name).ToList(),
+                Datasets = new List<ChartDatasetDto>
+                {
+                    new()
+                    {
+                        Label = "Amount",
+                        Data = earnings.Concat(deductions).Select(c => c.Amount).ToList(),
+                        BackgroundColor = "#6366f1"
+                    }
+                }
+            }
+        };
+    }
+
+    public async Task<PayrollReportDto> GetSalaryBreakdownAsync()
+    {
+        var structures = await _context.SalaryStructures
+            .Include(s => s.Employee)
+            .Where(s => s.IsActive)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var earnings = new List<SalaryComponentDto>();
+        var deductions = new List<SalaryComponentDto>();
+        decimal totalEarnings = 0m, totalDeductions = 0m;
+
+        if (structures.Count > 0)
+        {
+            earnings = new List<SalaryComponentDto>
+            {
+                new() { Name = "Basic Salary", Type = "EARNING", Amount = structures.Sum(s => s.BasicSalary), Percentage = "Fixed" },
+                new() { Name = "HRA", Type = "EARNING", Amount = structures.Sum(s => s.Hra), Percentage = "40%" },
+                new() { Name = "Conveyance", Type = "EARNING", Amount = structures.Sum(s => s.Conveyance), Percentage = "Fixed" },
+                new() { Name = "Medical Allowance", Type = "EARNING", Amount = structures.Sum(s => s.MedicalAllowance), Percentage = "Fixed" },
+                new() { Name = "Special Allowance", Type = "EARNING", Amount = structures.Sum(s => s.SpecialAllowance), Percentage = "Balance" }
+            };
+            deductions = new List<SalaryComponentDto>
+            {
+                new() { Name = "Provident Fund", Type = "DEDUCTION", Amount = structures.Sum(s => s.BasicSalary * s.PfPercent / 100m), Percentage = $"{structures.First().PfPercent}%" },
+                new() { Name = "ESI", Type = "DEDUCTION", Amount = structures.Sum(s => s.BasicSalary * s.EsiPercent / 100m), Percentage = $"{structures.First().EsiPercent}%" },
+                new() { Name = "TDS / Income Tax", Type = "DEDUCTION", Amount = structures.Sum(s => s.BasicSalary * s.TdsPercent / 100m), Percentage = $"{structures.First().TdsPercent}%" },
+                new() { Name = "Professional Tax", Type = "DEDUCTION", Amount = structures.Sum(s => s.ProfessionalTax), Percentage = "Fixed" }
+            };
+            totalEarnings = earnings.Sum(e => e.Amount);
+            totalDeductions = deductions.Sum(d => d.Amount);
+        }
+
+        return new PayrollReportDto
+        {
+            TotalBasic = structures.Sum(s => s.BasicSalary),
+            TotalEarnings = totalEarnings,
+            TotalDeductions = totalDeductions,
+            TotalNetPay = totalEarnings - totalDeductions,
+            EmployeeCount = structures.Count,
+            ProcessedCount = structures.Count,
+            AverageSalary = structures.Count > 0 ? Math.Round(structures.Average(s => s.BasicSalary + s.Hra + s.Conveyance + s.MedicalAllowance + s.SpecialAllowance), 2) : 0,
+            HighestSalary = structures.Any() ? structures.Max(s => s.BasicSalary + s.Hra + s.Conveyance + s.MedicalAllowance + s.SpecialAllowance) : 0,
+            LowestSalary = structures.Any() ? structures.Min(s => s.BasicSalary + s.Hra + s.Conveyance + s.MedicalAllowance + s.SpecialAllowance) : 0,
+            EarningsComponents = earnings,
+            DeductionComponents = deductions,
+            Chart = new ChartDataDto
+            {
+                Labels = earnings.Select(e => e.Name).ToList(),
+                Datasets = new List<ChartDatasetDto>
+                {
+                    new()
+                    {
+                        Label = "Earnings",
+                        Data = earnings.Select(e => e.Amount).ToList(),
+                        BackgroundColor = "#10b981"
+                    }
+                }
+            }
+        };
+    }
+
+    private SalaryStructureDto MapSalary(SalaryStructure s)
+    {
+        var totalEarnings = s.BasicSalary + s.Hra + s.Conveyance + s.MedicalAllowance + s.SpecialAllowance;
+        var pf = Math.Round(s.BasicSalary * s.PfPercent / 100m, 2);
+        var esi = Math.Round(s.BasicSalary * s.EsiPercent / 100m, 2);
+        var tds = Math.Round(s.BasicSalary * s.TdsPercent / 100m, 2);
+        var totalDeductions = pf + esi + tds + s.ProfessionalTax;
+
+        return new SalaryStructureDto
+        {
+            Id = s.Id,
+            EmployeeId = s.EmployeeId,
+            EmployeeName = s.Employee != null ? $"{s.Employee.FirstName} {s.Employee.LastName}" : null,
+            EmployeeCode = s.Employee?.EmployeeId,
+            BasicSalary = s.BasicSalary,
+            Hra = s.Hra,
+            Conveyance = s.Conveyance,
+            MedicalAllowance = s.MedicalAllowance,
+            SpecialAllowance = s.SpecialAllowance,
+            TotalEarnings = totalEarnings,
+            PfPercent = s.PfPercent,
+            EsiPercent = s.EsiPercent,
+            TdsPercent = s.TdsPercent,
+            ProfessionalTax = s.ProfessionalTax,
+            TotalDeductions = totalDeductions,
+            NetPay = totalEarnings - totalDeductions,
+            IsActive = s.IsActive,
+            EffectiveFrom = s.EffectiveFrom,
+            EffectiveTo = s.EffectiveTo
+        };
     }
 
     private PayrollRecordDto MapToDto(PayrollRecord pr) => new()

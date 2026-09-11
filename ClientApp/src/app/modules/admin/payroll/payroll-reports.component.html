@@ -1,0 +1,80 @@
+<app-page-header title="Payroll Reports" subtitle="Monthly payroll summaries, components and cost analysis" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Payroll'},{label:'Reports'}]">
+  <button class="btn btn--outline" (click)="loadReport()"><i class="fas fa-sync-alt"></i> Refresh</button>
+</app-page-header>
+
+<div class="filter-card">
+  <div class="filter-bar">
+    <div class="filter-group">
+      <i class="far fa-calendar-alt filter-icon"></i>
+      <select class="filter-select" [(ngModel)]="month" (ngModelChange)="loadReport()">
+        <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <i class="fas fa-calendar filter-icon"></i>
+      <input type="number" class="filter-input" [(ngModel)]="year" (change)="loadReport()" />
+    </div>
+  </div>
+</div>
+
+<app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+<ng-container *ngIf="report && !loading">
+  <div class="stats-grid">
+    <div class="mini-stat">
+      <span class="mini-stat__label">Employees Covered</span>
+      <span class="mini-stat__value">{{ report.employeeCount }}</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat__label">Processed</span>
+      <span class="mini-stat__value">{{ report.processedCount }}</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat__label">Total Gross</span>
+      <span class="mini-stat__value">{{ report.totalEarnings | currency }}</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat__label">Total Deductions</span>
+      <span class="mini-stat__value">{{ report.totalDeductions | currency }}</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat__label">Total Net Pay</span>
+      <span class="mini-stat__value">{{ report.totalNetPay | currency }}</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat__label">Average Salary</span>
+      <span class="mini-stat__value">{{ report.averageSalary | currency }}</span>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="table-card breakdown-card">
+      <h3 class="section-title"><i class="fas fa-arrow-up text-green"></i> Earnings Components</h3>
+      <div class="breakdown-list">
+        <div class="breakdown-row" *ngFor="let item of report.earningsComponents">
+          <span>{{ item.name }}</span>
+          <strong>{{ item.amount | currency }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card breakdown-card">
+      <h3 class="section-title"><i class="fas fa-arrow-down text-red"></i> Deduction Components</h3>
+      <div class="breakdown-list">
+        <div class="breakdown-row" *ngFor="let item of report.deductionComponents">
+          <span>{{ item.name }}</span>
+          <strong>{{ item.amount | currency }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card" *ngIf="chartData.length > 0">
+    <app-chart-bar title="Payroll Cost by Department" subtitle="{{ month }} {{ year }}" [chartData]="chartData"></app-chart-bar>
+  </div>
+</ng-container>
+
+<div class="empty-state" *ngIf="!report && !loading">
+  <i class="fas fa-file-invoice-dollar"></i>
+  <p>No payroll data for this period.</p>
+</div>

@@ -14,6 +14,7 @@ import { EmpAnnouncementsComponent } from './announcements/announcements.compone
 import { EmpNotificationsComponent } from './notifications/notifications.component';
 import { EmpBreakTrackerComponent } from './break-tracker/break-tracker.component';
 import { EmpDailyWorkUpdateComponent } from './daily-work-update/daily-work-update.component';
+import { EmpProjectsComponent } from './my-projects/my-projects.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'apply-leave', component: EmpApplyLeaveComponent },
   { path: 'my-payslips', component: EmpPayslipsComponent },
   { path: 'my-tasks', component: EmpTasksComponent },
+  { path: 'my-projects', component: EmpProjectsComponent },
   { path: 'my-performance', component: EmpPerformanceComponent },
   { path: 'my-documents', component: EmpDocumentsComponent },
   { path: 'announcements', component: EmpAnnouncementsComponent },

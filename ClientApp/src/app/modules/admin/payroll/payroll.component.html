@@ -1,5 +1,6 @@
 <app-page-header title="Payroll Management" subtitle="Process monthly salaries, calculate deductions, and generate employee payslips" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Payroll'}]">
-  <button class="btn btn--outline"><i class="fas fa-file-invoice-dollar"></i> Salary Structure</button>
+  <button class="btn btn--outline" (click)="goToSalaryStructures()"><i class="fas fa-file-invoice-dollar"></i> Salary Structure</button>
+  <button class="btn btn--outline" (click)="goToReports()"><i class="fas fa-chart-line"></i> Reports</button>
   <button class="btn btn--primary"><i class="fas fa-play"></i> Run Payroll</button>
 </app-page-header>
 

@@ -176,6 +176,8 @@ builder.Services.AddScoped<IRecruitmentService, RecruitmentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IWorkUpdateService, WorkUpdateService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+  builder.Services.AddScoped<IManagementService, ManagementService>();
 builder.Services.AddScoped<DbInitializer>();
 
 var app = builder.Build();

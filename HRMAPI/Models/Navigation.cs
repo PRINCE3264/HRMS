@@ -6,6 +6,19 @@ using HRMAPI.Enums;
 
 namespace HRMAPI.Models;
 
+[Table("Roles")]
+public class Role
+{
+    [Key]
+    public Guid Id { get; set; }
+    [Required, MaxLength(50)]
+    public string Code { get; set; } = string.Empty;
+    [Required, MaxLength(100)]
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+}
+
 [Table("Modules")]
 public class Module
 {
@@ -62,7 +75,11 @@ public class FeatureRole
     public Guid Id { get; set; }
     public Guid FeatureId { get; set; }
     public string Role { get; set; } = string.Empty;
+    public Guid? RoleId { get; set; }
 
     [ForeignKey("FeatureId")]
     public Feature? Feature { get; set; }
+
+    [ForeignKey("RoleId")]
+    public Role? RoleRef { get; set; }
 }

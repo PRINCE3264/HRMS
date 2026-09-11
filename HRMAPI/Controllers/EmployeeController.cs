@@ -79,4 +79,12 @@ public class EmployeeController : BaseController
         var success = await _employeeService.DeleteEmployeeAsync(id);
         return Ok(ApiResponse<object>.Ok(new { success }, "Employee deleted."));
     }
+
+    [HttpPut("{id:guid}/status")]
+    [Authorize(Roles = "ADMIN,HR")]
+    public async Task<ActionResult<ApiResponse<EmployeeDto>>> SetStatus(Guid id, [FromBody] SetEmployeeStatusDto dto)
+    {
+        var result = await _employeeService.SetEmploymentStatusAsync(id, dto.Status, dto.ExitDate, dto.ExitReason);
+        return Ok(ApiResponse<EmployeeDto>.Ok(result, "Employee status updated."));
+    }
 }

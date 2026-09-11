@@ -1,0 +1,19 @@
+<div class="tree-node">
+  <div class="tree-node__row">
+    <button *ngIf="node.children && node.children.length" class="tree-node__toggle" (click)="toggle()">
+      <i [class]="expanded ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
+    </button>
+    <div class="tree-node__avatar" *ngIf="!node.avatar">{{ node.name.charAt(0) }}</div>
+    <img *ngIf="node.avatar" [src]="node.avatar" class="tree-node__avatar tree-node__avatar--img" alt="">
+    <div class="tree-node__info">
+      <span class="tree-node__name">{{ node.name }}</span>
+      <span class="tree-node__meta">{{ node.designation }}<ng-container *ngIf="node.department"> • {{ node.department }}</ng-container></span>
+    </div>
+    <span class="tree-node__count" *ngIf="node.directReportCount > 0">{{ node.directReportCount }} direct</span>
+    <app-status-badge [status]="node.employmentStatus"></app-status-badge>
+  </div>
+
+  <div class="tree-node__children" *ngIf="expanded && node.children && node.children.length">
+    <app-tree-node *ngFor="let child of node.children" [node]="child"></app-tree-node>
+  </div>
+</div>

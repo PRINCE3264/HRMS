@@ -27,6 +27,20 @@ import { AdminUserManagementComponent } from './user-management/user-management.
 import { AdminRolesPermissionsComponent } from './roles-permissions/roles-permissions.component';
 import { AdminSystemSettingsComponent } from './system-settings/system-settings.component';
 import { AdminAuditLogsComponent } from './audit-logs/audit-logs.component';
+import { AdminProjectsComponent } from './projects/projects.component';
+import { AdminEmployeeManagementComponent } from './management/employee-management/employee-management.component';
+import { AdminTlManagementComponent } from './management/tl-management/tl-management.component';
+import { AdminHrManagementComponent } from './management/hr-management/hr-management.component';
+import { AdminReportingHierarchyComponent } from './org/reporting-hierarchy.component';
+import { TreeNodeComponent } from './org/tree-node/tree-node.component';
+import { AdminAttendanceCorrectionsComponent } from './attendance/attendance-corrections.component';
+import { AdminAttendanceSummaryComponent } from './attendance/attendance-summary.component';
+import { AdminAttendanceRulesComponent } from './attendance/attendance-rules.component';
+import { AdminSalaryStructuresComponent } from './payroll/salary-structures.component';
+import { AdminPayrollReportsComponent } from './payroll/payroll-reports.component';
+import { AdminCompanySettingsComponent } from './settings/company-settings.component';
+import { AdminEmailSmsConfigComponent } from './settings/email-sms-config.component';
+import { AdminNotificationSettingsComponent } from './settings/notification-settings.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +51,21 @@ import { AdminAuditLogsComponent } from './audit-logs/audit-logs.component';
     AdminPayrollComponent, AdminRecruitmentComponent, AdminOnboardingComponent,
     AdminPerformanceComponent, AdminTrainingComponent, AdminDocumentsComponent,
     AdminAnnouncementsComponent, AdminReportsComponent, AdminUserManagementComponent,
-    AdminRolesPermissionsComponent, AdminSystemSettingsComponent, AdminAuditLogsComponent
+    AdminRolesPermissionsComponent, AdminSystemSettingsComponent, AdminAuditLogsComponent,
+    AdminProjectsComponent,
+    AdminEmployeeManagementComponent,
+    AdminTlManagementComponent,
+    AdminHrManagementComponent,
+    AdminReportingHierarchyComponent,
+    TreeNodeComponent,
+    AdminAttendanceCorrectionsComponent,
+    AdminAttendanceSummaryComponent,
+    AdminAttendanceRulesComponent,
+    AdminSalaryStructuresComponent,
+    AdminPayrollReportsComponent,
+    AdminCompanySettingsComponent,
+    AdminEmailSmsConfigComponent,
+    AdminNotificationSettingsComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, AdminRoutingModule, SharedModule]
 })

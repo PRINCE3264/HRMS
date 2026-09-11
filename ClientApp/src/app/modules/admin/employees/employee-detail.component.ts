@@ -59,6 +59,8 @@ export class AdminEmployeeDetailComponent implements OnInit {
     basicSalary: 0,
     allowances: 0,
     status: 'ACTIVE',
+    exitDate: '',
+    exitReason: '',
     avatar: ''
   };
 
@@ -122,12 +124,45 @@ export class AdminEmployeeDetailComponent implements OnInit {
           basicSalary: e.salary || 0,
           allowances: 0,
           status: e.employmentStatus || 'ACTIVE',
+          exitDate: e.exitDate || '',
+          exitReason: e.exitReason || '',
           avatar: e.avatar || ''
         };
         this.loadSubData(id);
       },
       error: () => this.toast.error('Failed to load employee')
     });
+  }
+
+  get isActive(): boolean {
+    return this.employee.status === 'ACTIVE' || this.employee.status === 'PROBATION' || this.employee.status === 'NOTICE';
+  }
+
+  changeStatus(): void {
+    if (this.isActive) {
+      const exitDate = prompt('Exit date (YYYY-MM-DD):', new Date().toISOString().slice(0, 10));
+      if (exitDate === null) return;
+      const exitReason = prompt('Exit reason (optional):') ?? '';
+      this.employeeService.setEmploymentStatus(this.employee.id, 'INACTIVE', exitDate, exitReason).subscribe({
+        next: () => {
+          this.employee.status = 'INACTIVE';
+          this.employee.exitDate = exitDate;
+          this.employee.exitReason = exitReason;
+          this.toast.success('Employee deactivated');
+        },
+        error: () => this.toast.error('Failed to deactivate employee')
+      });
+    } else {
+      this.employeeService.setEmploymentStatus(this.employee.id, 'ACTIVE').subscribe({
+        next: () => {
+          this.employee.status = 'ACTIVE';
+          this.employee.exitDate = '';
+          this.employee.exitReason = '';
+          this.toast.success('Employee reactivated');
+        },
+        error: () => this.toast.error('Failed to reactivate employee')
+      });
+    }
   }
 
   loadSubData(employeeId: string): void {
