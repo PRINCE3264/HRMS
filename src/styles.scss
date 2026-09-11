@@ -1,4 +1,101 @@
-*,
+@import '@syncfusion/ej2-base/styles/material.css';
+@import '@syncfusion/ej2-buttons/styles/material.css';
+@import '@syncfusion/ej2-inputs/styles/material.css';
+@import '@syncfusion/ej2-dropdowns/styles/material.css';
+@import '@syncfusion/ej2-navigations/styles/material.css';
+@import '@syncfusion/ej2-grids/styles/material.css';
+
+/* ================================================
+   SYNCFUSION GLOBAL COLOR OVERRIDES
+   Replace pink/red Material theme → Indigo #6366f1
+   ================================================ */
+
+/* Checkboxes */
+.e-checkbox-wrapper .e-frame.e-check,
+.e-checkbox-wrapper .e-frame.e-stop,
+.e-css.e-checkbox-wrapper .e-frame.e-check,
+.e-css.e-checkbox-wrapper .e-frame.e-stop {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+}
+.e-checkbox-wrapper:hover .e-frame.e-check,
+.e-checkbox-wrapper .e-checkbox:focus + .e-label + .e-frame {
+  border-color: #6366f1 !important;
+}
+.e-checkbox-wrapper .e-ripple-element {
+  background: rgba(99, 102, 241, 0.12) !important;
+}
+
+/* Toolbar active/focus */
+.e-toolbar .e-tbar-btn:focus,
+.e-toolbar .e-tbar-btn.e-active {
+  background: #ede9fe !important;
+  color: #6366f1 !important;
+}
+
+/* Grid sort icons and active column header */
+.e-grid .e-headercell.e-sorted .e-headercelldiv,
+.e-grid .e-sortfilterdiv.e-ascending::before,
+.e-grid .e-sortfilterdiv.e-descending::before {
+  color: #6366f1 !important;
+}
+
+/* Grid pager active page */
+.e-gridpager .e-numericitem.e-currentitem,
+.e-gridpager .e-numericitem.e-currentitem:hover {
+  background: #6366f1 !important;
+  border-color: #6366f1 !important;
+  color: #fff !important;
+}
+
+/* Column chooser dialog */
+.e-ccdlg .e-dlg-header-content,
+.e-ccdlg .e-cc-searchdiv .e-input:focus,
+.e-columnchooser-btn .e-cc-btn {
+  border-color: #6366f1 !important;
+  color: #6366f1 !important;
+}
+.e-ccdlg .e-btn.e-primary,
+.e-ccdlg .e-btn.e-primary:hover {
+  background: #6366f1 !important;
+  border-color: #6366f1 !important;
+  color: #fff !important;
+}
+
+/* Filter menu / Excel filter */
+.e-filter-popup .e-btn.e-primary,
+.e-excelfilter .e-btn.e-primary,
+.e-flmenu .e-btn.e-primary {
+  background: #6366f1 !important;
+  border-color: #6366f1 !important;
+  color: #fff !important;
+}
+.e-filter-popup .e-checkbox-wrapper .e-frame.e-check,
+.e-excelfilter .e-checkbox-wrapper .e-frame.e-check {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+}
+
+/* Input underline focus (Material style) */
+.e-input-group.e-input-focus::after,
+.e-input-group.e-input-focus::before,
+.e-float-input.e-input-focus::after,
+.e-float-input.e-input-focus::before {
+  background: #6366f1 !important;
+}
+
+/* Radio buttons */
+.e-radio:checked + label::before {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+}
+
+/* Search highlight in column chooser */
+.e-ccdlg .e-ul .e-list-item.e-active {
+  color: #6366f1 !important;
+}
+
+
 *::before,
 *::after {
   margin: 0;

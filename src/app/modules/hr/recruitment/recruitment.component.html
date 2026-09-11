@@ -2,10 +2,34 @@
       <button class="btn btn--primary"><i class="fas fa-plus"></i> New Job Posting</button>
     </app-page-header>
     <div class="recruit-stats">
-      <div class="r-stat"><span class="r-val">12</span><span class="r-label">Open Positions</span></div>
-      <div class="r-stat"><span class="r-val">86</span><span class="r-label">Applications</span></div>
-      <div class="r-stat"><span class="r-val">24</span><span class="r-label">Interviews Scheduled</span></div>
-      <div class="r-stat"><span class="r-val">6</span><span class="r-label">Offers Extended</span></div>
+      <div class="r-stat metric-indigo">
+        <div class="r-icon"><i class="fas fa-briefcase"></i></div>
+        <div class="r-info">
+          <span class="r-val">12</span>
+          <span class="r-label">Open Positions</span>
+        </div>
+      </div>
+      <div class="r-stat metric-emerald">
+        <div class="r-icon"><i class="fas fa-user-plus"></i></div>
+        <div class="r-info">
+          <span class="r-val">86</span>
+          <span class="r-label">Applications</span>
+        </div>
+      </div>
+      <div class="r-stat metric-violet">
+        <div class="r-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="r-info">
+          <span class="r-val">24</span>
+          <span class="r-label">Interviews Scheduled</span>
+        </div>
+      </div>
+      <div class="r-stat metric-amber">
+        <div class="r-icon"><i class="fas fa-file-signature"></i></div>
+        <div class="r-info">
+          <span class="r-val">6</span>
+          <span class="r-label">Offers Extended</span>
+        </div>
+      </div>
     </div>
     <div class="tabs">
       <button class="tab" [class.active]="activeTab === 'jobs'" (click)="activeTab = 'jobs'">Job Postings</button>

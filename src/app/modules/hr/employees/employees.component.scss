@@ -1,2 +1,288 @@
-:host { display: block; }
-    .btn { padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; background: #6366f1; color: #fff; }
+:host { display: block; background: #f1f5f9; min-height: 100vh; }
+
+.emp-page {
+  padding: 24px 28px;
+  font-family: 'Inter', -apple-system, sans-serif;
+
+  /* ---- Page Header ---- */
+  .emp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .emp-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .emp-title-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 20px;
+      box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 2px;
+    }
+
+    p {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0;
+    }
+  }
+
+  .emp-header-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .emp-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+
+    &.emp-btn-secondary {
+      background: #fff;
+      color: #475569;
+      border: 1.5px solid #e2e8f0;
+      &:hover { background: #f8fafc; border-color: #cbd5e1; }
+    }
+
+    &.emp-btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+      &:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(99,102,241,0.45); }
+    }
+  }
+
+  /* ---- Grid Wrapper ---- */
+  .emp-grid-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e8edf4;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  /* ---- Syncfusion Grid Overrides ---- */
+  ::ng-deep {
+    .e-grid {
+      border: none !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+
+      /* Toolbar */
+      .e-toolbar {
+        background: #f8fafc !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+        padding: 8px 12px !important;
+
+        .e-tbar-btn {
+          border-radius: 8px !important;
+          font-weight: 600 !important;
+          font-size: 13px !important;
+          color: #475569 !important;
+          &:hover { background: #ede9fe !important; color: #6366f1 !important; }
+        }
+
+        .e-search-wrapper .e-input {
+          border-radius: 8px !important;
+          border: 1.5px solid #e2e8f0 !important;
+          padding: 6px 12px !important;
+          font-size: 13px !important;
+          &:focus { border-color: #6366f1 !important; }
+        }
+      }
+
+      /* Header */
+      .e-headercell {
+        background: #f8fafc !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #64748b !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border-bottom: 1.5px solid #e2e8f0 !important;
+        padding: 14px 16px !important;
+      }
+
+      /* Rows */
+      .e-row {
+        transition: background 0.15s ease !important;
+        &:hover .e-rowcell { background: #fafbff !important; }
+      }
+
+      .e-rowcell {
+        padding: 12px 16px !important;
+        font-size: 13px !important;
+        color: #334155 !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        vertical-align: middle !important;
+      }
+
+      /* Pager */
+      .e-gridpager {
+        background: #f8fafc !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 8px 16px !important;
+
+        .e-numericitem.e-currentitem {
+          background: #6366f1 !important;
+          color: #fff !important;
+          border-radius: 6px !important;
+        }
+      }
+    }
+  }
+
+  /* ---- Cell Templates ---- */
+  .emp-id {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6366f1;
+    background: #ede9fe;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .emp-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .emp-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #a78bfa);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .emp-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .emp-email {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 1px;
+  }
+
+  .dept-chip {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+  }
+
+  .salary-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: #16a34a;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Status Badges */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+
+    &.status-active {
+      background: #dcfce7;
+      color: #15803d;
+      &::before { content: '●'; margin-right: 5px; font-size: 8px; }
+    }
+
+    &.status-inactive {
+      background: #fee2e2;
+      color: #b91c1c;
+      &::before { content: '●'; margin-right: 5px; font-size: 8px; }
+    }
+
+    &.status-leave {
+      background: #fef3c7;
+      color: #b45309;
+      &::before { content: '●'; margin-right: 5px; font-size: 8px; }
+    }
+  }
+
+  /* Action Buttons */
+  .action-btns {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .act-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &.act-view {
+      background: #eff6ff;
+      color: #2563eb;
+      &:hover { background: #2563eb; color: #fff; transform: scale(1.1); }
+    }
+
+    &.act-edit {
+      background: #fef3c7;
+      color: #d97706;
+      &:hover { background: #d97706; color: #fff; transform: scale(1.1); }
+    }
+
+    &.act-del {
+      background: #fef2f2;
+      color: #ef4444;
+      &:hover { background: #ef4444; color: #fff; transform: scale(1.1); }
+    }
+  }
+}

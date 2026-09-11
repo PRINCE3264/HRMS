@@ -3,6 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HrRoutingModule } from './hr-routing.module';
 import { SharedModule } from '../../shared/shared.module';
+import {
+  GridModule,
+  PageService,
+  SortService,
+  FilterService,
+  ToolbarService,
+  ExcelExportService,
+  PdfExportService,
+  ColumnChooserService,
+  ResizeService,
+  ReorderService
+} from '@syncfusion/ej2-angular-grids';
+
 import { HrDashboardComponent } from './dashboard/dashboard.component';
 import { HrEmployeesComponent } from './employees/employees.component';
 import { HrDepartmentsComponent } from './departments/departments.component';
@@ -26,6 +39,16 @@ import { HrReportsComponent } from './reports/reports.component';
     HrRecruitmentComponent, HrOnboardingComponent, HrPerformanceComponent, HrTrainingComponent,
     HrDocumentsComponent, HrAnnouncementsComponent, HrReportsComponent
   ],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HrRoutingModule, SharedModule]
+  imports: [
+    CommonModule, FormsModule, ReactiveFormsModule,
+    HrRoutingModule, SharedModule,
+    GridModule
+  ],
+  providers: [
+    PageService, SortService, FilterService, ToolbarService,
+    ExcelExportService, PdfExportService, ColumnChooserService,
+    ResizeService, ReorderService
+  ]
 })
 export class HrModule {}
+
