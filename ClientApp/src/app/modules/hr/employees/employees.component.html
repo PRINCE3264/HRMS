@@ -1,0 +1,115 @@
+<app-page-header title="Employees" subtitle="Manage all employee records, profiles, and HR information"
+  [breadcrumbs]="[{label:'Dashboard',link:'/hr/dashboard'},{label:'Employees'}]">
+  <button class="btn btn--outline"><i class="fas fa-download"></i> Export</button>
+  <button class="btn btn--primary"><i class="fas fa-user-plus"></i> Add Employee</button>
+</app-page-header>
+
+<!-- Metric Summary Cards -->
+<div class="emp-metrics">
+  <div class="emp-metric-card metric-blue">
+    <div class="metric-icon"><i class="fas fa-users"></i></div>
+    <div class="metric-body">
+      <span class="metric-val">{{ employees.length }}</span>
+      <span class="metric-lbl">Total Employees</span>
+    </div>
+
+  </div>
+  <div class="emp-metric-card metric-emerald">
+    <div class="metric-icon"><i class="fas fa-user-check"></i></div>
+    <div class="metric-body">
+      <span class="metric-val">{{ activeCount }}</span>
+      <span class="metric-lbl">Active</span>
+    </div>
+  </div>
+  <div class="emp-metric-card metric-amber">
+    <div class="metric-icon"><i class="fas fa-user-clock"></i></div>
+    <div class="metric-body">
+      <span class="metric-val">{{ onLeaveCount }}</span>
+      <span class="metric-lbl">On Leave</span>
+    </div>
+  </div>
+  <div class="emp-metric-card metric-red">
+    <div class="metric-icon"><i class="fas fa-user-times"></i></div>
+    <div class="metric-body">
+      <span class="metric-val">{{ inactiveCount }}</span>
+      <span class="metric-lbl">Inactive</span>
+    </div>
+  </div>
+</div>
+
+<!-- Syncfusion Grid -->
+<div class="emp-grid-wrapper">
+  <ejs-grid #grid [dataSource]="employees" [toolbar]="toolbar" [allowPaging]="true" [pageSettings]="pageSettings"
+    [allowSorting]="true" [allowFiltering]="true" [filterSettings]="filterSettings" [allowExcelExport]="true"
+    [allowPdfExport]="true" [showColumnChooser]="true" [allowResizing]="true" [allowReordering]="true"
+    (toolbarClick)="toolbarClick($event)" gridLines="Horizontal" height="auto">
+
+    <e-columns>
+
+      <!-- Employee ID -->
+      <e-column field="employeeId" headerText="Emp ID" width="110" [isPrimaryKey]="true">
+        <ng-template #template let-data>
+          <span class="emp-id">{{ data.employeeId }}</span>
+        </ng-template>
+      </e-column>
+
+      <!-- Name + Avatar -->
+      <e-column field="name" headerText="Employee" width="220">
+        <ng-template #template let-data>
+          <div class="emp-name-cell">
+            <div class="emp-avatar" [style.background]="getAvatarColor(data.department)">{{ data.avatar }}</div>
+            <div>
+              <div class="emp-name">{{ data.name }}</div>
+              <div class="emp-email">{{ data.email }}</div>
+            </div>
+          </div>
+        </ng-template>
+      </e-column>
+
+      <!-- Department -->
+      <e-column field="department" headerText="Department" width="140">
+        <ng-template #template let-data>
+          <span class="dept-chip" [style.background]="getAvatarColor(data.department) + '18'"
+            [style.color]="getAvatarColor(data.department)">
+            {{ data.department }}
+          </span>
+        </ng-template>
+      </e-column>
+
+      <!-- Designation -->
+      <e-column field="designation" headerText="Designation" width="180"></e-column>
+
+      <!-- Phone -->
+      <e-column field="phone" headerText="Phone" width="150"></e-column>
+
+      <!-- Joining Date -->
+      <e-column field="joiningDate" headerText="Joined" width="120" type="date" format="dd MMM yyyy"></e-column>
+
+      <!-- Salary -->
+      <e-column field="salary" headerText="Salary" width="120" format="C0" textAlign="Right">
+        <ng-template #template let-data>
+          <span class="salary-val">$ {{ data.salary | number }}</span>
+        </ng-template>
+      </e-column>
+
+      <!-- Status -->
+      <e-column field="status" headerText="Status" width="120">
+        <ng-template #template let-data>
+          <span class="status-badge" [ngClass]="getStatusClass(data.status)">{{ data.status }}</span>
+        </ng-template>
+      </e-column>
+
+      <!-- Actions -->
+      <e-column headerText="Actions" width="120" [allowSorting]="false" [allowFiltering]="false">
+        <ng-template #template let-data>
+          <div class="action-btns">
+            <button class="act-btn act-view" title="View"><i class="fas fa-eye"></i></button>
+            <button class="act-btn act-edit" title="Edit"><i class="fas fa-edit"></i></button>
+            <button class="act-btn act-del" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
+        </ng-template>
+      </e-column>
+
+    </e-columns>
+  </ejs-grid>
+</div>

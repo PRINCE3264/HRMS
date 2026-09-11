@@ -1,0 +1,147 @@
+<div class="shift-page">
+
+  <!-- Page Header -->
+  <div class="shift-header">
+    <div class="shift-title">
+      <div class="shift-title-icon"><i class="fas fa-clock"></i></div>
+      <div>
+        <h1>Shift Management</h1>
+        <p>Configure and manage employee work shifts</p>
+      </div>
+    </div>
+    <div class="shift-header-actions">
+      <button class="sh-btn sh-btn-secondary"><i class="fas fa-download"></i> Export</button>
+      <button class="sh-btn sh-btn-primary"><i class="fas fa-plus"></i> Create Shift</button>
+    </div>
+  </div>
+
+  <!-- Shift Type Cards -->
+  <div class="shift-types-grid">
+    <div class="shift-type-card" *ngFor="let s of shiftTypes">
+      <div class="shift-card-accent" [style.background]="s.color"></div>
+      <div class="shift-card-body">
+        <div class="shift-card-top">
+          <div class="shift-icon" [style.background]="s.color + '18'" [style.color]="s.color">
+            <i class="fas fa-sun" *ngIf="s.name.includes('Morning')"></i>
+            <i class="fas fa-cloud-sun" *ngIf="s.name.includes('Afternoon')"></i>
+            <i class="fas fa-moon" *ngIf="s.name.includes('Night')"></i>
+          </div>
+          <div class="shift-card-menu">
+            <button class="btn-menu"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+        <h3 class="shift-name">{{ s.name }}</h3>
+        <p class="shift-time-range"><i class="fas fa-clock"></i> {{ s.time }}</p>
+        <div class="shift-stats">
+          <div class="shift-stat">
+            <span class="st-val" [style.color]="s.color">{{ s.assignedCount }}</span>
+            <span class="st-lbl">Assigned</span>
+          </div>
+          <div class="stat-sep"></div>
+          <div class="shift-stat">
+            <span class="st-val" [style.color]="s.color">{{ s.duration }}</span>
+            <span class="st-lbl">Duration</span>
+          </div>
+        </div>
+        <div class="shift-days">
+          <span *ngFor="let d of s.days" class="day-pill"
+            [class.day-active]="d.active"
+            [style.background]="d.active ? s.color : ''"
+            [style.color]="d.active ? '#fff' : ''">
+            {{ d.label }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assignments Table Panel -->
+  <div class="assignments-panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <div class="panel-icon"><i class="fas fa-list-alt"></i></div>
+        <div>
+          <h3>Shift Assignments</h3>
+          <p>{{ assignments.length }} employees assigned</p>
+        </div>
+      </div>
+      <div class="panel-filters">
+        <select class="filter-select">
+          <option>All Shifts</option>
+          <option>Morning Shift</option>
+          <option>Afternoon Shift</option>
+          <option>Night Shift</option>
+        </select>
+        <select class="filter-select">
+          <option>All Departments</option>
+          <option>Engineering</option>
+          <option>Operations</option>
+          <option>Design</option>
+          <option>Marketing</option>
+        </select>
+        <button class="sh-btn sh-btn-secondary"><i class="fas fa-search"></i> Search</button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Shift</th>
+            <th>Time</th>
+            <th>Week Schedule</th>
+            <th>Effective From</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of assignments">
+            <td>
+              <div class="emp-cell">
+                <div class="emp-avatar" [style.background]="a.color">{{ a.name.charAt(0) }}</div>
+                <div>
+                  <div class="emp-name">{{ a.name }}</div>
+                  <div class="emp-dept-sm">{{ a.department }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-tag">{{ a.department }}</span>
+            </td>
+            <td>
+              <span class="shift-badge"
+                [style.background]="a.shiftColor + '18'"
+                [style.color]="a.shiftColor"
+                [style.border]="'1px solid ' + a.shiftColor + '40'">
+                <i class="fas fa-circle" style="font-size:7px"></i>
+                {{ a.shift }}
+              </span>
+            </td>
+            <td>
+              <span class="time-val"><i class="fas fa-clock"></i> {{ a.time }}</span>
+            </td>
+            <td>
+              <div class="week-dots">
+                <span *ngFor="let d of a.schedule" class="wd"
+                  [class.wd-active]="d.active"
+                  [title]="d.label">{{ d.label }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="date-val">{{ a.effectiveFrom }}</span>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button class="act-btn act-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                <button class="act-btn act-del" title="Remove"><i class="fas fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

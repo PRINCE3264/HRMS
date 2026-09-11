@@ -1,0 +1,49 @@
+<app-page-header title="Payroll Management" subtitle="Process monthly salaries, calculate deductions, and generate employee payslips" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Payroll'}]">
+  <button class="btn btn--outline"><i class="fas fa-file-invoice-dollar"></i> Salary Structure</button>
+  <button class="btn btn--primary"><i class="fas fa-play"></i> Run Payroll</button>
+</app-page-header>
+
+<div class="payroll-summary">
+  <div class="summary-card total">
+    <div class="summary-card__icon"><i class="fas fa-wallet"></i></div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Total Gross Pay</span>
+      <span class="summary-card__value">$485,200.00</span>
+      <span class="summary-card__sub">December 2024</span>
+    </div>
+  </div>
+  <div class="summary-card deductions">
+    <div class="summary-card__icon"><i class="fas fa-file-invoice-dollar"></i></div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Total Deductions</span>
+      <span class="summary-card__value">$62,480.00</span>
+      <span class="summary-card__sub">Tax + Benefits</span>
+    </div>
+  </div>
+  <div class="summary-card net">
+    <div class="summary-card__icon"><i class="fas fa-dollar-sign"></i></div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Net Pay</span>
+      <span class="summary-card__value">$422,720.00</span>
+      <span class="summary-card__sub">After deductions</span>
+    </div>
+  </div>
+  <div class="summary-card processed">
+    <div class="summary-card__icon"><i class="fas fa-user-check"></i></div>
+    <div class="summary-card__content">
+      <span class="summary-card__label">Processed</span>
+      <span class="summary-card__value">231</span>
+      <span class="summary-card__sub">of 248 employees</span>
+    </div>
+  </div>
+</div>
+
+<div class="table-card">
+  <app-data-table 
+    [columns]="columns" 
+    [data]="payrollData" 
+    [pageSize]="10" 
+    [actions]="tableActions" 
+    (onActionClick)="onAction($event)">
+  </app-data-table>
+</div>

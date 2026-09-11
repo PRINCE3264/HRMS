@@ -1,0 +1,94 @@
+<app-page-header title="Break Tracker" subtitle="Monitor and manage your daily work break logs" [breadcrumbs]="[{label:'Dashboard',link:'/employee/dashboard'},{label:'Break Tracker'}]"></app-page-header>
+
+<div class="break-container">
+
+  <!-- Active Break Timer Banner -->
+  <div class="active-break-card" *ngIf="activeBreak; else noActiveBreak">
+    <div class="active-pulse"></div>
+    <div class="active-info">
+      <h3>Ongoing: {{ activeBreak.type }}</h3>
+      <p>Started at {{ activeBreak.startTime | date:'shortTime' }}</p>
+    </div>
+    <div class="timer-display">
+      {{ formatTimer(elapsedSeconds) }}
+    </div>
+    <button class="btn-stop-break" (click)="stopBreak()">
+      <i class="fas fa-play"></i> Resume Work
+    </button>
+  </div>
+
+  <ng-template #noActiveBreak>
+    <div class="break-start-card">
+      <h3>Select Break Type to Start</h3>
+      <div class="break-options-grid">
+        <div class="break-option-btn" *ngFor="let b of breakTypes" (click)="startBreak(b.name)">
+          <div class="icon-circle" [style.background]="b.color + '20'" [style.color]="b.color">
+            <i [class]="b.icon"></i>
+          </div>
+          <div class="break-option-text">
+            <strong>{{ b.name }}</strong>
+            <small>Max {{ b.maxMinutes }} mins</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Break Summary Stats -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <i class="fas fa-clock text-blue"></i>
+      <div>
+        <h4>{{ totalBreakMins }} Mins</h4>
+        <p>Total Break Time Today</p>
+      </div>
+    </div>
+    <div class="stat-box">
+      <i class="fas fa-hourglass-half text-green"></i>
+      <div>
+        <h4>{{ allowedBreakMins }} Mins</h4>
+        <p>Daily Allowed Limit</p>
+      </div>
+    </div>
+    <div class="stat-box">
+      <i class="fas fa-check-circle text-purple"></i>
+      <div>
+        <h4>{{ todayBreaks.length }} Breaks</h4>
+        <p>Breaks Taken Today</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Break History Table -->
+  <div class="history-card">
+    <div class="card-header">
+      <h3><i class="fas fa-history text-blue"></i> Today's Break Logs</h3>
+    </div>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Break Type</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Duration</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of todayBreaks">
+            <td><strong>{{ item.type }}</strong></td>
+            <td>{{ item.startTime }}</td>
+            <td>{{ item.endTime }}</td>
+            <td><span class="pill-duration">{{ item.duration }}</span></td>
+            <td><span class="status-badge-completed">{{ item.status }}</span></td>
+          </tr>
+          <tr *ngIf="todayBreaks.length === 0">
+            <td colspan="5" class="text-center py-4 text-gray">No breaks recorded yet today.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

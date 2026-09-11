@@ -1,0 +1,165 @@
+<app-page-header title="Performance & Goals" subtitle="Track performance reviews, evaluate KPIs, and manage goal cycles" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Performance'}]">
+  <div class="header-actions">
+    <button class="btn btn--secondary" (click)="openKpiModal()"><i class="fas fa-bullseye"></i> Add KPI Target</button>
+    <button class="btn btn--primary" (click)="openReviewModal()"><i class="fas fa-plus"></i> New Review Cycle</button>
+  </div>
+</app-page-header>
+
+<!-- Circular Summary Widgets -->
+<div class="perf-summary">
+  <div class="perf-card">
+    <div class="perf-card__ring" style="--percent: 85; --color: #4461f6">
+      <span>4.4 / 5</span>
+    </div>
+    <span class="perf-card__label">Avg. Rating</span>
+  </div>
+  <div class="perf-card">
+    <div class="perf-card__ring" style="--percent: 92; --color: #10b981">
+      <span>92%</span>
+    </div>
+    <span class="perf-card__label">Reviews Completed</span>
+  </div>
+  <div class="perf-card">
+    <div class="perf-card__ring" style="--percent: 78; --color: #8b5cf6">
+      <span>78%</span>
+    </div>
+    <span class="perf-card__label">KPIs Achieved</span>
+  </div>
+  <div class="perf-card">
+    <div class="perf-card__ring" style="--percent: 15; --color: #f59e0b">
+      <span>15%</span>
+    </div>
+    <span class="perf-card__label">PIP Active</span>
+  </div>
+</div>
+
+<!-- Toolbar & Tabs -->
+<div class="performance-toolbar">
+  <div class="tabs">
+    <button class="tab" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
+      <i class="fas fa-star"></i> Performance Reviews <span class="tab-count">{{ reviews.length }}</span>
+    </button>
+    <button class="tab" [class.active]="activeTab === 'kpi'" (click)="activeTab = 'kpi'">
+      <i class="fas fa-bullseye"></i> Key Performance Indicators <span class="tab-count">{{ kpis.length }}</span>
+    </button>
+  </div>
+
+  <div class="filter-controls">
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Search {{ activeTab === 'reviews' ? 'reviews' : 'KPIs' }}..." />
+    </div>
+
+    <div class="select-box" *ngIf="activeTab === 'reviews'">
+      <select [(ngModel)]="statusFilter">
+        <option value="ALL">All Status</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="PENDING">Pending</option>
+        <option value="PIP">PIP</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Tab Content: Reviews -->
+<div *ngIf="activeTab === 'reviews'">
+  <div class="table-card">
+    <app-data-table 
+      [columns]="reviewColumns" 
+      [data]="filteredReviews" 
+      [pageSize]="10" 
+      [actions]="reviewActions" 
+      (onActionClick)="onAction($event)">
+    </app-data-table>
+  </div>
+</div>
+
+<!-- Tab Content: KPIs -->
+<div *ngIf="activeTab === 'kpi'">
+  <div class="table-card">
+    <app-data-table 
+      [columns]="kpiColumns" 
+      [data]="filteredKpis" 
+      [pageSize]="10">
+    </app-data-table>
+  </div>
+</div>
+
+<!-- Modal: New Review Cycle -->
+<div class="modal-backdrop" *ngIf="showReviewModal" (click)="closeReviewModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-plus-circle"></i> Create Review Cycle</h3>
+      <button class="close-btn" (click)="closeReviewModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Cycle Title *</label>
+        <input type="text" [(ngModel)]="newReviewCycle.title" placeholder="e.g. Annual Performance Review 2025" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Period</label>
+          <select [(ngModel)]="newReviewCycle.period">
+            <option value="Q1 2025">Q1 2025</option>
+            <option value="Q2 2025">Q2 2025</option>
+            <option value="Q3 2025">Q3 2025</option>
+            <option value="Q4 2025">Q4 2025</option>
+            <option value="Annual 2025">Annual 2025</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <select [(ngModel)]="newReviewCycle.department">
+            <option value="All Departments">All Departments</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Design">Design</option>
+            <option value="Human Resources">Human Resources</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeReviewModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveReviewCycle()"><i class="fas fa-check"></i> Launch Cycle</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Create KPI Target -->
+<div class="modal-backdrop" *ngIf="showKpiModal" (click)="closeKpiModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-bullseye"></i> Add KPI Target</h3>
+      <button class="close-btn" (click)="closeKpiModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>KPI Title *</label>
+        <input type="text" [(ngModel)]="newKpi.title" placeholder="e.g. Code Quality & Test Coverage" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Department</label>
+          <select [(ngModel)]="newKpi.department">
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Design">Design</option>
+            <option value="Sales">Sales</option>
+            <option value="Human Resources">Human Resources</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target</label>
+          <input type="text" [(ngModel)]="newKpi.target" placeholder="e.g. 90% Coverage" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeKpiModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveKpi()"><i class="fas fa-check"></i> Save KPI</button>
+    </div>
+  </div>
+</div>

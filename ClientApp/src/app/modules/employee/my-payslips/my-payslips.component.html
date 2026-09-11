@@ -1,0 +1,251 @@
+<app-page-header title="My Payslips" subtitle="View and download your monthly salary slips and tax statements" [breadcrumbs]="[{label:'Dashboard',link:'/employee/dashboard'},{label:'My Payslips'}]"></app-page-header>
+
+<div class="my-payslips-container">
+
+  <!-- Top Salary Overview Stats -->
+  <div class="salary-summary-grid">
+    <div class="salary-card">
+      <div class="salary-icon-box box-blue">
+        <i class="fas fa-wallet"></i>
+      </div>
+      <div class="salary-details">
+        <span class="salary-label">Monthly Gross</span>
+        <span class="salary-amount">$7,500.00</span>
+        <span class="salary-sub">Base + Allowances</span>
+      </div>
+    </div>
+
+    <div class="salary-card">
+      <div class="salary-icon-box box-red">
+        <i class="fas fa-minus-circle"></i>
+      </div>
+      <div class="salary-details">
+        <span class="salary-label">Total Deductions</span>
+        <span class="salary-amount text-danger">-$1,575.00</span>
+        <span class="salary-sub">Taxes & PF (21%)</span>
+      </div>
+    </div>
+
+    <div class="salary-card">
+      <div class="salary-icon-box box-green">
+        <i class="fas fa-check-double"></i>
+      </div>
+      <div class="salary-details">
+        <span class="salary-label">Net Take-Home Pay</span>
+        <span class="salary-amount text-success">$5,925.00</span>
+        <span class="salary-sub">Transferred to account</span>
+      </div>
+    </div>
+
+    <div class="salary-card">
+      <div class="salary-icon-box box-purple">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="salary-details">
+        <span class="salary-label">YTD Total Earnings</span>
+        <span class="salary-amount">$71,100.00</span>
+        <span class="salary-sub">Cumulative (2026)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Section Card -->
+  <div class="section-card">
+    <div class="card-toolbar">
+      <div class="toolbar-title">
+        <i class="fas fa-file-invoice-dollar text-blue"></i>
+        <h3>Salary Slips History</h3>
+      </div>
+
+      <div class="year-filter-wrap">
+        <label>Filter Year:</label>
+        <select [(ngModel)]="selectedYear" class="select-year">
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Pay Period</th>
+            <th>Basic Salary</th>
+            <th>Allowances</th>
+            <th>Deductions</th>
+            <th>Net Pay</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of filteredPayslips">
+            <td><strong>{{ p.period }}</strong></td>
+            <td>{{ p.basic }}</td>
+            <td class="text-success">+{{ p.allowances }}</td>
+            <td class="text-danger">-{{ p.deductions }}</td>
+            <td><strong class="net-pay-val">{{ p.netPay }}</strong></td>
+            <td>{{ p.payDate }}</td>
+            <td><app-status-badge [status]="p.status"></app-status-badge></td>
+            <td>
+              <div class="action-btns">
+                <button class="btn-icon" (click)="viewPayslipDetail(p)" title="View Detailed Payslip Statement">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-icon btn-download" (click)="downloadPayslip(p.period)" title="Download Payslip PDF">
+                  <i class="fas fa-download"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredPayslips.length === 0">
+            <td colspan="8" class="text-center py-4 text-gray">No payslips found for {{ selectedYear }}.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Detailed Payslip Invoice Modal -->
+<div class="modal-backdrop" *ngIf="activePayslipModal" (click)="closePayslipDetail()">
+  <div class="payslip-modal-card" (click)="$event.stopPropagation()">
+    <!-- Top Corporate Header -->
+    <div class="payslip-modal-header">
+      <div class="company-brand">
+        <div class="logo-wrapper">
+          <img src="assets/images/hrm.png" alt="Company Logo" class="modal-logo" />
+        </div>
+        <div class="brand-titles">
+          <h3>Envision Beyond India Pvt Ltd</h3>
+          <p class="sub-heading">Official Salary Statement & Tax Breakdown</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="slip-id-tag"><i class="fas fa-file-alt"></i> SLIP #PAY-2026-09</span>
+        <button class="close-btn" (click)="closePayslipDetail()"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+
+    <div class="payslip-modal-body">
+      <!-- Employee Profile Metadata Grid -->
+      <div class="employee-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-user text-blue"></i> Employee Name</span>
+          <span class="meta-value">PRINCE VIDYARTHI</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-id-card text-purple"></i> Employee ID</span>
+          <span class="meta-value">EMP-1059</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-briefcase text-teal"></i> Designation</span>
+          <span class="meta-value">Software Developer</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-building text-orange"></i> Department</span>
+          <span class="meta-value">Engineering & Technology</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-calendar-alt text-indigo"></i> Pay Period</span>
+          <span class="meta-value">{{ activePayslipModal.period }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-clock text-green"></i> Pay Date</span>
+          <span class="meta-value">{{ activePayslipModal.payDate }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-university text-blue"></i> Bank Account</span>
+          <span class="meta-value">HDFC Bank (****4892)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label"><i class="fas fa-fingerprint text-purple"></i> PAN / Tax ID</span>
+          <span class="meta-value">ABCDE1234F</span>
+        </div>
+      </div>
+
+      <!-- Earnings vs Deductions Breakdown -->
+      <div class="breakdown-tables-grid">
+        <!-- Earnings Box -->
+        <div class="breakdown-box earnings-box">
+          <div class="box-header green-header">
+            <h4><i class="fas fa-plus-circle"></i> Gross Earnings</h4>
+            <span class="badge-pill green-pill">Credit</span>
+          </div>
+          <div class="line-items">
+            <div class="row-line"><span>Basic Salary</span> <strong>{{ activePayslipModal.basic }}</strong></div>
+            <div class="row-line"><span>House Rent Allowance (HRA)</span> <strong>$1,200.00</strong></div>
+            <div class="row-line"><span>Special Allowance</span> <strong>$800.00</strong></div>
+            <div class="row-line"><span>Performance Bonus</span> <strong>$0.00</strong></div>
+          </div>
+          <div class="box-total-footer green-total">
+            <span>Total Gross Earnings</span>
+            <strong>$7,500.00</strong>
+          </div>
+        </div>
+
+        <!-- Deductions Box -->
+        <div class="breakdown-box deductions-box">
+          <div class="box-header red-header">
+            <h4><i class="fas fa-minus-circle"></i> Deductions</h4>
+            <span class="badge-pill red-pill">Debit</span>
+          </div>
+          <div class="line-items">
+            <div class="row-line"><span>Provident Fund (PF)</span> <strong>$675.00</strong></div>
+            <div class="row-line"><span>Income Tax (TDS)</span> <strong>$700.00</strong></div>
+            <div class="row-line"><span>Health Insurance</span> <strong>$200.00</strong></div>
+            <div class="row-line"><span>Professional Tax</span> <strong>$0.00</strong></div>
+          </div>
+          <div class="box-total-footer red-total">
+            <span>Total Deductions</span>
+            <strong>-${{ activePayslipModal.deductions }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Net Salary Banner -->
+      <div class="net-salary-banner">
+        <div class="net-salary-info">
+          <span class="net-label">NET TAKE-HOME PAY</span>
+          <h2 class="net-amount">{{ activePayslipModal.netPay }}</h2>
+        </div>
+        <div class="payment-status-badge">
+          <i class="fas fa-check-circle"></i>
+          <div>
+            <strong>Payment Processed</strong>
+            <small>Direct Bank Transfer</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Footer Note -->
+      <div class="statement-notice">
+        <i class="fas fa-shield-alt text-blue"></i>
+        <span>This is a system-generated electronic payslip statement verified by <strong>Envision Beyond India Pvt Ltd</strong>. No physical signature required.</span>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="payslip-modal-footer">
+      <button class="btn-secondary" (click)="closePayslipDetail()">
+        <i class="fas fa-times"></i> Close
+      </button>
+      <button class="btn-outline-primary" (click)="printPayslip()">
+        <i class="fas fa-print"></i> Print
+      </button>
+      <button class="btn-primary" (click)="downloadPayslip(activePayslipModal.period)">
+        <i class="fas fa-download"></i> Download PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-notification" [class.show]="showToast">
+  <i class="fas fa-check-circle"></i>
+  <span>{{ toastMsg }}</span>
+</div>

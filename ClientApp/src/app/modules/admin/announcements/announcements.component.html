@@ -1,0 +1,43 @@
+<app-page-header title="Announcements" subtitle="Company-wide announcements and notices" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Announcements'}]">
+      <button class="btn btn--primary"><i class="fas fa-plus"></i> New Announcement</button>
+    </app-page-header>
+
+    <div class="announce-filters">
+      <button class="filter-btn active">All</button>
+      <button class="filter-btn">Important</button>
+      <button class="filter-btn">General</button>
+      <button class="filter-btn">HR</button>
+      <button class="filter-btn">Events</button>
+    </div>
+
+    <div class="announce-list">
+      <div class="announce-item" *ngFor="let item of announcements" [class.pinned]="item.pinned">
+        <div class="announce-item__pinned" *ngIf="item.pinned">
+          <i class="fas fa-thumbtack"></i> Pinned
+        </div>
+        <div class="announce-item__header">
+          <div class="announce-item__icon" [style.background]="item.color">
+            <i [class]="item.icon"></i>
+          </div>
+          <div class="announce-item__meta">
+            <h3>{{ item.title }}</h3>
+            <div class="announce-item__info">
+              <span><i class="fas fa-user"></i> {{ item.author }}</span>
+              <span><i class="fas fa-calendar"></i> {{ item.date }}</span>
+              <span class="announce-tag" [style.background]="item.tagColor">{{ item.tag }}</span>
+            </div>
+          </div>
+        </div>
+        <p class="announce-item__body">{{ item.content }}</p>
+        <div class="announce-item__footer">
+          <div class="announce-item__stats">
+            <span><i class="fas fa-eye"></i> {{ item.views }} views</span>
+            <span><i class="fas fa-comments"></i> {{ item.comments }} comments</span>
+          </div>
+          <div class="announce-item__actions">
+            <button class="action-btn"><i class="fas fa-edit"></i></button>
+            <button class="action-btn action-btn--danger"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>

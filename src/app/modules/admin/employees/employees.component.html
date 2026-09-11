@@ -1,6 +1,0 @@
-<app-page-header title="Employee Management" subtitle="Manage all employees" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Employees'}]">
-      <button class="btn btn--primary" routerLink="/employees/add"><i class="fas fa-plus"></i> Add Employee</button>
-      <button class="btn btn--outline"><i class="fas fa-file-export"></i> Export</button>
-    </app-page-header>
-    <app-data-table [columns]="columns" [data]="employees" [pageSize]="10" [actions]="tableActions" (onActionClick)="onAction($event)">
-    </app-data-table>

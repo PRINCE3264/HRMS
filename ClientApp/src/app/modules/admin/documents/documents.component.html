@@ -1,0 +1,169 @@
+<app-page-header title="Document Management" subtitle="Organize, share, and manage company policies, contracts, and templates" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Documents'}]">
+  <button class="btn btn--primary" (click)="openUploadModal()"><i class="fas fa-cloud-upload-alt"></i> Upload Document</button>
+</app-page-header>
+
+<!-- Category Cards Grid -->
+<div class="doc-categories">
+  <div class="doc-cat" [class.active]="selectedCategory === 'ALL'" (click)="selectedCategory = 'ALL'">
+    <div class="doc-cat__icon all-icon">
+      <i class="fas fa-folder-open"></i>
+    </div>
+    <div class="doc-cat__info">
+      <span class="doc-cat__name">All Files</span>
+      <span class="doc-cat__count">{{ documents.length }} Files</span>
+    </div>
+  </div>
+
+  <div class="doc-cat" *ngFor="let cat of categories" [class.active]="selectedCategory === cat.name" (click)="filterByCategory(cat.name)">
+    <div class="doc-cat__icon" [style.background]="cat.color">
+      <i [class]="cat.icon"></i>
+    </div>
+    <div class="doc-cat__info">
+      <span class="doc-cat__name">{{ cat.name }}</span>
+      <span class="doc-cat__count">{{ cat.count }} Files</span>
+    </div>
+  </div>
+</div>
+
+<!-- Toolbar Controls -->
+<div class="doc-toolbar">
+  <div class="search-box">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search documents by name, author..." />
+  </div>
+
+  <div class="filter-controls">
+    <div class="select-box">
+      <select [(ngModel)]="selectedCategory">
+        <option value="ALL">All Categories</option>
+        <option value="Policies">Policies</option>
+        <option value="Contracts">Contracts</option>
+        <option value="Forms">Forms</option>
+        <option value="Templates">Templates</option>
+        <option value="Certificates">Certificates</option>
+        <option value="Handbooks">Handbooks</option>
+      </select>
+    </div>
+
+    <div class="select-box">
+      <select [(ngModel)]="selectedType">
+        <option value="ALL">All File Types</option>
+        <option value="PDF">PDF</option>
+        <option value="DOCX">DOCX</option>
+      </select>
+    </div>
+
+    <button class="btn btn--clear" *ngIf="selectedCategory !== 'ALL' || selectedType !== 'ALL' || searchTerm" (click)="selectedCategory = 'ALL'; selectedType = 'ALL'; searchTerm = ''">
+      <i class="fas fa-times"></i> Reset Filters
+    </button>
+  </div>
+</div>
+
+<!-- Custom Documents Table View -->
+<div class="table-card">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Document Name</th>
+          <th>Category</th>
+          <th>Uploaded By</th>
+          <th>Upload Date</th>
+          <th>File Size</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of filteredDocuments">
+          <td>
+            <div class="doc-file-cell">
+              <div class="file-type-icon" [class]="doc.type.toLowerCase()">
+                <i [class]="doc.type === 'PDF' ? 'fas fa-file-pdf' : (doc.type === 'DOCX' ? 'fas fa-file-word' : 'fas fa-file-excel')"></i>
+              </div>
+              <span class="doc-title">{{ doc.name }}</span>
+            </div>
+          </td>
+          <td><span class="category-badge">{{ doc.category }}</span></td>
+          <td>
+            <div class="author-cell">
+              <div class="avatar-mini">{{ doc.uploadedBy.charAt(0) }}</div>
+              <span>{{ doc.uploadedBy }}</span>
+            </div>
+          </td>
+          <td>{{ doc.uploadDate }}</td>
+          <td><span class="size-badge">{{ doc.size }}</span></td>
+          <td><span class="type-pill" [class]="doc.type.toLowerCase()">{{ doc.type }}</span></td>
+          <td>
+            <app-status-badge [status]="doc.status"></app-status-badge>
+          </td>
+          <td style="text-align: right;">
+            <button class="btn-icon" title="Download Document" (click)="onAction({action: 'download', row: doc})">
+              <i class="fas fa-download"></i>
+            </button>
+            <button class="btn-icon btn-icon--danger" title="Delete Document" (click)="onAction({action: 'delete', row: doc})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredDocuments.length === 0">
+          <td colspan="8" class="empty-cell">
+            <i class="fas fa-folder-open empty-icon"></i>
+            <h4>No Documents Found</h4>
+            <p>Try adjusting your search criteria or filters.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal: Upload Document -->
+<div class="modal-backdrop" *ngIf="showUploadModal" (click)="closeUploadModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Document</h3>
+      <button class="close-btn" (click)="closeUploadModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Document Title *</label>
+        <input type="text" [(ngModel)]="newDoc.name" placeholder="e.g. Employee Handbook 2025.pdf" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select [(ngModel)]="newDoc.category">
+            <option value="Policies">Policies</option>
+            <option value="Contracts">Contracts</option>
+            <option value="Forms">Forms</option>
+            <option value="Templates">Templates</option>
+            <option value="Certificates">Certificates</option>
+            <option value="Handbooks">Handbooks</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>File Type</label>
+          <select [(ngModel)]="newDoc.type">
+            <option value="PDF">PDF</option>
+            <option value="DOCX">DOCX</option>
+            <option value="XLSX">XLSX</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>File Upload Dropzone</label>
+        <div class="dropzone">
+          <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+          <p>Drag and drop files here, or <span class="browse-text">browse</span></p>
+          <span class="file-info">Supports PDF, DOCX, XLSX up to 25MB</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeUploadModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveDocument()"><i class="fas fa-check"></i> Upload Document</button>
+    </div>
+  </div>
+</div>

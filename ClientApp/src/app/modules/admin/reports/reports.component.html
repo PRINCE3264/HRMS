@@ -1,0 +1,259 @@
+<app-page-header title="Reports & Analytics" subtitle="Comprehensive workforce analytics, attendance tracking, and financial payroll insights" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Reports'}]">
+  <div class="header-actions">
+    <button class="btn btn--outline" (click)="exportReport()"><i class="fas fa-download"></i> Export Report</button>
+    <button class="btn btn--primary"><i class="fas fa-plus"></i> Create Custom Report</button>
+  </div>
+</app-page-header>
+
+<!-- Main Report Submodule Tabs -->
+<div class="report-tabs">
+  <button class="tab" [class.active]="activeTab === 'hr'" (click)="activeTab = 'hr'">
+    <i class="fas fa-file-alt"></i> HR & Headcount Reports
+  </button>
+  <button class="tab" [class.active]="activeTab === 'attendance'" (click)="activeTab = 'attendance'">
+    <i class="fas fa-calendar-check"></i> Attendance Reports
+  </button>
+  <button class="tab" [class.active]="activeTab === 'payroll'" (click)="activeTab = 'payroll'">
+    <i class="fas fa-money-bill-wave"></i> Payroll & Compensation Reports
+  </button>
+</div>
+
+<!-- ================= TAB 1: HR REPORTS ================= -->
+<div *ngIf="activeTab === 'hr'" class="tab-content">
+  <div class="report-grid">
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Employee Headcount by Department</h3>
+      </div>
+      <div class="report-card__body">
+        <app-chart-bar title="" [chartData]="headcountData"></app-chart-bar>
+      </div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Gender & Diversity Distribution</h3>
+      </div>
+      <div class="report-card__body">
+        <app-chart-donut title="" [data]="genderData"></app-chart-donut>
+      </div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Monthly Employee Turnover Rate</h3>
+      </div>
+      <div class="report-card__body">
+        <app-chart-bar title="" [chartData]="turnoverData"></app-chart-bar>
+      </div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Average Salary Level Distribution</h3>
+      </div>
+      <div class="report-card__body">
+        <div class="salary-bars">
+          <div class="salary-bar" *ngFor="let item of salaryData">
+            <div class="salary-bar__label">
+              <span>{{ item.level }}</span>
+              <span>{{ item.avg | currency }}</span>
+            </div>
+            <div class="salary-bar__track">
+              <div class="salary-bar__fill" [style.width]="item.percent + '%'" [style.background]="item.color"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-reports">
+    <h3>Quick Access HR Reports</h3>
+    <div class="quick-grid">
+      <div class="quick-card" *ngFor="let report of quickReports">
+        <div class="quick-card__icon" [style.background]="report.color">
+          <i [class]="report.icon"></i>
+        </div>
+        <div class="quick-card__info">
+          <h4>{{ report.name }}</h4>
+          <span>{{ report.description }}</span>
+        </div>
+        <button class="quick-card__btn"><i class="fas fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TAB 2: ATTENDANCE REPORTS ================= -->
+<div *ngIf="activeTab === 'attendance'" class="tab-content">
+  <div class="report-stats">
+    <div class="r-stat metric-emerald">
+      <div class="r-icon"><i class="fas fa-user-check"></i></div>
+      <div class="r-info">
+        <span class="r-val">96.2%</span>
+        <span class="r-label">Average Attendance Rate</span>
+      </div>
+    </div>
+    <div class="r-stat metric-blue">
+      <div class="r-icon"><i class="fas fa-clock"></i></div>
+      <div class="r-info">
+        <span class="r-val">218</span>
+        <span class="r-label">Present Today</span>
+      </div>
+    </div>
+    <div class="r-stat metric-amber">
+      <div class="r-icon"><i class="fas fa-user-clock"></i></div>
+      <div class="r-info">
+        <span class="r-val">14</span>
+        <span class="r-label">Late Arrivals</span>
+      </div>
+    </div>
+    <div class="r-stat metric-rose">
+      <div class="r-icon"><i class="fas fa-user-times"></i></div>
+      <div class="r-info">
+        <span class="r-val">3</span>
+        <span class="r-label">Unexcused Absences</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="report-grid">
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Monthly Attendance Rate Trend (%)</h3>
+      </div>
+      <div class="report-card__body">
+        <app-chart-bar title="" [chartData]="attendanceTrendData"></app-chart-bar>
+      </div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Today's Attendance Status Breakdown</h3>
+      </div>
+      <div class="report-card__body">
+        <app-chart-donut title="" [data]="attendanceBreakdownData"></app-chart-donut>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header-title">
+      <h3>Department Attendance Rates</h3>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Attendance Rate</th>
+            <th>Employees Present</th>
+            <th>Employees Absent</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of deptAttendanceData">
+            <td><strong>{{ item.dept }}</strong></td>
+            <td>
+              <div class="progress-bar-cell">
+                <span>{{ item.rate }}%</span>
+                <div class="mini-track">
+                  <div class="mini-fill" [style.width]="item.rate + '%'" [style.background]="item.rate > 95 ? '#10b981' : '#f59e0b'"></div>
+                </div>
+              </div>
+            </td>
+            <td>{{ item.present }}</td>
+            <td>{{ item.absent }}</td>
+            <td>
+              <span class="status-pill" [class.good]="item.rate >= 95" [class.warning]="item.rate < 95">
+                {{ item.rate >= 95 ? 'EXCELLENT' : 'NEEDS ATTENTION' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TAB 3: PAYROLL REPORTS ================= -->
+<div *ngIf="activeTab === 'payroll'" class="tab-content">
+  <div class="report-stats">
+    <div class="r-stat metric-blue">
+      <div class="r-icon"><i class="fas fa-money-bill-wave"></i></div>
+      <div class="r-info">
+        <span class="r-val">$480,000</span>
+        <span class="r-label">Total Monthly Payroll</span>
+      </div>
+    </div>
+    <div class="r-stat metric-emerald">
+      <div class="r-icon"><i class="fas fa-gift"></i></div>
+      <div class="r-info">
+        <span class="r-val">$45,000</span>
+        <span class="r-label">Bonuses & Incentives</span>
+      </div>
+    </div>
+    <div class="r-stat metric-violet">
+      <div class="r-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+      <div class="r-info">
+        <span class="r-val">$32,000</span>
+        <span class="r-label">Benefits & Insurance</span>
+      </div>
+    </div>
+    <div class="r-stat metric-amber">
+      <div class="r-icon"><i class="fas fa-hand-holding-usd"></i></div>
+      <div class="r-info">
+        <span class="r-val">$23,000</span>
+        <span class="r-label">Tax Withholding</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="report-grid">
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Monthly Payroll Expenditure ($)</h3>
+      </div>
+      <div class="report-card__body">
+        <app-chart-bar title="" [chartData]="payrollExpensesData"></app-chart-bar>
+      </div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-card__header">
+        <h3>Compensation Cost Breakdown</h3>
+      </div>
+      <div class="report-card__body">
+        <app-chart-donut title="" [data]="payrollCategoryData"></app-chart-donut>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header-title">
+      <h3>Department Payroll Expenditure Summary</h3>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Total Payroll Cost</th>
+            <th>Average Salary</th>
+            <th>Headcount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of deptPayrollData">
+            <td><strong>{{ item.dept }}</strong></td>
+            <td><span class="cost-text">{{ item.totalCost }}</span></td>
+            <td>{{ item.avgSalary }}</td>
+            <td>{{ item.employeeCount }} Employees</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

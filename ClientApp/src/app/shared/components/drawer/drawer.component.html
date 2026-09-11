@@ -1,0 +1,17 @@
+<div class="drawer-overlay" *ngIf="isOpen" (click)="close()"></div>
+<aside class="drawer" [class.open]="isOpen" [style.width.px]="width">
+  <header class="drawer-header">
+    <div>
+      <h3>{{ title }}</h3>
+      <p *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
+    <button class="drawer-close" (click)="close()"><i class="fas fa-times"></i></button>
+  </header>
+  <div class="drawer-body">
+    <ng-content></ng-content>
+  </div>
+  <footer class="drawer-footer" *ngIf="showFooter">
+    <button class="btn btn--outline" (click)="close()">Cancel</button>
+    <button class="btn btn--primary" (click)="save()"><i class="fas fa-check"></i> Save</button>
+  </footer>
+</aside>

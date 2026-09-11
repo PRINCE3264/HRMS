@@ -1,0 +1,19 @@
+.chart-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+}
+.chart-header { margin-bottom: 16px; }
+.chart-header h3 { font-size: 16px; font-weight: 600; color: #1e293b; margin: 0; }
+.chart-subtitle { font-size: 13px; color: #64748b; }
+.chart-body { width: 100%; }
+.chart-body svg { display: block; }
+.chart-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 0 10px;
+}
+.chart-labels span { font-size: 11px; color: #94a3b8; }

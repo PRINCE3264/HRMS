@@ -1,0 +1,14 @@
+<div class="stat-card" [class]="'stat-card--' + color">
+      <div class="stat-card__icon">
+        <i [class]="icon"></i>
+      </div>
+      <div class="stat-card__content">
+        <div class="stat-card__value">{{ prefix }}{{ value | number }}{{ suffix }}</div>
+        <div class="stat-card__label">{{ label }}</div>
+        <div class="stat-card__change" *ngIf="change !== undefined" [class.positive]="change >= 0" [class.negative]="change < 0">
+          <i [class]="change >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+          {{ change >= 0 ? '+' : '' }}{{ change }}%
+          <span>vs last month</span>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,17 @@
+.page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+    .page-header__breadcrumb {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+    }
+    .page-header__breadcrumb-item {
+      font-size: 13px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 4px;
+    }
+    .page-header__breadcrumb-item:hover { color: #6366f1; }
+    .page-header__title { font-size: 24px; font-weight: 700; color: #1e293b; margin: 0; }
+    .page-header__subtitle { font-size: 14px; color: #64748b; margin: 4px 0 0 0; }
+    .page-header__right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }

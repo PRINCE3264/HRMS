@@ -1,0 +1,36 @@
+<div class="chart-container">
+  <div class="chart-header" *ngIf="title">
+    <div>
+      <h3>{{ title }}</h3>
+      <span class="chart-subtitle" *ngIf="subtitle">{{ subtitle }}</span>
+    </div>
+    <div class="chart-badge">
+      <span class="dot"></span> Live Trend
+    </div>
+  </div>
+  
+  <div class="bar-chart">
+    <div class="bar-chart__y-axis">
+      <span *ngFor="let tick of yTicks">{{ tick }}</span>
+    </div>
+    <div class="bar-chart__bars-container">
+      <div class="grid-lines">
+        <div class="grid-line" *ngFor="let tick of yTicks"></div>
+      </div>
+      <div class="bar-chart__bars">
+        <div class="bar-group" *ngFor="let item of chartData; let i = index">
+          <div class="bar-wrapper">
+            <div 
+              class="bar" 
+              [style.height.%]="getBarHeight(item.value)" 
+              [style.background]="colors[i % colors.length]" 
+              [title]="item.label + ': ' + item.value">
+              <span class="bar__value">{{ item.value }}</span>
+            </div>
+          </div>
+          <span class="bar__label">{{ item.label }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

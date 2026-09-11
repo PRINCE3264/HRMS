@@ -1,0 +1,58 @@
+<app-page-header title="Team Performance" subtitle="Track and evaluate team performance" [breadcrumbs]="[{label:'Dashboard',link:'/team-lead/dashboard'},{label:'Team'},{label:'Performance'}]"></app-page-header>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num" style="color:#6366f1">87%</div><div class="stat-label">Avg Performance</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:#10b981">4</div><div class="stat-label">Top Performers</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:#f59e0b">2</div><div class="stat-label">Needs Improvement</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:#06b6d4">Q4 2025</div><div class="stat-label">Review Period</div></div>
+    </div>
+    <div class="section-card">
+      <div class="card-toolbar">
+        <h3>Performance Reviews</h3>
+        <button class="btn-primary"><i class="fas fa-plus"></i> New Review</button>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Designation</th>
+              <th>Tasks Completed</th>
+              <th>Avg. Rating</th>
+              <th>Punctuality</th>
+              <th>Quality</th>
+              <th>Overall</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of performances">
+              <td>
+                <div class="user-cell">
+                  <div class="avatar">{{ p.name.charAt(0) }}</div>
+                  <span>{{ p.name }}</span>
+                </div>
+              </td>
+              <td>{{ p.designation }}</td>
+              <td>{{ p.tasksCompleted }}</td>
+              <td>
+                <div class="rating-stars">
+                  <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [class.filled]="s <= p.avgRating" [class.empty]="s > p.avgRating"></i>
+                  <span class="rating-num">{{ p.avgRating }}.0</span>
+                </div>
+              </td>
+              <td><div class="progress-bar-sm"><div class="progress-fill" [style.width]="p.punctuality + '%'" [style.background]="getProgressColor(p.punctuality)"></div></div><span class="progress-text">{{ p.punctuality }}%</span></td>
+              <td><div class="progress-bar-sm"><div class="progress-fill" [style.width]="p.quality + '%'" [style.background]="getProgressColor(p.quality)"></div></div><span class="progress-text">{{ p.quality }}%</span></td>
+              <td>
+                <span class="overall-badge" [class]="'overall--' + getOverallLevel(p.overall)">{{ p.overall }}%</span>
+              </td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon" title="Write Review"><i class="fas fa-pen"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

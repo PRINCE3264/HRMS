@@ -1,0 +1,22 @@
+<div class="chart-container">
+  <div class="chart-header" *ngIf="title">
+    <h3>{{ title }}</h3>
+    <span *ngIf="subtitle" class="chart-subtitle">{{ subtitle }}</span>
+  </div>
+  <div class="chart-body" [style.height.px]="height">
+    <svg viewBox="0 0 800 200" preserveAspectRatio="none" width="100%">
+      <defs>
+        <linearGradient id="line-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" [attr.stop-color]="lineColor" stop-opacity="0.2"></stop>
+          <stop offset="100%" [attr.stop-color]="lineColor" stop-opacity="0"></stop>
+        </linearGradient>
+      </defs>
+      <path [attr.d]="pathD" [attr.fill]="fillColor" stroke="none"></path>
+      <polyline [attr.points]="points" fill="none" [attr.stroke]="lineColor" stroke-width="3"></polyline>
+      <circle *ngFor="let point of getPoints()" [attr.cx]="point.x" [attr.cy]="point.y" r="4" [attr.fill]="lineColor" stroke="#fff" stroke-width="2"></circle>
+    </svg>
+    <div class="chart-labels">
+      <span *ngFor="let item of chartData">{{ item.label }}</span>
+    </div>
+  </div>
+</div>

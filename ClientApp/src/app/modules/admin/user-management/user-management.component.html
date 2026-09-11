@@ -1,0 +1,156 @@
+<app-page-header title="User Management" subtitle="Manage system users, access roles, security settings, and permissions" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'User Management'}]">
+  <button class="btn btn--primary" (click)="openUserModal()"><i class="fas fa-user-plus"></i> Add New User</button>
+</app-page-header>
+
+<!-- Metrics Overview Cards -->
+<div class="user-stats">
+  <div class="u-stat metric-blue">
+    <div class="u-icon"><i class="fas fa-users-cog"></i></div>
+    <div class="u-info">
+      <span class="u-val">{{ users.length }}</span>
+      <span class="u-label">Total Users</span>
+    </div>
+  </div>
+  <div class="u-stat metric-emerald">
+    <div class="u-icon"><i class="fas fa-user-check"></i></div>
+    <div class="u-info">
+      <span class="u-val">{{ activeUserCount }}</span>
+      <span class="u-label">Active Users</span>
+    </div>
+  </div>
+  <div class="u-stat metric-amber">
+    <div class="u-icon"><i class="fas fa-user-shield"></i></div>
+    <div class="u-info">
+      <span class="u-val">{{ adminCount }}</span>
+      <span class="u-label">System Admins</span>
+    </div>
+  </div>
+  <div class="u-stat metric-rose">
+    <div class="u-icon"><i class="fas fa-user-slash"></i></div>
+    <div class="u-info">
+      <span class="u-val">{{ inactiveUserCount }}</span>
+      <span class="u-label">Inactive Users</span>
+    </div>
+  </div>
+</div>
+
+<!-- Search & Role Filters Toolbar -->
+<div class="user-toolbar">
+  <div class="search-box">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search users by name, username, email..." />
+  </div>
+
+  <div class="filter-controls">
+    <div class="select-box">
+      <select [(ngModel)]="roleFilter">
+        <option value="ALL">All Roles</option>
+        <option value="Super Admin">Super Admin</option>
+        <option value="HR Admin">HR Admin</option>
+        <option value="Finance Admin">Finance Admin</option>
+        <option value="Department Manager">Department Manager</option>
+        <option value="Team Lead">Team Lead</option>
+        <option value="Employee">Employee</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Users Table -->
+<div class="table-card">
+  <app-data-table 
+    [columns]="columns" 
+    [data]="filteredUsers" 
+    [pageSize]="10" 
+    [actions]="tableActions" 
+    (onActionClick)="onAction($event)">
+  </app-data-table>
+</div>
+
+<!-- Modal: Add New User -->
+<div class="modal-backdrop" *ngIf="showUserModal" (click)="closeUserModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-plus"></i> Add New System User</h3>
+      <button class="close-btn" (click)="closeUserModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" [(ngModel)]="newUser.username" placeholder="e.g. jdoe" />
+        </div>
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" [(ngModel)]="newUser.name" placeholder="e.g. John Doe" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" [(ngModel)]="newUser.email" placeholder="john.doe@hrm.com" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>User Role</label>
+          <select [(ngModel)]="newUser.role">
+            <option value="Super Admin">Super Admin</option>
+            <option value="HR Admin">HR Admin</option>
+            <option value="Finance Admin">Finance Admin</option>
+            <option value="Department Manager">Department Manager</option>
+            <option value="Team Lead">Team Lead</option>
+            <option value="Employee">Employee</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <select [(ngModel)]="newUser.department">
+            <option value="Engineering">Engineering</option>
+            <option value="Human Resources">Human Resources</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Finance">Finance</option>
+            <option value="Design">Design</option>
+            <option value="Sales">Sales</option>
+            <option value="IT">IT</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>MFA Enforced</label>
+          <select [(ngModel)]="newUser.mfa">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="newUser.status">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeUserModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveUser()"><i class="fas fa-check"></i> Save User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Reset Password -->
+<div class="modal-backdrop" *ngIf="showResetModal" (click)="closeResetModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-key"></i> Reset User Password</h3>
+      <button class="close-btn" (click)="closeResetModal()">&times;</button>
+    </div>
+    <div class="modal-body" *ngIf="selectedUser">
+      <p>Are you sure you want to send a password reset link to <strong>{{ selectedUser.name }}</strong> ({{ selectedUser.email }})?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeResetModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="confirmResetPassword()"><i class="fas fa-paper-plane"></i> Send Reset Link</button>
+    </div>
+  </div>
+</div>

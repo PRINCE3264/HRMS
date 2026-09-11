@@ -1,0 +1,31 @@
+<app-page-header title="Shift Management" subtitle="Configure work shifts, timings, and employee shift schedules" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Shift Management'}]">
+  <button class="btn btn--primary" (click)="showAdd = true"><i class="fas fa-plus"></i> Create Shift</button>
+</app-page-header>
+
+<div class="shift-overview">
+  <div class="shift-card" *ngFor="let shift of shiftTypes">
+    <div class="shift-card__color" [style.background]="shift.color"></div>
+    <div class="shift-card__content">
+      <div class="shift-card__header">
+        <h4>{{ shift.name }}</h4>
+        <span class="duration-badge">{{ shift.duration }} hrs</span>
+      </div>
+      <div class="shift-card__time">
+        <i class="far fa-clock text-muted"></i> {{ shift.startTime }} - {{ shift.endTime }}
+      </div>
+      <div class="shift-card__assigned">
+        <i class="fas fa-users text-indigo"></i> <strong>{{ shift.assignedEmployees }}</strong> employees assigned
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-card">
+  <app-data-table 
+    [columns]="columns" 
+    [data]="shiftAssignments" 
+    [pageSize]="10" 
+    [actions]="tableActions" 
+    (onActionClick)="onAction($event)">
+  </app-data-table>
+</div>

@@ -1,0 +1,184 @@
+<div class="my-attendance-container">
+  <!-- 1. Top Header Bar -->
+  <div class="attendance-top-header">
+    <div class="header-titles">
+      <h2>My Attendance</h2>
+      <p>Personal Monthly Attendance & Calendar</p>
+    </div>
+    <div class="user-pill-badge">
+      <i class="fas fa-user"></i>
+      <span>{{ (currentUser?.firstName + ' ' + currentUser?.lastName) || 'PRINCE VIDYARTHI' }}</span>
+    </div>
+  </div>
+
+  <!-- 2. Month Selector Navigation Bar -->
+  <div class="month-selector-bar">
+    <button type="button" class="month-nav-btn"><i class="fas fa-chevron-left"></i></button>
+    <div class="month-label">
+      <i class="far fa-calendar-alt"></i>
+      <span>{{ currentMonth }}</span>
+      <i class="fas fa-caret-down caret-icon"></i>
+    </div>
+    <button type="button" class="month-nav-btn"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+  <!-- 3. Today's Status Banner Card -->
+  <div class="today-status-card">
+    <div class="status-left">
+      <div class="status-icon-badge">
+        <i class="far fa-clock"></i>
+      </div>
+      <div class="status-text-content">
+        <span class="status-top-lbl">Today's Status</span>
+        <h3 class="status-title">Not Clocked In Today</h3>
+        <p class="status-sub">Office starts at 09:30 AM (15m grace period). Tap Clock-In to start shift.</p>
+      </div>
+    </div>
+    <div class="status-right-date">
+      <span>Thursday, 10 September 2026</span>
+    </div>
+  </div>
+
+  <!-- 4. Monthly Summary Card -->
+  <div class="monthly-summary-card">
+    <div class="summary-card-header">
+      <h3>{{ currentMonth }} Summary</h3>
+      <span class="attendance-rate-badge">{{ summaryStats.attendanceRate }} Attendance</span>
+    </div>
+
+    <!-- 6 Metric Boxes Grid (2 rows x 3 cols) -->
+    <div class="summary-grid">
+      <!-- Row 1 -->
+      <div class="summary-box box-green">
+        <span class="box-value">{{ summaryStats.present }}</span>
+        <span class="box-label">Present</span>
+      </div>
+
+      <div class="summary-box box-red">
+        <span class="box-value">{{ summaryStats.absent }}</span>
+        <span class="box-label">Absent</span>
+      </div>
+
+      <div class="summary-box box-yellow">
+        <span class="box-value">{{ summaryStats.late }}</span>
+        <span class="box-label">Late</span>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="summary-box box-blue">
+        <span class="box-value">{{ summaryStats.leave }}</span>
+        <span class="box-label">Leave</span>
+      </div>
+
+      <div class="summary-box box-gold">
+        <span class="box-value">{{ summaryStats.pending }}</span>
+        <span class="box-label">Pending</span>
+      </div>
+
+      <div class="summary-box box-pink">
+        <span class="box-value">{{ summaryStats.rejected }}</span>
+        <span class="box-label">Rejected</span>
+      </div>
+    </div>
+
+    <div class="summary-card-footer">
+      <div class="footer-left">
+        <i class="fas fa-briefcase"></i>
+        <span>Total Working Days (Mon-Fri):</span>
+      </div>
+      <div class="footer-right-val">
+        <span>{{ summaryStats.totalWorkingDays }} Days</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Attendance Calendar Card -->
+  <div class="calendar-card">
+    <h3 class="card-title">Attendance Calendar</h3>
+
+    <div class="calendar-table">
+      <!-- Days of Week Header -->
+      <div class="calendar-week-header">
+        <div class="day-head" *ngFor="let day of weekDays">{{ day }}</div>
+      </div>
+
+      <!-- Days Grid -->
+      <div class="calendar-days-grid">
+        <div class="cal-cell" *ngFor="let cell of calendarGrid" [class.empty-cell]="!cell.day">
+          <ng-container *ngIf="cell.day">
+            <span class="day-number" [class.today-ring]="cell.isToday">{{ cell.day }}</span>
+            <div class="badge-tag" *ngIf="cell.badge" [class]="'badge-' + cell.status">
+              {{ cell.badge }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar Legend Bar -->
+    <div class="calendar-legend-bar">
+      <span class="legend-pill pill-present">P = Present</span>
+      <span class="legend-pill pill-absent">A = Absent</span>
+      <span class="legend-pill pill-late">L = Late</span>
+      <span class="legend-pill pill-leave">LV = Leave</span>
+      <span class="legend-pill pill-pending">Pnd = Pending</span>
+      <span class="legend-pill pill-rejected">Rjk = Rejected</span>
+    </div>
+  </div>
+
+  <!-- 6. Date-wise Attendance History Section -->
+  <div class="history-section">
+    <h3 class="history-title">Date-wise Attendance History</h3>
+
+    <!-- Filter Pills Row -->
+    <div class="filter-pills-row">
+      <button type="button" class="filter-pill" [class.active]="activeFilter === 'All'" (click)="setFilter('All')">
+        <i class="fas fa-check"></i> All
+      </button>
+      <button type="button" class="filter-pill" [class.active]="activeFilter === 'Present'" (click)="setFilter('Present')">
+        Present
+      </button>
+      <button type="button" class="filter-pill" [class.active]="activeFilter === 'Late'" (click)="setFilter('Late')">
+        Late
+      </button>
+      <button type="button" class="filter-pill" [class.active]="activeFilter === 'Pending'" (click)="setFilter('Pending')">
+        Pending
+      </button>
+      <button type="button" class="filter-pill" [class.active]="activeFilter === 'Rejected'" (click)="setFilter('Rejected')">
+        Rejected
+      </button>
+    </div>
+
+    <!-- History Cards List -->
+    <div class="history-cards-list">
+      <div class="history-card-item" *ngFor="let log of historyLogs">
+        <div class="history-card-header">
+          <h4 class="log-date-title">{{ log.dateFormatted }}</h4>
+          <span class="log-approved-badge" [class]="'badge-' + log.badgeClass">
+            <i class="far fa-check-circle"></i> {{ log.status }}
+          </span>
+        </div>
+
+        <div class="history-card-body">
+          <div class="user-avatar-circle">
+            <div class="avatar-initials">PV</div>
+          </div>
+          <div class="log-time-details">
+            <div class="time-line line-in">
+              <i class="fas fa-sign-in-alt icon-in"></i>
+              <span>Clock In: {{ log.clockIn }}</span>
+            </div>
+            <div class="time-line line-out">
+              <i class="fas fa-sign-out-alt icon-out"></i>
+              <span>Clock Out: {{ log.clockOut }}</span>
+            </div>
+            <div class="time-line line-worked">
+              <i class="far fa-clock icon-worked"></i>
+              <span>Worked: <strong>{{ log.workedHours }}</strong> (Gross: {{ log.grossHours }})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

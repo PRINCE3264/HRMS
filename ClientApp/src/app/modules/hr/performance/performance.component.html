@@ -1,0 +1,147 @@
+<app-page-header title="Performance" subtitle="Track and manage employee performance reviews" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Performance'}]">
+      <button class="btn btn--primary"><i class="fas fa-plus"></i> New Review Cycle</button>
+    </app-page-header>
+    <div class="perf-stats">
+      <div class="p-stat stat-amber">
+        <div class="stat-icon"><i class="fas fa-star"></i></div>
+        <div class="stat-info">
+          <span class="p-val">4.2</span>
+          <span class="p-label">Avg. Rating</span>
+        </div>
+      </div>
+      <div class="p-stat stat-blue">
+        <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
+        <div class="stat-info">
+          <span class="p-val">89%</span>
+          <span class="p-label">Reviews Completed</span>
+        </div>
+      </div>
+      <div class="p-stat stat-emerald">
+        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+        <div class="stat-info">
+          <span class="p-val">36</span>
+          <span class="p-label">Top Performers</span>
+        </div>
+      </div>
+      <div class="p-stat stat-red">
+        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="stat-info">
+          <span class="p-val">8</span>
+          <span class="p-label">Needs Improvement</span>
+        </div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">Performance Reviews</button>
+      <button class="tab" [class.active]="activeTab === 'goals'" (click)="activeTab = 'goals'">Goals & OKRs</button>
+      <button class="tab" [class.active]="activeTab === 'feedback'" (click)="activeTab = 'feedback'">360 Feedback</button>
+    </div>
+    <div class="table-card" *ngIf="activeTab === 'reviews'">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Employee</th><th>Department</th><th>Review Period</th><th>Rating</th><th>Reviewer</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of reviews">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="r.color">{{ r.name.charAt(0) }}</div>
+                  <span class="emp-name">{{ r.name }}</span>
+                </div>
+              </td>
+              <td>{{ r.department }}</td>
+              <td>{{ r.period }}</td>
+              <td>
+                <div class="rating">
+                  <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= r.rating ? '#f59e0b' : '#e2e8f0'"></i>
+                  <span class="rating-num">{{ r.rating }}.0</span>
+                </div>
+              </td>
+              <td>{{ r.reviewer }}</td>
+              <td><span class="status-badge" [class]="r.status.toLowerCase().replace(' ','-')">{{ r.status }}</span></td>
+              <td>
+                <button class="btn-icon" title="View"><i class="fas fa-eye"></i></button>
+                <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="table-card" *ngIf="activeTab === 'goals'">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Employee</th><th>Goal</th><th>Category</th><th>Progress</th><th>Due Date</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let g of goals">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="g.color">{{ g.employee.charAt(0) }}</div>
+                  <span class="emp-name">{{ g.employee }}</span>
+                </div>
+              </td>
+              <td><strong>{{ g.goal }}</strong></td>
+              <td><span class="cat-badge">{{ g.category }}</span></td>
+              <td>
+                <div class="goal-progress">
+                  <div class="progress-bar"><div class="progress-fill" [style.width]="g.progress + '%'" [style.background]="g.progress >= 80 ? '#10b981' : g.progress >= 50 ? '#f59e0b' : '#6366f1'"></div></div>
+                  <span class="progress-text">{{ g.progress }}%</span>
+                </div>
+              </td>
+              <td>{{ g.dueDate }}</td>
+              <td><span class="status-badge" [class]="g.status.toLowerCase()">{{ g.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="table-card" *ngIf="activeTab === 'feedback'">
+      <div class="feedback-toolbar">
+        <div class="feedback-filters">
+          <div class="select-box">
+            <label>Filter by Employee</label>
+            <select [(ngModel)]="selectedEmployeeId" (change)="onEmployeeFilterChange()">
+              <option value="">All Employees</option>
+              <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
+            </select>
+          </div>
+          <button class="btn btn--secondary btn-refresh" (click)="loadFeedbacks()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Employee</th><th>Feedback From</th><th>Category</th><th>Period</th><th>Rating</th><th>Comments</th><th>Date</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of feedbacks; let i = index">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="getFeedbackColor(i)">{{ f.targetEmployeeName.charAt(0) || '?' }}</div>
+                  <span class="emp-name">{{ f.targetEmployeeName }}</span>
+                </div>
+              </td>
+              <td>{{ f.reviewerName }}</td>
+              <td><span class="cat-badge">{{ f.category }}</span></td>
+              <td>{{ f.reviewPeriod }}</td>
+              <td>
+                <div class="rating">
+                  <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= f.rating ? '#f59e0b' : '#e2e8f0'"></i>
+                </div>
+              </td>
+              <td class="comments-cell">{{ f.comments }}</td>
+              <td>{{ formatDate(f.createdAt) }}</td>
+              <td>
+                <button class="btn-icon" title="Delete" (click)="deleteFeedback(f.id)"><i class="fas fa-trash" style="color:#ef4444"></i></button>
+              </td>
+            </tr>
+            <tr *ngIf="feedbacks.length === 0">
+              <td colspan="8" style="text-align:center;color:#94a3b8;padding:32px">No feedback entries found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

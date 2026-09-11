@@ -1,0 +1,154 @@
+<app-page-header title="Training & Development" subtitle="Organize employee training courses, track enrollments, and evaluate completion rates" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Training'}]">
+  <button class="btn btn--primary" (click)="openProgramModal()"><i class="fas fa-plus"></i> Create Training Program</button>
+</app-page-header>
+
+<!-- Metrics Overview Cards -->
+<div class="training-stats">
+  <div class="t-stat metric-blue">
+    <div class="t-icon"><i class="fas fa-graduation-cap"></i></div>
+    <div class="t-info">
+      <span class="t-val">{{ programs.length }}</span>
+      <span class="t-label">Active Programs</span>
+    </div>
+  </div>
+  <div class="t-stat metric-emerald">
+    <div class="t-icon"><i class="fas fa-users-class"></i></div>
+    <div class="t-info">
+      <span class="t-val">{{ totalEnrolled }}</span>
+      <span class="t-label">Enrolled Employees</span>
+    </div>
+  </div>
+  <div class="t-stat metric-violet">
+    <div class="t-icon"><i class="fas fa-chart-line"></i></div>
+    <div class="t-info">
+      <span class="t-val">92%</span>
+      <span class="t-label">Completion Rate</span>
+    </div>
+  </div>
+  <div class="t-stat metric-amber">
+    <div class="t-icon"><i class="fas fa-star"></i></div>
+    <div class="t-info">
+      <span class="t-val">4.8 / 5</span>
+      <span class="t-label">Avg. Feedback Score</span>
+    </div>
+  </div>
+</div>
+
+<!-- Search & Filter Controls -->
+<div class="training-toolbar">
+  <div class="search-box">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search training programs, instructors..." />
+  </div>
+
+  <div class="filter-controls">
+    <div class="select-box">
+      <select [(ngModel)]="statusFilter">
+        <option value="ALL">All Status</option>
+        <option value="ACTIVE">Active</option>
+        <option value="UPCOMING">Upcoming</option>
+        <option value="COMPLETED">Completed</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Training Programs Cards Grid -->
+<div class="training-grid" *ngIf="filteredPrograms.length > 0; else noPrograms">
+  <div class="training-card" *ngFor="let program of filteredPrograms">
+    <div class="training-card__banner" [style.background]="program.color">
+      <i [class]="program.icon"></i>
+    </div>
+    <div class="training-card__body">
+      <div class="training-card__header">
+        <h3>{{ program.title }}</h3>
+        <app-status-badge [status]="program.status"></app-status-badge>
+      </div>
+      <p>{{ program.description }}</p>
+      
+      <div class="training-card__meta">
+        <span><i class="fas fa-user-graduate"></i> Instructor: <strong>{{ program.instructor }}</strong></span>
+        <span><i class="fas fa-clock"></i> Duration: {{ program.duration }}</span>
+        <span><i class="fas fa-users"></i> Enrollment: {{ program.enrolled }} / {{ program.capacity }} Slots</span>
+      </div>
+
+      <div class="training-card__progress">
+        <div class="progress-info">
+          <span>Capacity Filled</span>
+          <span>{{ (program.enrolled / program.capacity * 100) | number:'1.0-0' }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" [style.width]="(program.enrolled / program.capacity * 100) + '%'"></div>
+        </div>
+      </div>
+
+      <div class="training-card__footer">
+        <div class="training-card__tags">
+          <span class="tag" *ngFor="let tag of program.tags">{{ tag }}</span>
+        </div>
+        <button class="btn-sm" [disabled]="program.enrolled >= program.capacity" (click)="enrollUser(program)">
+          <i class="fas fa-plus"></i> Enroll
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noPrograms>
+  <div class="empty-state">
+    <i class="fas fa-graduation-cap empty-icon"></i>
+    <h3>No Training Programs Found</h3>
+    <p>Try adjusting your search criteria or create a new training program.</p>
+  </div>
+</ng-template>
+
+<!-- Modal: Create Program -->
+<div class="modal-backdrop" *ngIf="showProgramModal" (click)="closeProgramModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-graduation-cap"></i> Create Training Program</h3>
+      <button class="close-btn" (click)="closeProgramModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Program Title *</label>
+        <input type="text" [(ngModel)]="newProgram.title" placeholder="e.g. Advanced Angular Masterclass" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea rows="3" [(ngModel)]="newProgram.description" placeholder="Short overview of learning objectives..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Instructor / Trainer</label>
+          <input type="text" [(ngModel)]="newProgram.instructor" placeholder="e.g. Michael Chen" />
+        </div>
+        <div class="form-group">
+          <label>Duration</label>
+          <input type="text" [(ngModel)]="newProgram.duration" placeholder="e.g. 4 weeks" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Max Capacity (Seats)</label>
+          <input type="number" [(ngModel)]="newProgram.capacity" />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="newProgram.status">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="UPCOMING">UPCOMING</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tags (Comma separated)</label>
+        <input type="text" [(ngModel)]="newProgram.tagsInput" placeholder="e.g. Angular, Frontend, RxJS" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeProgramModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveProgram()"><i class="fas fa-check"></i> Create Program</button>
+    </div>
+  </div>
+</div>

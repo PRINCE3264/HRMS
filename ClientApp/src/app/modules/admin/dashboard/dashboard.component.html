@@ -1,0 +1,124 @@
+<!-- Hero Welcome Banner -->
+<div class="dashboard-hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="pulse-dot"></span> System Live • Operational
+    </div>
+    <h1 class="hero-title">Welcome back, {{ adminName }}! 👋</h1>
+    <p class="hero-subtitle">Here is a real-time overview of your workforce, attendance, and HR operations today.</p>
+  </div>
+  <div class="hero-actions">
+    <button class="btn-hero btn-hero--primary" [routerLink]="['/admin/employees']">
+      <i class="fas fa-user-plus"></i> Add Employee
+    </button>
+    <button class="btn-hero btn-hero--glass" [routerLink]="['/admin/reports']">
+      <i class="fas fa-chart-line"></i> View Reports
+    </button>
+  </div>
+</div>
+
+<!-- Key Performance Metrics Grid -->
+<div class="section-title-bar">
+  <h2><i class="fas fa-tachometer-alt text-indigo"></i> Performance Overview</h2>
+  <span class="text-muted text-sm">Updated just now</span>
+</div>
+
+<div class="stats-grid">
+  <app-stat-card label="Total Employees" [value]="stats.totalEmployees" icon="fas fa-users" color="primary"></app-stat-card>
+  <app-stat-card label="Active Employees" [value]="stats.activeEmployees" icon="fas fa-user-check" color="success"></app-stat-card>
+  <app-stat-card label="Departments" [value]="stats.departments" icon="fas fa-building" color="info"></app-stat-card>
+  <app-stat-card label="Present Today" [value]="stats.presentToday" icon="fas fa-calendar-check" color="purple"></app-stat-card>
+  <app-stat-card label="Absent Today" [value]="stats.absentToday" icon="fas fa-user-times" color="danger"></app-stat-card>
+  <app-stat-card label="Pending Leaves" [value]="stats.pendingLeaves" icon="fas fa-clock" color="warning"></app-stat-card>
+</div>
+
+<!-- Quick Shortcuts -->
+<div class="quick-actions-bar">
+  <a *ngFor="let act of quickActions" [routerLink]="act.link" class="quick-action-card">
+    <div class="quick-icon" [style.background]="act.bg">
+      <i [class]="act.icon"></i>
+    </div>
+    <span class="quick-label">{{ act.label }}</span>
+    <i class="fas fa-chevron-right quick-arrow"></i>
+  </a>
+</div>
+
+<!-- Charts Row -->
+<div class="charts-row">
+  <app-chart-bar title="Monthly Attendance Trend" subtitle="Last 6 months attendance tracking" [chartData]="attendanceData"></app-chart-bar>
+  <app-chart-donut title="Department Distribution" [data]="departmentData"></app-chart-donut>
+</div>
+
+<!-- Recent Activities & Payroll Summary -->
+<div class="recent-section">
+  <div class="section-card">
+    <div class="section-header">
+      <div>
+        <h3><i class="fas fa-history text-indigo"></i> Recent Activities</h3>
+        <span class="text-xs text-muted">Latest system logs & employee updates</span>
+      </div>
+      <a class="view-all" [routerLink]="['/admin/reports']">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="activity-list">
+      <div class="activity-item" *ngFor="let activity of recentActivities">
+        <div class="activity-icon" [class]="'activity-icon--' + activity.type">
+          <i [class]="activity.icon"></i>
+        </div>
+        <div class="activity-content">
+          <p>{{ activity.text }}</p>
+          <span><i class="far fa-clock"></i> {{ activity.time }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header">
+      <div>
+        <h3><i class="fas fa-file-invoice-dollar text-green"></i> Payroll Summary</h3>
+        <span class="text-xs text-muted">Monthly salary disbursement status</span>
+      </div>
+      <a class="view-all" [routerLink]="['/admin/payroll']">Manage Payroll <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="payroll-list">
+      <div class="payroll-item" *ngFor="let item of payrollSummary">
+        <div class="payroll-icon-box">
+          <i class="fas fa-receipt text-indigo"></i>
+        </div>
+        <div class="payroll-info">
+          <span class="payroll-month">{{ item.month }}</span>
+          <span class="payroll-amount">{{ item.amount | currency }}</span>
+        </div>
+        <app-status-badge [status]="item.status"></app-status-badge>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upcoming Birthdays -->
+<div class="section-card birthdays-card">
+  <div class="section-header">
+    <div>
+      <h3><i class="fas fa-birthday-cake" style="color:#ec4899"></i> Upcoming Birthdays</h3>
+      <span class="text-xs text-muted">Next 7 days</span>
+    </div>
+  </div>
+  <div *ngIf="birthdays.length === 0" class="empty-state">
+    <i class="fas fa-birthday-cake"></i>
+    <p>No upcoming birthdays</p>
+  </div>
+  <div class="birthday-list" *ngIf="birthdays.length > 0">
+    <div class="birthday-row" *ngFor="let b of birthdays">
+      <div class="birthday-avatar" *ngIf="!b.avatar">{{ b.name.charAt(0) }}</div>
+      <img *ngIf="b.avatar" [src]="b.avatar" class="birthday-avatar birthday-avatar--img" [alt]="b.name">
+      <div class="birthday-info">
+        <span class="birthday-name">{{ b.name }}</span>
+        <span class="birthday-dept">{{ b.department }}</span>
+      </div>
+      <span class="birthday-date">{{ b.birthdayDay }} {{ b.birthdayMonth }}</span>
+      <span class="birthday-badge" [class.badge-today]="b.isToday" [class.badge-tomorrow]="b.daysUntil === 1">
+        {{ b.isToday ? 'Today' : (b.daysUntil === 1 ? 'Tomorrow' : b.daysUntil + ' days') }}
+      </span>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,0 @@
-<div class="toast-container">
-      <div *ngFor="let toast of (toastService.toasts$ | async)" class="toast-item" [class]="'toast-item--' + toast.type" (click)="toastService.dismiss(toast.id)">
-        <i [class]="getIcon(toast.type)"></i>
-        <span class="toast-item__message">{{ toast.message }}</span>
-        <i class="fas fa-times toast-item__close"></i>
-      </div>
-    </div>

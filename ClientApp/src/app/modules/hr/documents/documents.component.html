@@ -1,0 +1,78 @@
+<app-page-header title="Documents" subtitle="Manage HR documents and policies" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Documents'}]">
+      <button class="btn btn--primary" (click)="showUploadModal = true"><i class="fas fa-upload"></i> Upload Document</button>
+    </app-page-header>
+    <div class="docs-header-row">
+      <div class="tabs">
+        <button class="tab" [class.active]="activeTab === 'all'" (click)="activeTab = 'all'">All Documents</button>
+        <button class="tab" [class.active]="activeTab === 'policies'" (click)="activeTab = 'policies'">Policies</button>
+        <button class="tab" [class.active]="activeTab === 'contracts'" (click)="activeTab = 'contracts'">Contracts</button>
+        <button class="tab" [class.active]="activeTab === 'forms'" (click)="activeTab = 'forms'">Forms</button>
+        <button class="tab" [class.active]="activeTab === 'certificates'" (click)="activeTab = 'certificates'">Certificates</button>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-filters">
+          <input type="text" placeholder="Search documents..." class="search-input">
+          <select class="filter-select">
+            <option>All Categories</option>
+            <option>Policy</option>
+            <option>Contract</option>
+            <option>Form</option>
+            <option>Certificate</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Document</th><th>Category</th><th>Department</th><th>Version</th><th>Last Updated</th><th>Uploaded By</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let doc of getFilteredDocs()">
+              <td>
+                <div class="doc-cell">
+                  <div class="doc-icon" [style.color]="doc.iconColor"><i [class]="doc.icon"></i></div>
+                  <div><span class="doc-name">{{ doc.name }}</span><br><span class="doc-ext">{{ doc.extension }}</span></div>
+                </div>
+              </td>
+              <td><span class="cat-badge" [class]="doc.category.toLowerCase()">{{ doc.category }}</span></td>
+              <td>{{ doc.department }}</td>
+              <td>v{{ doc.version }}</td>
+              <td>{{ doc.lastUpdated }}</td>
+              <td>{{ doc.uploadedBy }}</td>
+              <td>
+                <button class="btn-icon" title="Download" (click)="downloadDocument(doc)"><i class="fas fa-download"></i></button>
+                <button class="btn-icon" title="Preview"><i class="fas fa-eye"></i></button>
+                <button class="btn-icon" title="Delete" (click)="deleteDocument(doc)"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="modal-overlay" *ngIf="showUploadModal" (click)="showUploadModal = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Upload Document</h3>
+          <button class="btn-close" (click)="showUploadModal = false"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">Category</label>
+          <select class="filter-select" [(ngModel)]="uploadCategory">
+            <option value="POLICIES">Policies</option>
+            <option value="CONTRACTS">Contracts</option>
+            <option value="FORMS">Forms</option>
+            <option value="CERTIFICATES">Certificates</option>
+          </select>
+          <label class="form-label" style="margin-top:16px">File</label>
+          <input type="file" class="file-input" (change)="onFilePicked($event)">
+          <p class="file-hint" *ngIf="pickedFile">{{ pickedFile.name }}</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-cancel" (click)="showUploadModal = false">Cancel</button>
+          <button class="btn btn--primary" (click)="saveDocument()" [disabled]="!pickedFile">Upload</button>
+        </div>
+      </div>
+    </div>

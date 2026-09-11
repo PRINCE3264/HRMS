@@ -1,6 +1,0 @@
-<app-page-header title="Designations" subtitle="Manage job titles and levels" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Designations'}]">
-      <button class="btn btn--primary" (click)="showAdd = true"><i class="fas fa-plus"></i> Add Designation</button>
-      <button class="btn btn--outline"><i class="fas fa-file-export"></i> Export</button>
-    </app-page-header>
-    <app-data-table [columns]="columns" [data]="designations" [pageSize]="10" [actions]="tableActions" (onActionClick)="onAction($event)">
-    </app-data-table>

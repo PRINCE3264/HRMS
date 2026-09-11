@@ -1,0 +1,35 @@
+<app-page-header title="Announcements" subtitle="Company-wide announcements and updates" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Announcements'}]">
+      <button class="btn btn--primary"><i class="fas fa-plus"></i> New Announcement</button>
+    </app-page-header>
+    <div class="announce-list">
+      <div class="announce-card" *ngFor="let a of announcements">
+        <div class="announce-priority" [class]="a.priority.toLowerCase()"></div>
+        <div class="announce-body">
+          <div class="announce-header">
+            <div class="announce-icon" [style.background]="a.iconBg">
+              <i [class]="a.icon" [style.color]="a.iconColor"></i>
+            </div>
+            <div class="announce-meta">
+              <h3>{{ a.title }}</h3>
+              <span class="announce-info">
+                <i class="fas fa-user"></i> {{ a.author }} &middot;
+                <i class="fas fa-calendar"></i> {{ a.date }} &middot;
+                <i class="fas fa-tag"></i> {{ a.category }}
+              </span>
+            </div>
+            <span class="announce-priority-badge" [class]="a.priority.toLowerCase()">{{ a.priority }}</span>
+          </div>
+          <p class="announce-content">{{ a.content }}</p>
+          <div class="announce-footer">
+            <div class="announce-audience">
+              <i class="fas fa-users"></i> {{ a.audience }}
+            </div>
+            <div class="announce-stats">
+              <span><i class="fas fa-eye"></i> {{ a.views }} views</span>
+              <span><i class="fas fa-heart"></i> {{ a.likes }}</span>
+              <span><i class="fas fa-comment"></i> {{ a.comments }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

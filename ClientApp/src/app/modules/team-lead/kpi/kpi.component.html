@@ -1,0 +1,192 @@
+<div class="kpi-container">
+  <!-- Page Header -->
+  <div class="kpi-header-bar">
+    <div class="header-titles">
+      <div class="title-with-back">
+        <div>
+          <h1 class="page-title">Team KPIs & Performance</h1>
+          <p class="subtitle">Monitor team deliverables, productivity, and quarterly goal achievement</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="period-select-wrapper">
+        <i class="far fa-calendar-alt select-icon"></i>
+        <select [(ngModel)]="selectedPeriod" class="period-select">
+          <option value="Q3 2026">Q3 2026</option>
+          <option value="Q2 2026">Q2 2026</option>
+          <option value="Q1 2026">Q1 2026</option>
+        </select>
+      </div>
+      <div class="action-icon-group">
+        <button class="btn-action-icon btn-pdf" title="Export PDF"><i class="fas fa-file-pdf"></i></button>
+        <button class="btn-action-icon btn-excel" title="Export Excel"><i class="fas fa-file-excel"></i></button>
+        <button class="btn-action-icon btn-print" title="Print KPI Report"><i class="fas fa-print"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Health Banner Row -->
+  <div class="health-summary-row">
+    <div class="summary-card card-health">
+      <div class="card-icon-box bg-blue-light">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="card-info">
+        <span class="card-lbl">Overall Team Health</span>
+        <div class="card-val-row">
+          <span class="card-val text-blue">{{ overallHealthScore }}%</span>
+          <span class="val-tag tag-success">+4.2% vs last month</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card card-exceeded">
+      <div class="card-icon-box bg-green-light">
+        <i class="fas fa-award"></i>
+      </div>
+      <div class="card-info">
+        <span class="card-lbl">KPIs Exceeded</span>
+        <div class="card-val-row">
+          <span class="card-val text-green">{{ exceededCount }} / {{ kpis.length }}</span>
+          <span class="val-tag tag-green">Target Met</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card card-at-risk">
+      <div class="card-icon-box bg-amber-light">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="card-info">
+        <span class="card-lbl">KPIs Needing Attention</span>
+        <div class="card-val-row">
+          <span class="card-val text-amber">{{ atRiskCount }}</span>
+          <span class="val-tag tag-amber">Review Needed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Cards Grid -->
+  <div class="section-title-row">
+    <h2 class="section-heading">Key Metric Overview</h2>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card" *ngFor="let kpi of kpis">
+      <div class="card-top">
+        <div class="kpi-icon" [style.background]="kpi.iconBg" [style.color]="kpi.iconColor">
+          <i [class]="kpi.icon"></i>
+        </div>
+        <div class="kpi-trend" [class.up]="kpi.trend > 0" [class.down]="kpi.trend < 0">
+          <i [class]="kpi.trend > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+          {{ kpi.trend > 0 ? '+' : '' }}{{ kpi.trend }}%
+        </div>
+      </div>
+
+      <div class="kpi-body">
+        <h3 class="kpi-label">{{ kpi.label }}</h3>
+        <div class="kpi-value-row">
+          <span class="current-val">{{ kpi.current }}</span>
+          <span class="target-val">/ {{ kpi.target }}{{ kpi.unit }}</span>
+        </div>
+      </div>
+
+      <div class="kpi-footer">
+        <div class="progress-info">
+          <span class="progress-lbl">Achievement</span>
+          <span class="progress-pct" [style.color]="getProgressColor(getProgressPercent(kpi))">
+            {{ getProgressPercent(kpi) }}%
+          </span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" [style.width.%]="getProgressPercent(kpi)" [style.background]="getProgressColor(getProgressPercent(kpi))"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance Trends & Member Breakdown Grid -->
+  <div class="kpi-detail-grid">
+    <!-- Monthly Trends Table -->
+    <div class="content-card">
+      <div class="card-header-bar">
+        <div>
+          <h3 class="card-title">Quarterly Trend Analysis</h3>
+          <p class="card-sub">Month-over-month performance progression</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>KPI Name</th>
+              <th>Category</th>
+              <th>Oct</th>
+              <th>Nov</th>
+              <th>Dec</th>
+              <th>Trend</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of trends">
+              <td><strong>{{ t.kpi }}</strong></td>
+              <td><span class="category-pill">{{ t.category }}</span></td>
+              <td>{{ t.oct }}</td>
+              <td>{{ t.nov }}</td>
+              <td class="font-bold">{{ t.dec }}</td>
+              <td>
+                <span class="trend-badge" [class.trend-up]="t.trendUp" [class.trend-down]="!t.trendUp">
+                  <i [class]="t.trendUp ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i> {{ t.trendValue }}
+                </span>
+              </td>
+              <td>
+                <span class="status-pill" [class.status-exceeded]="t.status === 'EXCEEDED'" [class.status-ontrack]="t.status === 'ON_TRACK'" [class.status-atrisk]="t.status === 'AT_RISK'">
+                  {{ t.status === 'EXCEEDED' ? 'Exceeded' : (t.status === 'ON_TRACK' ? 'On Track' : 'At Risk') }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Member KPI Contribution -->
+    <div class="content-card">
+      <div class="card-header-bar">
+        <div>
+          <h3 class="card-title">Individual KPI Scores</h3>
+          <p class="card-sub">Assigned member metric breakdown</p>
+        </div>
+      </div>
+      <div class="members-kpi-list">
+        <div class="member-kpi-item" *ngFor="let member of memberKpis">
+          <div class="member-info-col">
+            <div class="avatar-circle">
+              {{ getInitial(member.name) }}
+            </div>
+            <div class="member-names">
+              <h4 class="m-name">{{ member.name }}</h4>
+              <span class="m-role">{{ member.role }}</span>
+            </div>
+          </div>
+          <div class="member-stats-col">
+            <div class="m-stat">
+              <span class="stat-lbl">Completion</span>
+              <span class="stat-val">{{ member.completionRate }}%</span>
+            </div>
+            <div class="m-stat">
+              <span class="stat-lbl">Quality</span>
+              <span class="stat-val text-blue">{{ member.qualityScore }}/100</span>
+            </div>
+            <span class="status-badge" [class.status-excellent]="member.status === 'EXCELLENT'" [class.status-good]="member.status === 'GOOD'" [class.status-needs-imp]="member.status === 'NEEDS_IMPROVEMENT'">
+              {{ member.status === 'EXCELLENT' ? 'Top Tier' : (member.status === 'GOOD' ? 'Good' : 'Needs Review') }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

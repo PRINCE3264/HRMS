@@ -1,0 +1,1583 @@
+2026-09-11 15:31:32.546 +05:30 [ERR] Database migration/seed failed. If this is a fresh install, run 'dotnet ef database update'.
+Npgsql.PostgresException (0x80004005): 28P01: password authentication failed for user "postgres"
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.Internal.NpgsqlConnector.AuthenticateSASL(List`1 mechanisms, String username, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Authenticate(String username, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.<Open>g__OpenCore|213_1(NpgsqlConnector conn, SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken, Boolean isFirstAttempt)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.Open()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.GetAppliedMigrations()
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.Migrate(String targetMigration)
+   at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+   at Program.<Main>$(String[] args) in D:\HRM\HRM\SupportAPI\Program.cs:line 189
+  Exception data:
+    Severity: FATAL
+    SqlState: 28P01
+    MessageText: password authentication failed for user "postgres"
+    File: auth.c
+    Line: 332
+    Routine: auth_failed
+2026-09-11 15:31:32.727 +05:30 [INF] User profile is available. Using 'C:\Users\Dell\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-09-11 15:31:32.809 +05:30 [WRN] The WebRootPath was not found: D:\HRM\HRM\SupportAPI\wwwroot. Static files may be unavailable.
+2026-09-11 15:31:32.827 +05:30 [INF] Now listening on: http://localhost:3000
+2026-09-11 15:31:32.828 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-11 15:31:32.829 +05:30 [INF] Hosting environment: Development
+2026-09-11 15:31:32.829 +05:30 [INF] Content root path: D:\HRM\HRM\SupportAPI
+2026-09-11 15:32:25.187 +05:30 [INF] Application is shutting down...
+2026-09-11 15:32:35.305 +05:30 [ERR] Database migration/seed failed. If this is a fresh install, run 'dotnet ef database update'.
+Npgsql.PostgresException (0x80004005): 28P01: password authentication failed for user "postgres"
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.Internal.NpgsqlConnector.AuthenticateSASL(List`1 mechanisms, String username, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.Authenticate(String username, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.Internal.NpgsqlConnector.<Open>g__OpenCore|213_1(NpgsqlConnector conn, SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken, Boolean isFirstAttempt)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.Open()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.GetAppliedMigrations()
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.Migrate(String targetMigration)
+   at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+   at Program.<Main>$(String[] args) in D:\HRM\HRM\SupportAPI\Program.cs:line 189
+  Exception data:
+    Severity: FATAL
+    SqlState: 28P01
+    MessageText: password authentication failed for user "postgres"
+    File: auth.c
+    Line: 332
+    Routine: auth_failed
+2026-09-11 15:32:35.434 +05:30 [INF] User profile is available. Using 'C:\Users\Dell\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-09-11 15:32:35.466 +05:30 [WRN] The WebRootPath was not found: D:\HRM\HRM\SupportAPI\wwwroot. Static files may be unavailable.
+2026-09-11 15:32:35.479 +05:30 [INF] Now listening on: http://localhost:3000
+2026-09-11 15:32:35.480 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-11 15:32:35.481 +05:30 [INF] Hosting environment: Development
+2026-09-11 15:32:35.481 +05:30 [INF] Content root path: D:\HRM\HRM\SupportAPI
+2026-09-11 15:35:20.928 +05:30 [INF] Application is shutting down...
+2026-09-11 15:35:31.175 +05:30 [INF] Executed DbCommand (33ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:35:31.232 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:35:31.432 +05:30 [INF] Executed DbCommand (39ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "__EFMigrationsHistory" (
+    "MigrationId" character varying(150) NOT NULL,
+    "ProductVersion" character varying(32) NOT NULL,
+    CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
+);
+2026-09-11 15:35:31.457 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:35:31.461 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-09-11 15:35:31.478 +05:30 [INF] Applying migration '20260911073624_InitialCreate'.
+2026-09-11 15:35:31.558 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Branches" (
+    "Id" uuid NOT NULL,
+    "Name" character varying(100) NOT NULL,
+    "Code" character varying(20) NOT NULL,
+    "Address" character varying(500),
+    "City" character varying(100) NOT NULL,
+    "State" character varying(100) NOT NULL,
+    "Country" character varying(100) NOT NULL,
+    "Phone" character varying(20),
+    "Email" character varying(255),
+    "IsActive" boolean NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Branches" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.562 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Shifts" (
+    "Id" uuid NOT NULL,
+    "Name" character varying(100) NOT NULL,
+    "StartTime" time(0) without time zone NOT NULL,
+    "EndTime" time(0) without time zone NOT NULL,
+    "BreakMinutes" integer NOT NULL,
+    "Description" character varying(500),
+    "IsActive" boolean NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Shifts" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.566 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Trainings" (
+    "Id" uuid NOT NULL,
+    "Title" character varying(200) NOT NULL,
+    "Description" character varying(2000),
+    "Trainer" character varying(200) NOT NULL,
+    "Department" character varying(200),
+    "StartDate" timestamp with time zone NOT NULL,
+    "EndDate" timestamp with time zone NOT NULL,
+    "Duration" character varying(50),
+    "Location" character varying(200),
+    "MaxParticipants" integer NOT NULL,
+    "Status" character varying(20) NOT NULL,
+    "Type" character varying(20) NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Trainings" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.570 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "AnnouncementAttachments" (
+    "Id" uuid NOT NULL,
+    "AnnouncementId" uuid NOT NULL,
+    "FileName" character varying(500) NOT NULL,
+    "FileUrl" character varying(1000) NOT NULL,
+    CONSTRAINT "PK_AnnouncementAttachments" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.574 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Announcements" (
+    "Id" uuid NOT NULL,
+    "Title" character varying(200) NOT NULL,
+    "Content" character varying(5000) NOT NULL,
+    "AuthorId" uuid NOT NULL,
+    "Priority" character varying(20) NOT NULL,
+    "TargetAudience" character varying(500),
+    "PublishedDate" timestamp with time zone NOT NULL,
+    "ExpiryDate" timestamp with time zone,
+    "IsPinned" boolean NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Announcements" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.580 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Attendances" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "Date" timestamp with time zone NOT NULL,
+    "CheckIn" timestamp with time zone,
+    "CheckOut" timestamp with time zone,
+    "WorkHours" numeric NOT NULL,
+    "Overtime" numeric NOT NULL,
+    "Status" character varying(20) NOT NULL,
+    "Location" character varying(200),
+    "Latitude" numeric(10,7),
+    "Longitude" numeric(10,7),
+    "Notes" character varying(500),
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Attendances" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.587 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "BreakRecords" (
+    "Id" uuid NOT NULL,
+    "AttendanceId" uuid NOT NULL,
+    "StartTime" timestamp with time zone NOT NULL,
+    "EndTime" timestamp with time zone,
+    "BreakType" character varying(20) NOT NULL,
+    "DurationMinutes" numeric NOT NULL,
+    "Reason" character varying(200),
+    CONSTRAINT "PK_BreakRecords" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_BreakRecords_Attendances_AttendanceId" FOREIGN KEY ("AttendanceId") REFERENCES "Attendances" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.591 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "AuditLogs" (
+    "Id" uuid NOT NULL,
+    "UserId" uuid NOT NULL,
+    "Action" character varying(100) NOT NULL,
+    "Module" character varying(100) NOT NULL,
+    "Details" character varying(2000),
+    "IpAddress" character varying(100),
+    "Timestamp" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_AuditLogs" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.596 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Candidates" (
+    "Id" uuid NOT NULL,
+    "FirstName" character varying(100) NOT NULL,
+    "LastName" character varying(100) NOT NULL,
+    "Email" character varying(255) NOT NULL,
+    "Phone" character varying(20),
+    "JobId" uuid NOT NULL,
+    "ResumeUrl" character varying(500),
+    "CoverLetter" character varying(5000),
+    "Source" character varying(100),
+    "Status" character varying(30) NOT NULL,
+    "Rating" integer,
+    "Notes" character varying(2000),
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Candidates" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.600 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Departments" (
+    "Id" uuid NOT NULL,
+    "Name" character varying(100) NOT NULL,
+    "Code" character varying(20) NOT NULL,
+    "Description" character varying(500),
+    "HeadId" uuid,
+    "IsActive" boolean NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Departments" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.603 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Designations" (
+    "Id" uuid NOT NULL,
+    "Title" character varying(100) NOT NULL,
+    "Level" character varying(50) NOT NULL,
+    "DepartmentId" uuid,
+    "MinSalary" numeric(18,2),
+    "MaxSalary" numeric(18,2),
+    "IsActive" boolean NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Designations" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Designations_Departments_DepartmentId" FOREIGN KEY ("DepartmentId") REFERENCES "Departments" ("Id") ON DELETE SET NULL
+);
+2026-09-11 15:35:31.608 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "JobOpenings" (
+    "Id" uuid NOT NULL,
+    "Title" character varying(200) NOT NULL,
+    "DepartmentId" uuid NOT NULL,
+    "DesignationId" uuid NOT NULL,
+    "BranchId" uuid NOT NULL,
+    "EmploymentType" character varying(20) NOT NULL,
+    "Experience" character varying(100),
+    "SalaryRange" character varying(100),
+    "Description" character varying(5000),
+    "Requirements" character varying(5000),
+    "Vacancies" integer NOT NULL,
+    "Status" character varying(20) NOT NULL,
+    "PostedDate" timestamp with time zone NOT NULL,
+    "ClosingDate" timestamp with time zone,
+    CONSTRAINT "PK_JobOpenings" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_JobOpenings_Branches_BranchId" FOREIGN KEY ("BranchId") REFERENCES "Branches" ("Id") ON DELETE RESTRICT,
+    CONSTRAINT "FK_JobOpenings_Departments_DepartmentId" FOREIGN KEY ("DepartmentId") REFERENCES "Departments" ("Id") ON DELETE RESTRICT,
+    CONSTRAINT "FK_JobOpenings_Designations_DesignationId" FOREIGN KEY ("DesignationId") REFERENCES "Designations" ("Id") ON DELETE RESTRICT
+);
+2026-09-11 15:35:31.613 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Documents" (
+    "Id" uuid NOT NULL,
+    "Name" character varying(200) NOT NULL,
+    "Type" character varying(50) NOT NULL,
+    "Category" character varying(20) NOT NULL,
+    "EmployeeId" uuid,
+    "UploadedById" uuid NOT NULL,
+    "UploadedAt" timestamp with time zone NOT NULL,
+    "FileSize" bigint NOT NULL,
+    "FileUrl" character varying(1000) NOT NULL,
+    CONSTRAINT "PK_Documents" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.617 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Employees" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" character varying(50) NOT NULL,
+    "FirstName" character varying(100) NOT NULL,
+    "LastName" character varying(100) NOT NULL,
+    "Email" character varying(255) NOT NULL,
+    "Phone" character varying(20),
+    "DateOfBirth" timestamp with time zone,
+    "Gender" character varying(20),
+    "MaritalStatus" character varying(20),
+    "Nationality" character varying(100),
+    "Avatar" text,
+    "DepartmentId" uuid NOT NULL,
+    "DesignationId" uuid NOT NULL,
+    "BranchId" uuid NOT NULL,
+    "TeamId" uuid,
+    "ReportingManagerId" uuid,
+    "JoiningDate" timestamp with time zone NOT NULL,
+    "EmploymentType" character varying(20) NOT NULL,
+    "EmploymentStatus" character varying(20) NOT NULL,
+    "WorkLocation" character varying(100),
+    "Address" character varying(500),
+    "City" character varying(100),
+    "State" character varying(100),
+    "Country" character varying(100),
+    "ZipCode" character varying(20),
+    "EmergencyContactName" character varying(200),
+    "EmergencyContactPhone" character varying(20),
+    "EmergencyContactRelation" character varying(50),
+    "BankName" character varying(200),
+    "BankAccountNumber" character varying(50),
+    "IfscCode" character varying(50),
+    "TaxId" character varying(50),
+    "Salary" numeric(18,2),
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Employees" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Employees_Branches_BranchId" FOREIGN KEY ("BranchId") REFERENCES "Branches" ("Id") ON DELETE RESTRICT,
+    CONSTRAINT "FK_Employees_Departments_DepartmentId" FOREIGN KEY ("DepartmentId") REFERENCES "Departments" ("Id") ON DELETE RESTRICT,
+    CONSTRAINT "FK_Employees_Designations_DesignationId" FOREIGN KEY ("DesignationId") REFERENCES "Designations" ("Id") ON DELETE RESTRICT,
+    CONSTRAINT "FK_Employees_Employees_ReportingManagerId" FOREIGN KEY ("ReportingManagerId") REFERENCES "Employees" ("Id") ON DELETE SET NULL
+);
+2026-09-11 15:35:31.621 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "KPIs" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "Title" character varying(200) NOT NULL,
+    "Description" character varying(1000),
+    "TargetValue" numeric(18,2) NOT NULL,
+    "CurrentValue" numeric(18,2) NOT NULL,
+    "Unit" character varying(50),
+    "Weight" numeric(5,2) NOT NULL,
+    "Period" character varying(50) NOT NULL,
+    "Status" character varying(50) NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_KPIs" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_KPIs_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.625 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "LeaveBalances" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "LeaveType" character varying(20) NOT NULL,
+    "Entitled" integer NOT NULL,
+    "Taken" integer NOT NULL,
+    "Remaining" integer NOT NULL,
+    "Year" integer NOT NULL,
+    CONSTRAINT "PK_LeaveBalances" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_LeaveBalances_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.629 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Onboardings" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "StartDate" timestamp with time zone NOT NULL,
+    "EndDate" timestamp with time zone,
+    "MentorId" uuid,
+    "Status" character varying(20) NOT NULL,
+    "Progress" numeric(5,2) NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Onboardings" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Onboardings_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_Onboardings_Employees_MentorId" FOREIGN KEY ("MentorId") REFERENCES "Employees" ("Id") ON DELETE SET NULL
+);
+2026-09-11 15:35:31.631 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "PayrollRecords" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "Month" character varying(20) NOT NULL,
+    "Year" integer NOT NULL,
+    "BasicSalary" numeric(18,2) NOT NULL,
+    "Allowances" numeric(18,2) NOT NULL,
+    "Deductions" numeric(18,2) NOT NULL,
+    "NetPay" numeric(18,2) NOT NULL,
+    "Status" character varying(20) NOT NULL,
+    "PaidDate" timestamp with time zone,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_PayrollRecords" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_PayrollRecords_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.635 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "ShiftAssignments" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "ShiftId" uuid NOT NULL,
+    "StartDate" timestamp with time zone NOT NULL,
+    "EndDate" timestamp with time zone,
+    CONSTRAINT "PK_ShiftAssignments" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_ShiftAssignments_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_ShiftAssignments_Shifts_ShiftId" FOREIGN KEY ("ShiftId") REFERENCES "Shifts" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.640 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "TaskAssignments" (
+    "Id" uuid NOT NULL,
+    "Title" character varying(200) NOT NULL,
+    "Description" character varying(2000),
+    "AssignedToId" uuid NOT NULL,
+    "AssignedById" uuid NOT NULL,
+    "Priority" character varying(20) NOT NULL,
+    "Status" character varying(20) NOT NULL,
+    "DueDate" timestamp with time zone NOT NULL,
+    "CompletedDate" timestamp with time zone,
+    "EstimatedHours" numeric,
+    "ActualHours" numeric,
+    "Rating" integer,
+    "ReviewComments" character varying(1000),
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_TaskAssignments" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_TaskAssignments_Employees_AssignedById" FOREIGN KEY ("AssignedById") REFERENCES "Employees" ("Id") ON DELETE RESTRICT,
+    CONSTRAINT "FK_TaskAssignments_Employees_AssignedToId" FOREIGN KEY ("AssignedToId") REFERENCES "Employees" ("Id") ON DELETE RESTRICT
+);
+2026-09-11 15:35:31.644 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Teams" (
+    "Id" uuid NOT NULL,
+    "Name" character varying(100) NOT NULL,
+    "DepartmentId" uuid NOT NULL,
+    "TeamLeadId" uuid NOT NULL,
+    "IsActive" boolean NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Teams" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Teams_Departments_DepartmentId" FOREIGN KEY ("DepartmentId") REFERENCES "Departments" ("Id") ON DELETE RESTRICT,
+    CONSTRAINT "FK_Teams_Employees_TeamLeadId" FOREIGN KEY ("TeamLeadId") REFERENCES "Employees" ("Id") ON DELETE RESTRICT
+);
+2026-09-11 15:35:31.647 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "TrainingEnrollments" (
+    "Id" uuid NOT NULL,
+    "TrainingId" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "EnrolledAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_TrainingEnrollments" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_TrainingEnrollments_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_TrainingEnrollments_Trainings_TrainingId" FOREIGN KEY ("TrainingId") REFERENCES "Trainings" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.652 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Users" (
+    "Id" uuid NOT NULL,
+    "FirstName" character varying(100) NOT NULL,
+    "LastName" character varying(100) NOT NULL,
+    "Email" character varying(255) NOT NULL,
+    "PasswordHash" text NOT NULL,
+    "Role" character varying(20) NOT NULL,
+    "Avatar" text,
+    "Department" text,
+    "Designation" text,
+    "Branch" text,
+    "EmployeeId" uuid,
+    "IsActive" boolean NOT NULL,
+    "MfaEnabled" boolean NOT NULL,
+    "RefreshToken" text,
+    "RefreshTokenExpiry" timestamp with time zone,
+    "LastLoginAt" timestamp with time zone,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Users" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Users_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id")
+);
+2026-09-11 15:35:31.656 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "OnboardingTasks" (
+    "Id" uuid NOT NULL,
+    "OnboardingId" uuid NOT NULL,
+    "Title" character varying(200) NOT NULL,
+    "Description" character varying(500),
+    "IsCompleted" boolean NOT NULL,
+    "CompletedAt" timestamp with time zone,
+    "AssignedTo" character varying(200),
+    CONSTRAINT "PK_OnboardingTasks" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_OnboardingTasks_Onboardings_OnboardingId" FOREIGN KEY ("OnboardingId") REFERENCES "Onboardings" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.660 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Payslips" (
+    "Id" uuid NOT NULL,
+    "PayrollId" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "Month" character varying(20) NOT NULL,
+    "Year" integer NOT NULL,
+    "BasicSalary" numeric(18,2) NOT NULL,
+    "Hra" numeric(18,2) NOT NULL,
+    "Conveyance" numeric(18,2) NOT NULL,
+    "MedicalAllowance" numeric(18,2) NOT NULL,
+    "SpecialAllowance" numeric(18,2) NOT NULL,
+    "Pf" numeric(18,2) NOT NULL,
+    "Esi" numeric(18,2) NOT NULL,
+    "Tds" numeric(18,2) NOT NULL,
+    "ProfessionalTax" numeric(18,2) NOT NULL,
+    "TotalEarnings" numeric(18,2) NOT NULL,
+    "TotalDeductions" numeric(18,2) NOT NULL,
+    "NetPay" numeric(18,2) NOT NULL,
+    CONSTRAINT "PK_Payslips" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Payslips_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_Payslips_PayrollRecords_PayrollId" FOREIGN KEY ("PayrollId") REFERENCES "PayrollRecords" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.663 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "LeaveRequests" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "LeaveType" character varying(20) NOT NULL,
+    "StartDate" timestamp with time zone NOT NULL,
+    "EndDate" timestamp with time zone NOT NULL,
+    "TotalDays" integer NOT NULL,
+    "Reason" character varying(500) NOT NULL,
+    "Status" character varying(20) NOT NULL,
+    "ApprovedById" uuid,
+    "ApprovedAt" timestamp with time zone,
+    "Comments" character varying(500),
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_LeaveRequests" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_LeaveRequests_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_LeaveRequests_Users_ApprovedById" FOREIGN KEY ("ApprovedById") REFERENCES "Users" ("Id") ON DELETE SET NULL
+);
+2026-09-11 15:35:31.667 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Notifications" (
+    "Id" uuid NOT NULL,
+    "UserId" uuid NOT NULL,
+    "Title" character varying(200) NOT NULL,
+    "Message" character varying(1000) NOT NULL,
+    "Type" character varying(20) NOT NULL,
+    "IsRead" boolean NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "Link" character varying(500),
+    CONSTRAINT "PK_Notifications" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Notifications_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.671 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "PerformanceReviews" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "ReviewerId" uuid NOT NULL,
+    "Period" character varying(50) NOT NULL,
+    "OverallRating" numeric(5,2) NOT NULL,
+    "GoalsRating" numeric(5,2) NOT NULL,
+    "CompetencyRating" numeric(5,2) NOT NULL,
+    "Comments" character varying(2000),
+    "Status" character varying(20) NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_PerformanceReviews" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_PerformanceReviews_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_PerformanceReviews_Users_ReviewerId" FOREIGN KEY ("ReviewerId") REFERENCES "Users" ("Id") ON DELETE RESTRICT
+);
+2026-09-11 15:35:31.675 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "SystemSettings" (
+    "Id" uuid NOT NULL,
+    "Key" character varying(200) NOT NULL,
+    "Value" character varying(2000) NOT NULL,
+    "Category" character varying(100) NOT NULL,
+    "Description" character varying(500),
+    "UpdatedById" uuid,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_SystemSettings" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_SystemSettings_Users_UpdatedById" FOREIGN KEY ("UpdatedById") REFERENCES "Users" ("Id") ON DELETE SET NULL
+);
+2026-09-11 15:35:31.679 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "UserPermissions" (
+    "Id" uuid NOT NULL,
+    "UserId" uuid NOT NULL,
+    "Module" character varying(100) NOT NULL,
+    "Action" character varying(20) NOT NULL,
+    CONSTRAINT "PK_UserPermissions" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_UserPermissions_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.682 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_AnnouncementAttachments_AnnouncementId" ON "AnnouncementAttachments" ("AnnouncementId");
+2026-09-11 15:35:31.684 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Announcements_AuthorId" ON "Announcements" ("AuthorId");
+2026-09-11 15:35:31.686 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Attendances_EmployeeId_Date" ON "Attendances" ("EmployeeId", "Date");
+2026-09-11 15:35:31.689 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_AuditLogs_Timestamp" ON "AuditLogs" ("Timestamp");
+2026-09-11 15:35:31.691 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_AuditLogs_UserId" ON "AuditLogs" ("UserId");
+2026-09-11 15:35:31.693 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Branches_Code" ON "Branches" ("Code");
+2026-09-11 15:35:31.695 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Branches_Name" ON "Branches" ("Name");
+2026-09-11 15:35:31.696 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_BreakRecords_AttendanceId" ON "BreakRecords" ("AttendanceId");
+2026-09-11 15:35:31.698 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Candidates_JobId" ON "Candidates" ("JobId");
+2026-09-11 15:35:31.700 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Departments_Code" ON "Departments" ("Code");
+2026-09-11 15:35:31.702 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Departments_HeadId" ON "Departments" ("HeadId");
+2026-09-11 15:35:31.704 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Departments_Name" ON "Departments" ("Name");
+2026-09-11 15:35:31.706 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Designations_DepartmentId" ON "Designations" ("DepartmentId");
+2026-09-11 15:35:31.708 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Documents_EmployeeId" ON "Documents" ("EmployeeId");
+2026-09-11 15:35:31.710 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Documents_UploadedById" ON "Documents" ("UploadedById");
+2026-09-11 15:35:31.713 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Employees_BranchId" ON "Employees" ("BranchId");
+2026-09-11 15:35:31.720 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Employees_DepartmentId" ON "Employees" ("DepartmentId");
+2026-09-11 15:35:31.723 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Employees_DesignationId" ON "Employees" ("DesignationId");
+2026-09-11 15:35:31.727 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Employees_Email" ON "Employees" ("Email");
+2026-09-11 15:35:31.729 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Employees_EmployeeId" ON "Employees" ("EmployeeId");
+2026-09-11 15:35:31.732 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Employees_ReportingManagerId" ON "Employees" ("ReportingManagerId");
+2026-09-11 15:35:31.734 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Employees_TeamId" ON "Employees" ("TeamId");
+2026-09-11 15:35:31.739 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_JobOpenings_BranchId" ON "JobOpenings" ("BranchId");
+2026-09-11 15:35:31.742 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_JobOpenings_DepartmentId" ON "JobOpenings" ("DepartmentId");
+2026-09-11 15:35:31.745 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_JobOpenings_DesignationId" ON "JobOpenings" ("DesignationId");
+2026-09-11 15:35:31.749 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_KPIs_EmployeeId" ON "KPIs" ("EmployeeId");
+2026-09-11 15:35:31.753 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_LeaveBalances_EmployeeId_LeaveType_Year" ON "LeaveBalances" ("EmployeeId", "LeaveType", "Year");
+2026-09-11 15:35:31.756 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_LeaveRequests_ApprovedById" ON "LeaveRequests" ("ApprovedById");
+2026-09-11 15:35:31.759 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_LeaveRequests_EmployeeId" ON "LeaveRequests" ("EmployeeId");
+2026-09-11 15:35:31.762 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Notifications_UserId_IsRead" ON "Notifications" ("UserId", "IsRead");
+2026-09-11 15:35:31.765 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Onboardings_EmployeeId" ON "Onboardings" ("EmployeeId");
+2026-09-11 15:35:31.768 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Onboardings_MentorId" ON "Onboardings" ("MentorId");
+2026-09-11 15:35:31.771 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_OnboardingTasks_OnboardingId" ON "OnboardingTasks" ("OnboardingId");
+2026-09-11 15:35:31.774 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_PayrollRecords_EmployeeId" ON "PayrollRecords" ("EmployeeId");
+2026-09-11 15:35:31.777 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Payslips_EmployeeId" ON "Payslips" ("EmployeeId");
+2026-09-11 15:35:31.780 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Payslips_PayrollId" ON "Payslips" ("PayrollId");
+2026-09-11 15:35:31.782 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_PerformanceReviews_EmployeeId" ON "PerformanceReviews" ("EmployeeId");
+2026-09-11 15:35:31.784 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_PerformanceReviews_ReviewerId" ON "PerformanceReviews" ("ReviewerId");
+2026-09-11 15:35:31.786 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_ShiftAssignments_EmployeeId" ON "ShiftAssignments" ("EmployeeId");
+2026-09-11 15:35:31.788 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_ShiftAssignments_ShiftId" ON "ShiftAssignments" ("ShiftId");
+2026-09-11 15:35:31.790 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_SystemSettings_Key" ON "SystemSettings" ("Key");
+2026-09-11 15:35:31.792 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_SystemSettings_UpdatedById" ON "SystemSettings" ("UpdatedById");
+2026-09-11 15:35:31.794 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_TaskAssignments_AssignedById" ON "TaskAssignments" ("AssignedById");
+2026-09-11 15:35:31.797 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_TaskAssignments_AssignedToId" ON "TaskAssignments" ("AssignedToId");
+2026-09-11 15:35:31.801 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Teams_DepartmentId" ON "Teams" ("DepartmentId");
+2026-09-11 15:35:31.803 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Teams_TeamLeadId" ON "Teams" ("TeamLeadId");
+2026-09-11 15:35:31.807 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_TrainingEnrollments_EmployeeId" ON "TrainingEnrollments" ("EmployeeId");
+2026-09-11 15:35:31.811 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_TrainingEnrollments_TrainingId_EmployeeId" ON "TrainingEnrollments" ("TrainingId", "EmployeeId");
+2026-09-11 15:35:31.813 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_UserPermissions_UserId_Module_Action" ON "UserPermissions" ("UserId", "Module", "Action");
+2026-09-11 15:35:31.815 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_Users_Email" ON "Users" ("Email");
+2026-09-11 15:35:31.817 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Users_EmployeeId" ON "Users" ("EmployeeId");
+2026-09-11 15:35:31.823 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "AnnouncementAttachments" ADD CONSTRAINT "FK_AnnouncementAttachments_Announcements_AnnouncementId" FOREIGN KEY ("AnnouncementId") REFERENCES "Announcements" ("Id") ON DELETE CASCADE;
+2026-09-11 15:35:31.827 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Announcements" ADD CONSTRAINT "FK_Announcements_Users_AuthorId" FOREIGN KEY ("AuthorId") REFERENCES "Users" ("Id") ON DELETE RESTRICT;
+2026-09-11 15:35:31.832 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Attendances" ADD CONSTRAINT "FK_Attendances_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE;
+2026-09-11 15:35:31.835 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "AuditLogs" ADD CONSTRAINT "FK_AuditLogs_Users_UserId" FOREIGN KEY ("UserId") REFERENCES "Users" ("Id") ON DELETE RESTRICT;
+2026-09-11 15:35:31.839 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Candidates" ADD CONSTRAINT "FK_Candidates_JobOpenings_JobId" FOREIGN KEY ("JobId") REFERENCES "JobOpenings" ("Id") ON DELETE CASCADE;
+2026-09-11 15:35:31.844 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Departments" ADD CONSTRAINT "FK_Departments_Employees_HeadId" FOREIGN KEY ("HeadId") REFERENCES "Employees" ("Id") ON DELETE SET NULL;
+2026-09-11 15:35:31.847 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Documents" ADD CONSTRAINT "FK_Documents_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE SET NULL;
+2026-09-11 15:35:31.849 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Documents" ADD CONSTRAINT "FK_Documents_Users_UploadedById" FOREIGN KEY ("UploadedById") REFERENCES "Users" ("Id") ON DELETE RESTRICT;
+2026-09-11 15:35:31.851 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE "Employees" ADD CONSTRAINT "FK_Employees_Teams_TeamId" FOREIGN KEY ("TeamId") REFERENCES "Teams" ("Id") ON DELETE SET NULL;
+2026-09-11 15:35:31.855 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20260911073624_InitialCreate', '8.0.0');
+2026-09-11 15:35:31.861 +05:30 [INF] Applying migration '20260911085113_AddWorkUpdatesRolesFeedbackInterviews'.
+2026-09-11 15:35:31.906 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "DailyWorkUpdates" (
+    "Id" uuid NOT NULL,
+    "EmployeeId" uuid NOT NULL,
+    "Date" timestamp with time zone NOT NULL,
+    "TasksCompleted" character varying(2000),
+    "WorkSummary" character varying(2000),
+    "IssuesBlockers" character varying(2000),
+    "HoursWorked" numeric(5,2),
+    "Status" character varying(20) NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_DailyWorkUpdates" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_DailyWorkUpdates_Employees_EmployeeId" FOREIGN KEY ("EmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.910 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "Interviews" (
+    "Id" uuid NOT NULL,
+    "CandidateId" uuid NOT NULL,
+    "JobId" uuid NOT NULL,
+    "InterviewerId" uuid,
+    "ScheduledAt" timestamp with time zone NOT NULL,
+    "Round" character varying(50) NOT NULL,
+    "InterviewType" character varying(20) NOT NULL,
+    "Status" character varying(20) NOT NULL,
+    "DurationMinutes" integer,
+    "MeetingLink" character varying(500),
+    "Feedback" character varying(2000),
+    "Rating" integer,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_Interviews" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Interviews_Candidates_CandidateId" FOREIGN KEY ("CandidateId") REFERENCES "Candidates" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_Interviews_Employees_InterviewerId" FOREIGN KEY ("InterviewerId") REFERENCES "Employees" ("Id") ON DELETE SET NULL,
+    CONSTRAINT "FK_Interviews_JobOpenings_JobId" FOREIGN KEY ("JobId") REFERENCES "JobOpenings" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.913 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "PerformanceFeedbacks" (
+    "Id" uuid NOT NULL,
+    "TargetEmployeeId" uuid NOT NULL,
+    "ReviewerId" uuid NOT NULL,
+    "ReviewPeriod" character varying(50) NOT NULL,
+    "Category" character varying(20) NOT NULL,
+    "Rating" integer NOT NULL,
+    "Comments" character varying(2000),
+    "CreatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_PerformanceFeedbacks" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_PerformanceFeedbacks_Employees_TargetEmployeeId" FOREIGN KEY ("TargetEmployeeId") REFERENCES "Employees" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_PerformanceFeedbacks_Users_ReviewerId" FOREIGN KEY ("ReviewerId") REFERENCES "Users" ("Id") ON DELETE RESTRICT
+);
+2026-09-11 15:35:31.916 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "RolePermissions" (
+    "Id" uuid NOT NULL,
+    "Role" character varying(20) NOT NULL,
+    "Module" character varying(100) NOT NULL,
+    "Action" character varying(20) NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "UpdatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT "PK_RolePermissions" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.917 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_DailyWorkUpdates_EmployeeId_Date" ON "DailyWorkUpdates" ("EmployeeId", "Date");
+2026-09-11 15:35:31.919 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Interviews_CandidateId" ON "Interviews" ("CandidateId");
+2026-09-11 15:35:31.922 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Interviews_InterviewerId" ON "Interviews" ("InterviewerId");
+2026-09-11 15:35:31.924 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_Interviews_JobId" ON "Interviews" ("JobId");
+2026-09-11 15:35:31.926 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_PerformanceFeedbacks_ReviewerId" ON "PerformanceFeedbacks" ("ReviewerId");
+2026-09-11 15:35:31.928 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_PerformanceFeedbacks_TargetEmployeeId" ON "PerformanceFeedbacks" ("TargetEmployeeId");
+2026-09-11 15:35:31.930 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_RolePermissions_Role_Module_Action" ON "RolePermissions" ("Role", "Module", "Action");
+2026-09-11 15:35:31.931 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20260911085113_AddWorkUpdatesRolesFeedbackInterviews', '8.0.0');
+2026-09-11 15:35:31.933 +05:30 [INF] Applying migration '20260911095023_AddNavigationModels'.
+2026-09-11 15:35:31.974 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "AppModules" (
+    "Id" uuid NOT NULL,
+    "Name" character varying(100) NOT NULL,
+    "Icon" character varying(100) NOT NULL,
+    "DisplayOrder" integer NOT NULL,
+    "IsActive" boolean NOT NULL,
+    CONSTRAINT "PK_AppModules" PRIMARY KEY ("Id")
+);
+2026-09-11 15:35:31.977 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "AppFeatures" (
+    "Id" uuid NOT NULL,
+    "ModuleId" uuid NOT NULL,
+    "Name" character varying(100) NOT NULL,
+    "Path" character varying(200) NOT NULL,
+    "Icon" character varying(100) NOT NULL,
+    "DisplayOrder" integer NOT NULL,
+    "IsActive" boolean NOT NULL,
+    CONSTRAINT "PK_AppFeatures" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_AppFeatures_AppModules_ModuleId" FOREIGN KEY ("ModuleId") REFERENCES "AppModules" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.979 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE "FeatureRoles" (
+    "Id" uuid NOT NULL,
+    "FeatureId" uuid NOT NULL,
+    "Role" character varying(20) NOT NULL,
+    CONSTRAINT "PK_FeatureRoles" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_FeatureRoles_AppFeatures_FeatureId" FOREIGN KEY ("FeatureId") REFERENCES "AppFeatures" ("Id") ON DELETE CASCADE
+);
+2026-09-11 15:35:31.982 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX "IX_AppFeatures_ModuleId" ON "AppFeatures" ("ModuleId");
+2026-09-11 15:35:31.983 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX "IX_FeatureRoles_FeatureId_Role" ON "FeatureRoles" ("FeatureId", "Role");
+2026-09-11 15:35:31.985 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20260911095023_AddNavigationModels', '8.0.0');
+2026-09-11 15:35:32.115 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Departments" AS d)
+2026-09-11 15:35:32.235 +05:30 [INF] Executed DbCommand (10ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?' (DbType = DateTime), @p3='?', @p4='?' (DbType = Guid), @p5='?' (DbType = Boolean), @p6='?', @p7='?' (DbType = DateTime), @p8='?' (DbType = Guid), @p9='?', @p10='?' (DbType = DateTime), @p11='?', @p12='?' (DbType = Guid), @p13='?' (DbType = Boolean), @p14='?', @p15='?' (DbType = DateTime), @p16='?' (DbType = Guid), @p17='?', @p18='?' (DbType = DateTime), @p19='?', @p20='?' (DbType = Guid), @p21='?' (DbType = Boolean), @p22='?', @p23='?' (DbType = DateTime), @p24='?' (DbType = Guid), @p25='?', @p26='?' (DbType = DateTime), @p27='?', @p28='?' (DbType = Guid), @p29='?' (DbType = Boolean), @p30='?', @p31='?' (DbType = DateTime), @p32='?' (DbType = Guid), @p33='?', @p34='?' (DbType = DateTime), @p35='?', @p36='?' (DbType = Guid), @p37='?' (DbType = Boolean), @p38='?', @p39='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Departments" ("Id", "Code", "CreatedAt", "Description", "HeadId", "IsActive", "Name", "UpdatedAt")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+INSERT INTO "Departments" ("Id", "Code", "CreatedAt", "Description", "HeadId", "IsActive", "Name", "UpdatedAt")
+VALUES (@p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15);
+INSERT INTO "Departments" ("Id", "Code", "CreatedAt", "Description", "HeadId", "IsActive", "Name", "UpdatedAt")
+VALUES (@p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23);
+INSERT INTO "Departments" ("Id", "Code", "CreatedAt", "Description", "HeadId", "IsActive", "Name", "UpdatedAt")
+VALUES (@p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31);
+INSERT INTO "Departments" ("Id", "Code", "CreatedAt", "Description", "HeadId", "IsActive", "Name", "UpdatedAt")
+VALUES (@p32, @p33, @p34, @p35, @p36, @p37, @p38, @p39);
+2026-09-11 15:35:32.248 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Designations" AS d)
+2026-09-11 15:35:32.288 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'ENG'
+LIMIT 1
+2026-09-11 15:35:32.295 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'HR'
+LIMIT 1
+2026-09-11 15:35:32.331 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = DateTime), @p2='?' (DbType = Guid), @p3='?' (DbType = Boolean), @p4='?', @p5='?' (DbType = Decimal), @p6='?' (DbType = Decimal), @p7='?', @p8='?' (DbType = DateTime), @p9='?' (DbType = Guid), @p10='?' (DbType = DateTime), @p11='?' (DbType = Guid), @p12='?' (DbType = Boolean), @p13='?', @p14='?' (DbType = Decimal), @p15='?' (DbType = Decimal), @p16='?', @p17='?' (DbType = DateTime), @p18='?' (DbType = Guid), @p19='?' (DbType = DateTime), @p20='?' (DbType = Guid), @p21='?' (DbType = Boolean), @p22='?', @p23='?' (DbType = Decimal), @p24='?' (DbType = Decimal), @p25='?', @p26='?' (DbType = DateTime), @p27='?' (DbType = Guid), @p28='?' (DbType = DateTime), @p29='?' (DbType = Guid), @p30='?' (DbType = Boolean), @p31='?', @p32='?' (DbType = Decimal), @p33='?' (DbType = Decimal), @p34='?', @p35='?' (DbType = DateTime), @p36='?' (DbType = Guid), @p37='?' (DbType = DateTime), @p38='?' (DbType = Guid), @p39='?' (DbType = Boolean), @p40='?', @p41='?' (DbType = Decimal), @p42='?' (DbType = Decimal), @p43='?', @p44='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Designations" ("Id", "CreatedAt", "DepartmentId", "IsActive", "Level", "MaxSalary", "MinSalary", "Title", "UpdatedAt")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+INSERT INTO "Designations" ("Id", "CreatedAt", "DepartmentId", "IsActive", "Level", "MaxSalary", "MinSalary", "Title", "UpdatedAt")
+VALUES (@p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17);
+INSERT INTO "Designations" ("Id", "CreatedAt", "DepartmentId", "IsActive", "Level", "MaxSalary", "MinSalary", "Title", "UpdatedAt")
+VALUES (@p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26);
+INSERT INTO "Designations" ("Id", "CreatedAt", "DepartmentId", "IsActive", "Level", "MaxSalary", "MinSalary", "Title", "UpdatedAt")
+VALUES (@p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34, @p35);
+INSERT INTO "Designations" ("Id", "CreatedAt", "DepartmentId", "IsActive", "Level", "MaxSalary", "MinSalary", "Title", "UpdatedAt")
+VALUES (@p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44);
+2026-09-11 15:35:32.337 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Branches" AS b)
+2026-09-11 15:35:32.358 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?', @p4='?', @p5='?' (DbType = DateTime), @p6='?', @p7='?' (DbType = Boolean), @p8='?', @p9='?', @p10='?', @p11='?' (DbType = DateTime), @p12='?' (DbType = Guid), @p13='?', @p14='?', @p15='?', @p16='?', @p17='?' (DbType = DateTime), @p18='?', @p19='?' (DbType = Boolean), @p20='?', @p21='?', @p22='?', @p23='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Branches" ("Id", "Address", "City", "Code", "Country", "CreatedAt", "Email", "IsActive", "Name", "Phone", "State", "UpdatedAt")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+INSERT INTO "Branches" ("Id", "Address", "City", "Code", "Country", "CreatedAt", "Email", "IsActive", "Name", "Phone", "State", "UpdatedAt")
+VALUES (@p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23);
+2026-09-11 15:35:32.365 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Employees" AS e)
+2026-09-11 15:35:32.368 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'ENG'
+LIMIT 1
+2026-09-11 15:35:32.370 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'HR'
+LIMIT 1
+2026-09-11 15:35:32.376 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'Team Lead'
+LIMIT 1
+2026-09-11 15:35:32.380 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'Software Engineer'
+LIMIT 1
+2026-09-11 15:35:32.383 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'HR Manager'
+LIMIT 1
+2026-09-11 15:35:32.387 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT b."Id", b."Address", b."City", b."Code", b."Country", b."CreatedAt", b."Email", b."IsActive", b."Name", b."Phone", b."State", b."UpdatedAt"
+FROM "Branches" AS b
+WHERE b."Code" = 'HQ'
+LIMIT 1
+2026-09-11 15:35:32.482 +05:30 [ERR] Failed executing DbCommand (2ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?', @p4='?', @p5='?' (DbType = Guid), @p6='?', @p7='?', @p8='?' (DbType = DateTime), @p9='?' (DbType = DateTime), @p10='?' (DbType = Guid), @p11='?' (DbType = Guid), @p12='?', @p13='?', @p14='?', @p15='?', @p16='?', @p17='?', @p18='?', @p19='?', @p20='?', @p21='?', @p22='?' (DbType = DateTime), @p23='?', @p24='?', @p25='?', @p26='?', @p27='?' (DbType = Guid), @p28='?' (DbType = Decimal), @p29='?', @p30='?', @p31='?' (DbType = Guid), @p32='?' (DbType = DateTime), @p33='?', @p34='?', @p35='?' (DbType = Guid), @p36='?', @p37='?', @p38='?', @p39='?', @p40='?' (DbType = Guid), @p41='?', @p42='?', @p43='?' (DbType = DateTime), @p44='?' (DbType = DateTime), @p45='?' (DbType = Guid), @p46='?' (DbType = Guid), @p47='?', @p48='?', @p49='?', @p50='?', @p51='?', @p52='?', @p53='?', @p54='?', @p55='?', @p56='?', @p57='?' (DbType = DateTime), @p58='?', @p59='?', @p60='?', @p61='?', @p62='?' (DbType = Guid), @p63='?' (DbType = Decimal), @p64='?', @p65='?', @p66='?' (DbType = Guid), @p67='?' (DbType = DateTime), @p68='?', @p69='?', @p70='?' (DbType = Guid), @p71='?', @p72='?', @p73='?', @p74='?', @p75='?' (DbType = Guid), @p76='?', @p77='?', @p78='?' (DbType = DateTime), @p79='?' (DbType = DateTime), @p80='?' (DbType = Guid), @p81='?' (DbType = Guid), @p82='?', @p83='?', @p84='?', @p85='?', @p86='?', @p87='?', @p88='?', @p89='?', @p90='?', @p91='?', @p92='?' (DbType = DateTime), @p93='?', @p94='?', @p95='?', @p96='?', @p97='?' (DbType = Guid), @p98='?' (DbType = Decimal), @p99='?', @p100='?', @p101='?' (DbType = Guid), @p102='?' (DbType = DateTime), @p103='?', @p104='?', @p105='?' (DbType = Guid), @p106='?', @p107='?', @p108='?', @p109='?', @p110='?' (DbType = Guid), @p111='?', @p112='?', @p113='?' (DbType = DateTime), @p114='?' (DbType = DateTime), @p115='?' (DbType = Guid), @p116='?' (DbType = Guid), @p117='?', @p118='?', @p119='?', @p120='?', @p121='?', @p122='?', @p123='?', @p124='?', @p125='?', @p126='?', @p127='?' (DbType = DateTime), @p128='?', @p129='?', @p130='?', @p131='?', @p132='?' (DbType = Guid), @p133='?' (DbType = Decimal), @p134='?', @p135='?', @p136='?' (DbType = Guid), @p137='?' (DbType = DateTime), @p138='?', @p139='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, @p55, @p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, @p66, @p67, @p68, @p69);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p70, @p71, @p72, @p73, @p74, @p75, @p76, @p77, @p78, @p79, @p80, @p81, @p82, @p83, @p84, @p85, @p86, @p87, @p88, @p89, @p90, @p91, @p92, @p93, @p94, @p95, @p96, @p97, @p98, @p99, @p100, @p101, @p102, @p103, @p104);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p105, @p106, @p107, @p108, @p109, @p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, @p121, @p122, @p123, @p124, @p125, @p126, @p127, @p128, @p129, @p130, @p131, @p132, @p133, @p134, @p135, @p136, @p137, @p138, @p139);
+2026-09-11 15:35:32.499 +05:30 [ERR] An exception occurred in the database while saving changes for context type 'SupportAPI.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> System.ArgumentException: Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(DateTime value, Nullable`1 expectedPgTypeId, Boolean validateOnly)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver.<>c.<CreateResolver>b__0_0(DateTimeConverterResolver`1 resolver, DateTime value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(T value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgConverterResolver`1.GetAsObjectInternal(PgTypeInfo typeInfo, Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgResolverTypeInfo.GetResolutionAsObject(Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgTypeInfo.GetObjectResolution(Object value)
+   at Npgsql.NpgsqlParameter.ResolveConverter(PgTypeInfo typeInfo)
+   at Npgsql.NpgsqlParameter.ResolveTypeInfo(PgSerializerOptions options)
+   at Npgsql.NpgsqlParameterCollection.ProcessParameters(PgSerializerOptions options, Boolean validateValues, CommandType commandType)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> System.ArgumentException: Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(DateTime value, Nullable`1 expectedPgTypeId, Boolean validateOnly)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver.<>c.<CreateResolver>b__0_0(DateTimeConverterResolver`1 resolver, DateTime value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(T value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgConverterResolver`1.GetAsObjectInternal(PgTypeInfo typeInfo, Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgResolverTypeInfo.GetResolutionAsObject(Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgTypeInfo.GetObjectResolution(Object value)
+   at Npgsql.NpgsqlParameter.ResolveConverter(PgTypeInfo typeInfo)
+   at Npgsql.NpgsqlParameter.ResolveTypeInfo(PgSerializerOptions options)
+   at Npgsql.NpgsqlParameterCollection.ProcessParameters(PgSerializerOptions options, Boolean validateValues, CommandType commandType)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-09-11 15:35:32.503 +05:30 [ERR] Database migration/seed failed. If this is a fresh install, run 'dotnet ef database update'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> System.ArgumentException: Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(DateTime value, Nullable`1 expectedPgTypeId, Boolean validateOnly)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver.<>c.<CreateResolver>b__0_0(DateTimeConverterResolver`1 resolver, DateTime value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(T value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgConverterResolver`1.GetAsObjectInternal(PgTypeInfo typeInfo, Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgResolverTypeInfo.GetResolutionAsObject(Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgTypeInfo.GetObjectResolution(Object value)
+   at Npgsql.NpgsqlParameter.ResolveConverter(PgTypeInfo typeInfo)
+   at Npgsql.NpgsqlParameter.ResolveTypeInfo(PgSerializerOptions options)
+   at Npgsql.NpgsqlParameterCollection.ProcessParameters(PgSerializerOptions options, Boolean validateValues, CommandType commandType)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at SupportAPI.Services.DbInitializer.SeedAsync() in D:\HRM\HRM\SupportAPI\Services\DbInitializer.cs:line 134
+   at Program.<Main>$(String[] args) in D:\HRM\HRM\SupportAPI\Program.cs:line 191
+2026-09-11 15:35:32.592 +05:30 [INF] User profile is available. Using 'C:\Users\Dell\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-09-11 15:35:32.619 +05:30 [WRN] The WebRootPath was not found: D:\HRM\HRM\SupportAPI\wwwroot. Static files may be unavailable.
+2026-09-11 15:35:32.633 +05:30 [INF] Now listening on: http://localhost:3000
+2026-09-11 15:35:32.635 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-11 15:35:32.635 +05:30 [INF] Hosting environment: Development
+2026-09-11 15:35:32.636 +05:30 [INF] Content root path: D:\HRM\HRM\SupportAPI
+2026-09-11 15:36:32.592 +05:30 [INF] Application is shutting down...
+2026-09-11 15:39:16.454 +05:30 [INF] Executed DbCommand (28ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:39:16.495 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-09-11 15:39:16.528 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:39:16.561 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:39:16.562 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-09-11 15:39:16.578 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-09-11 15:39:16.692 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Departments" AS d)
+2026-09-11 15:39:16.703 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Designations" AS d)
+2026-09-11 15:39:16.708 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Branches" AS b)
+2026-09-11 15:39:16.716 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Employees" AS e)
+2026-09-11 15:39:16.760 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'ENG'
+LIMIT 1
+2026-09-11 15:39:16.805 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'HR'
+LIMIT 1
+2026-09-11 15:39:16.810 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'Team Lead'
+LIMIT 1
+2026-09-11 15:39:16.842 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'Software Engineer'
+LIMIT 1
+2026-09-11 15:39:16.845 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'HR Manager'
+LIMIT 1
+2026-09-11 15:39:16.852 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT b."Id", b."Address", b."City", b."Code", b."Country", b."CreatedAt", b."Email", b."IsActive", b."Name", b."Phone", b."State", b."UpdatedAt"
+FROM "Branches" AS b
+WHERE b."Code" = 'HQ'
+LIMIT 1
+2026-09-11 15:39:17.049 +05:30 [ERR] Failed executing DbCommand (7ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?', @p4='?', @p5='?' (DbType = Guid), @p6='?', @p7='?', @p8='?' (DbType = DateTime), @p9='?' (DbType = DateTime), @p10='?' (DbType = Guid), @p11='?' (DbType = Guid), @p12='?', @p13='?', @p14='?', @p15='?', @p16='?', @p17='?', @p18='?', @p19='?', @p20='?', @p21='?', @p22='?' (DbType = DateTime), @p23='?', @p24='?', @p25='?', @p26='?', @p27='?' (DbType = Guid), @p28='?' (DbType = Decimal), @p29='?', @p30='?', @p31='?' (DbType = Guid), @p32='?' (DbType = DateTime), @p33='?', @p34='?', @p35='?' (DbType = Guid), @p36='?', @p37='?', @p38='?', @p39='?', @p40='?' (DbType = Guid), @p41='?', @p42='?', @p43='?' (DbType = DateTime), @p44='?' (DbType = DateTime), @p45='?' (DbType = Guid), @p46='?' (DbType = Guid), @p47='?', @p48='?', @p49='?', @p50='?', @p51='?', @p52='?', @p53='?', @p54='?', @p55='?', @p56='?', @p57='?' (DbType = DateTime), @p58='?', @p59='?', @p60='?', @p61='?', @p62='?' (DbType = Guid), @p63='?' (DbType = Decimal), @p64='?', @p65='?', @p66='?' (DbType = Guid), @p67='?' (DbType = DateTime), @p68='?', @p69='?', @p70='?' (DbType = Guid), @p71='?', @p72='?', @p73='?', @p74='?', @p75='?' (DbType = Guid), @p76='?', @p77='?', @p78='?' (DbType = DateTime), @p79='?' (DbType = DateTime), @p80='?' (DbType = Guid), @p81='?' (DbType = Guid), @p82='?', @p83='?', @p84='?', @p85='?', @p86='?', @p87='?', @p88='?', @p89='?', @p90='?', @p91='?', @p92='?' (DbType = DateTime), @p93='?', @p94='?', @p95='?', @p96='?', @p97='?' (DbType = Guid), @p98='?' (DbType = Decimal), @p99='?', @p100='?', @p101='?' (DbType = Guid), @p102='?' (DbType = DateTime), @p103='?', @p104='?', @p105='?' (DbType = Guid), @p106='?', @p107='?', @p108='?', @p109='?', @p110='?' (DbType = Guid), @p111='?', @p112='?', @p113='?' (DbType = DateTime), @p114='?' (DbType = DateTime), @p115='?' (DbType = Guid), @p116='?' (DbType = Guid), @p117='?', @p118='?', @p119='?', @p120='?', @p121='?', @p122='?', @p123='?', @p124='?', @p125='?', @p126='?', @p127='?' (DbType = DateTime), @p128='?', @p129='?', @p130='?', @p131='?', @p132='?' (DbType = Guid), @p133='?' (DbType = Decimal), @p134='?', @p135='?', @p136='?' (DbType = Guid), @p137='?' (DbType = DateTime), @p138='?', @p139='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, @p55, @p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, @p66, @p67, @p68, @p69);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p70, @p71, @p72, @p73, @p74, @p75, @p76, @p77, @p78, @p79, @p80, @p81, @p82, @p83, @p84, @p85, @p86, @p87, @p88, @p89, @p90, @p91, @p92, @p93, @p94, @p95, @p96, @p97, @p98, @p99, @p100, @p101, @p102, @p103, @p104);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p105, @p106, @p107, @p108, @p109, @p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, @p121, @p122, @p123, @p124, @p125, @p126, @p127, @p128, @p129, @p130, @p131, @p132, @p133, @p134, @p135, @p136, @p137, @p138, @p139);
+2026-09-11 15:39:17.078 +05:30 [ERR] An exception occurred in the database while saving changes for context type 'SupportAPI.Data.ApplicationDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> System.ArgumentException: Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(DateTime value, Nullable`1 expectedPgTypeId, Boolean validateOnly)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver.<>c.<CreateResolver>b__0_0(DateTimeConverterResolver`1 resolver, DateTime value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(T value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgConverterResolver`1.GetAsObjectInternal(PgTypeInfo typeInfo, Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgResolverTypeInfo.GetResolutionAsObject(Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgTypeInfo.GetObjectResolution(Object value)
+   at Npgsql.NpgsqlParameter.ResolveConverter(PgTypeInfo typeInfo)
+   at Npgsql.NpgsqlParameter.ResolveTypeInfo(PgSerializerOptions options)
+   at Npgsql.NpgsqlParameterCollection.ProcessParameters(PgSerializerOptions options, Boolean validateValues, CommandType commandType)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> System.ArgumentException: Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(DateTime value, Nullable`1 expectedPgTypeId, Boolean validateOnly)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver.<>c.<CreateResolver>b__0_0(DateTimeConverterResolver`1 resolver, DateTime value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(T value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgConverterResolver`1.GetAsObjectInternal(PgTypeInfo typeInfo, Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgResolverTypeInfo.GetResolutionAsObject(Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgTypeInfo.GetObjectResolution(Object value)
+   at Npgsql.NpgsqlParameter.ResolveConverter(PgTypeInfo typeInfo)
+   at Npgsql.NpgsqlParameter.ResolveTypeInfo(PgSerializerOptions options)
+   at Npgsql.NpgsqlParameterCollection.ProcessParameters(PgSerializerOptions options, Boolean validateValues, CommandType commandType)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-09-11 15:39:17.081 +05:30 [ERR] Database migration/seed failed. If this is a fresh install, run 'dotnet ef database update'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> System.ArgumentException: Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported. Note that it's not possible to mix DateTimes with different Kinds in an array, range, or multirange. (Parameter 'value')
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(DateTime value, Nullable`1 expectedPgTypeId, Boolean validateOnly)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver.<>c.<CreateResolver>b__0_0(DateTimeConverterResolver`1 resolver, DateTime value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.Converters.DateTimeConverterResolver`1.Get(T value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgConverterResolver`1.GetAsObjectInternal(PgTypeInfo typeInfo, Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgResolverTypeInfo.GetResolutionAsObject(Object value, Nullable`1 expectedPgTypeId)
+   at Npgsql.Internal.PgTypeInfo.GetObjectResolution(Object value)
+   at Npgsql.NpgsqlParameter.ResolveConverter(PgTypeInfo typeInfo)
+   at Npgsql.NpgsqlParameter.ResolveTypeInfo(PgSerializerOptions options)
+   at Npgsql.NpgsqlParameterCollection.ProcessParameters(PgSerializerOptions options, Boolean validateValues, CommandType commandType)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at SupportAPI.Services.DbInitializer.SeedAsync() in D:\HRM\HRM\SupportAPI\Services\DbInitializer.cs:line 134
+   at Program.<Main>$(String[] args) in D:\HRM\HRM\SupportAPI\Program.cs:line 191
+2026-09-11 15:39:17.180 +05:30 [INF] User profile is available. Using 'C:\Users\Dell\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-09-11 15:39:17.214 +05:30 [WRN] The WebRootPath was not found: D:\HRM\HRM\SupportAPI\wwwroot. Static files may be unavailable.
+2026-09-11 15:39:17.230 +05:30 [INF] Now listening on: http://localhost:3000
+2026-09-11 15:39:17.231 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-11 15:39:17.231 +05:30 [INF] Hosting environment: Development
+2026-09-11 15:39:17.231 +05:30 [INF] Content root path: D:\HRM\HRM\SupportAPI
+2026-09-11 15:41:59.014 +05:30 [INF] Executed DbCommand (33ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:41:59.054 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-09-11 15:41:59.091 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:41:59.124 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_class c
+    JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND
+          c.relname='__EFMigrationsHistory'
+)
+2026-09-11 15:41:59.125 +05:30 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId";
+2026-09-11 15:41:59.142 +05:30 [INF] No migrations were applied. The database is already up to date.
+2026-09-11 15:41:59.281 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Departments" AS d)
+2026-09-11 15:41:59.293 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Designations" AS d)
+2026-09-11 15:41:59.301 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Branches" AS b)
+2026-09-11 15:41:59.310 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Employees" AS e)
+2026-09-11 15:41:59.359 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'ENG'
+LIMIT 1
+2026-09-11 15:41:59.410 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."Code", d."CreatedAt", d."Description", d."HeadId", d."IsActive", d."Name", d."UpdatedAt"
+FROM "Departments" AS d
+WHERE d."Code" = 'HR'
+LIMIT 1
+2026-09-11 15:41:59.415 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'Team Lead'
+LIMIT 1
+2026-09-11 15:41:59.451 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'Software Engineer'
+LIMIT 1
+2026-09-11 15:41:59.455 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT d."Id", d."CreatedAt", d."DepartmentId", d."IsActive", d."Level", d."MaxSalary", d."MinSalary", d."Title", d."UpdatedAt"
+FROM "Designations" AS d
+WHERE d."Title" = 'HR Manager'
+LIMIT 1
+2026-09-11 15:41:59.460 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT b."Id", b."Address", b."City", b."Code", b."Country", b."CreatedAt", b."Email", b."IsActive", b."Name", b."Phone", b."State", b."UpdatedAt"
+FROM "Branches" AS b
+WHERE b."Code" = 'HQ'
+LIMIT 1
+2026-09-11 15:41:59.658 +05:30 [INF] Executed DbCommand (12ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?', @p4='?', @p5='?' (DbType = Guid), @p6='?', @p7='?', @p8='?' (DbType = DateTime), @p9='?' (DbType = DateTime), @p10='?' (DbType = Guid), @p11='?' (DbType = Guid), @p12='?', @p13='?', @p14='?', @p15='?', @p16='?', @p17='?', @p18='?', @p19='?', @p20='?', @p21='?', @p22='?' (DbType = DateTime), @p23='?', @p24='?', @p25='?', @p26='?', @p27='?' (DbType = Guid), @p28='?' (DbType = Decimal), @p29='?', @p30='?', @p31='?' (DbType = Guid), @p32='?' (DbType = DateTime), @p33='?', @p34='?', @p35='?' (DbType = Guid), @p36='?', @p37='?', @p38='?', @p39='?', @p40='?' (DbType = Guid), @p41='?', @p42='?', @p43='?' (DbType = DateTime), @p44='?' (DbType = DateTime), @p45='?' (DbType = Guid), @p46='?' (DbType = Guid), @p47='?', @p48='?', @p49='?', @p50='?', @p51='?', @p52='?', @p53='?', @p54='?', @p55='?', @p56='?', @p57='?' (DbType = DateTime), @p58='?', @p59='?', @p60='?', @p61='?', @p62='?' (DbType = Guid), @p63='?' (DbType = Decimal), @p64='?', @p65='?', @p66='?' (DbType = Guid), @p67='?' (DbType = DateTime), @p68='?', @p69='?', @p70='?' (DbType = Guid), @p71='?', @p72='?', @p73='?', @p74='?', @p75='?' (DbType = Guid), @p76='?', @p77='?', @p78='?' (DbType = DateTime), @p79='?' (DbType = DateTime), @p80='?' (DbType = Guid), @p81='?' (DbType = Guid), @p82='?', @p83='?', @p84='?', @p85='?', @p86='?', @p87='?', @p88='?', @p89='?', @p90='?', @p91='?', @p92='?' (DbType = DateTime), @p93='?', @p94='?', @p95='?', @p96='?', @p97='?' (DbType = Guid), @p98='?' (DbType = Decimal), @p99='?', @p100='?', @p101='?' (DbType = Guid), @p102='?' (DbType = DateTime), @p103='?', @p104='?', @p105='?' (DbType = Guid), @p106='?', @p107='?', @p108='?', @p109='?', @p110='?' (DbType = Guid), @p111='?', @p112='?', @p113='?' (DbType = DateTime), @p114='?' (DbType = DateTime), @p115='?' (DbType = Guid), @p116='?' (DbType = Guid), @p117='?', @p118='?', @p119='?', @p120='?', @p121='?', @p122='?', @p123='?', @p124='?', @p125='?', @p126='?', @p127='?' (DbType = DateTime), @p128='?', @p129='?', @p130='?', @p131='?', @p132='?' (DbType = Guid), @p133='?' (DbType = Decimal), @p134='?', @p135='?', @p136='?' (DbType = Guid), @p137='?' (DbType = DateTime), @p138='?', @p139='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, @p55, @p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, @p66, @p67, @p68, @p69);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p70, @p71, @p72, @p73, @p74, @p75, @p76, @p77, @p78, @p79, @p80, @p81, @p82, @p83, @p84, @p85, @p86, @p87, @p88, @p89, @p90, @p91, @p92, @p93, @p94, @p95, @p96, @p97, @p98, @p99, @p100, @p101, @p102, @p103, @p104);
+INSERT INTO "Employees" ("Id", "Address", "Avatar", "BankAccountNumber", "BankName", "BranchId", "City", "Country", "CreatedAt", "DateOfBirth", "DepartmentId", "DesignationId", "Email", "EmergencyContactName", "EmergencyContactPhone", "EmergencyContactRelation", "EmployeeId", "EmploymentStatus", "EmploymentType", "FirstName", "Gender", "IfscCode", "JoiningDate", "LastName", "MaritalStatus", "Nationality", "Phone", "ReportingManagerId", "Salary", "State", "TaxId", "TeamId", "UpdatedAt", "WorkLocation", "ZipCode")
+VALUES (@p105, @p106, @p107, @p108, @p109, @p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, @p121, @p122, @p123, @p124, @p125, @p126, @p127, @p128, @p129, @p130, @p131, @p132, @p133, @p134, @p135, @p136, @p137, @p138, @p139);
+2026-09-11 15:41:59.683 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Users" AS u)
+2026-09-11 15:41:59.691 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT e."Id", e."Address", e."Avatar", e."BankAccountNumber", e."BankName", e."BranchId", e."City", e."Country", e."CreatedAt", e."DateOfBirth", e."DepartmentId", e."DesignationId", e."Email", e."EmergencyContactName", e."EmergencyContactPhone", e."EmergencyContactRelation", e."EmployeeId", e."EmploymentStatus", e."EmploymentType", e."FirstName", e."Gender", e."IfscCode", e."JoiningDate", e."LastName", e."MaritalStatus", e."Nationality", e."Phone", e."ReportingManagerId", e."Salary", e."State", e."TaxId", e."TeamId", e."UpdatedAt", e."WorkLocation", e."ZipCode"
+FROM "Employees" AS e
+WHERE e."Email" = 'admin@hrm.com'
+LIMIT 1
+2026-09-11 15:41:59.700 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT e."Id", e."Address", e."Avatar", e."BankAccountNumber", e."BankName", e."BranchId", e."City", e."Country", e."CreatedAt", e."DateOfBirth", e."DepartmentId", e."DesignationId", e."Email", e."EmergencyContactName", e."EmergencyContactPhone", e."EmergencyContactRelation", e."EmployeeId", e."EmploymentStatus", e."EmploymentType", e."FirstName", e."Gender", e."IfscCode", e."JoiningDate", e."LastName", e."MaritalStatus", e."Nationality", e."Phone", e."ReportingManagerId", e."Salary", e."State", e."TaxId", e."TeamId", e."UpdatedAt", e."WorkLocation", e."ZipCode"
+FROM "Employees" AS e
+WHERE e."Email" = 'hr@hrm.com'
+LIMIT 1
+2026-09-11 15:41:59.707 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT e."Id", e."Address", e."Avatar", e."BankAccountNumber", e."BankName", e."BranchId", e."City", e."Country", e."CreatedAt", e."DateOfBirth", e."DepartmentId", e."DesignationId", e."Email", e."EmergencyContactName", e."EmergencyContactPhone", e."EmergencyContactRelation", e."EmployeeId", e."EmploymentStatus", e."EmploymentType", e."FirstName", e."Gender", e."IfscCode", e."JoiningDate", e."LastName", e."MaritalStatus", e."Nationality", e."Phone", e."ReportingManagerId", e."Salary", e."State", e."TaxId", e."TeamId", e."UpdatedAt", e."WorkLocation", e."ZipCode"
+FROM "Employees" AS e
+WHERE e."Email" = 'tl@hrm.com'
+LIMIT 1
+2026-09-11 15:41:59.714 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT e."Id", e."Address", e."Avatar", e."BankAccountNumber", e."BankName", e."BranchId", e."City", e."Country", e."CreatedAt", e."DateOfBirth", e."DepartmentId", e."DesignationId", e."Email", e."EmergencyContactName", e."EmergencyContactPhone", e."EmergencyContactRelation", e."EmployeeId", e."EmploymentStatus", e."EmploymentType", e."FirstName", e."Gender", e."IfscCode", e."JoiningDate", e."LastName", e."MaritalStatus", e."Nationality", e."Phone", e."ReportingManagerId", e."Salary", e."State", e."TaxId", e."TeamId", e."UpdatedAt", e."WorkLocation", e."ZipCode"
+FROM "Employees" AS e
+WHERE e."Email" = 'emp@hrm.com'
+LIMIT 1
+2026-09-11 15:42:00.300 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?' (DbType = DateTime), @p4='?', @p5='?', @p6='?', @p7='?' (DbType = Guid), @p8='?', @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTime), @p11='?', @p12='?' (DbType = Boolean), @p13='?', @p14='?', @p15='?' (DbType = DateTime), @p16='?', @p17='?' (DbType = DateTime), @p18='?' (DbType = Guid), @p19='?', @p20='?', @p21='?' (DbType = DateTime), @p22='?', @p23='?', @p24='?', @p25='?' (DbType = Guid), @p26='?', @p27='?' (DbType = Boolean), @p28='?' (DbType = DateTime), @p29='?', @p30='?' (DbType = Boolean), @p31='?', @p32='?', @p33='?' (DbType = DateTime), @p34='?', @p35='?' (DbType = DateTime), @p36='?' (DbType = Guid), @p37='?', @p38='?', @p39='?' (DbType = DateTime), @p40='?', @p41='?', @p42='?', @p43='?' (DbType = Guid), @p44='?', @p45='?' (DbType = Boolean), @p46='?' (DbType = DateTime), @p47='?', @p48='?' (DbType = Boolean), @p49='?', @p50='?', @p51='?' (DbType = DateTime), @p52='?', @p53='?' (DbType = DateTime), @p54='?' (DbType = Guid), @p55='?', @p56='?', @p57='?' (DbType = DateTime), @p58='?', @p59='?', @p60='?', @p61='?' (DbType = Guid), @p62='?', @p63='?' (DbType = Boolean), @p64='?' (DbType = DateTime), @p65='?', @p66='?' (DbType = Boolean), @p67='?', @p68='?', @p69='?' (DbType = DateTime), @p70='?', @p71='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Users" ("Id", "Avatar", "Branch", "CreatedAt", "Department", "Designation", "Email", "EmployeeId", "FirstName", "IsActive", "LastLoginAt", "LastName", "MfaEnabled", "PasswordHash", "RefreshToken", "RefreshTokenExpiry", "Role", "UpdatedAt")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17);
+INSERT INTO "Users" ("Id", "Avatar", "Branch", "CreatedAt", "Department", "Designation", "Email", "EmployeeId", "FirstName", "IsActive", "LastLoginAt", "LastName", "MfaEnabled", "PasswordHash", "RefreshToken", "RefreshTokenExpiry", "Role", "UpdatedAt")
+VALUES (@p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34, @p35);
+INSERT INTO "Users" ("Id", "Avatar", "Branch", "CreatedAt", "Department", "Designation", "Email", "EmployeeId", "FirstName", "IsActive", "LastLoginAt", "LastName", "MfaEnabled", "PasswordHash", "RefreshToken", "RefreshTokenExpiry", "Role", "UpdatedAt")
+VALUES (@p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53);
+INSERT INTO "Users" ("Id", "Avatar", "Branch", "CreatedAt", "Department", "Designation", "Email", "EmployeeId", "FirstName", "IsActive", "LastLoginAt", "LastName", "MfaEnabled", "PasswordHash", "RefreshToken", "RefreshTokenExpiry", "Role", "UpdatedAt")
+VALUES (@p54, @p55, @p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, @p66, @p67, @p68, @p69, @p70, @p71);
+2026-09-11 15:42:00.309 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Shifts" AS s)
+2026-09-11 15:42:00.337 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime), @p3='?', @p4='?' (DbType = Time), @p5='?' (DbType = Boolean), @p6='?', @p7='?' (DbType = Time), @p8='?' (DbType = Guid), @p9='?' (DbType = Int32), @p10='?' (DbType = DateTime), @p11='?', @p12='?' (DbType = Time), @p13='?' (DbType = Boolean), @p14='?', @p15='?' (DbType = Time)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Shifts" ("Id", "BreakMinutes", "CreatedAt", "Description", "EndTime", "IsActive", "Name", "StartTime")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+INSERT INTO "Shifts" ("Id", "BreakMinutes", "CreatedAt", "Description", "EndTime", "IsActive", "Name", "StartTime")
+VALUES (@p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15);
+2026-09-11 15:42:00.366 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT e."Id", e."Address", e."Avatar", e."BankAccountNumber", e."BankName", e."BranchId", e."City", e."Country", e."CreatedAt", e."DateOfBirth", e."DepartmentId", e."DesignationId", e."Email", e."EmergencyContactName", e."EmergencyContactPhone", e."EmergencyContactRelation", e."EmployeeId", e."EmploymentStatus", e."EmploymentType", e."FirstName", e."Gender", e."IfscCode", e."JoiningDate", e."LastName", e."MaritalStatus", e."Nationality", e."Phone", e."ReportingManagerId", e."Salary", e."State", e."TaxId", e."TeamId", e."UpdatedAt", e."WorkLocation", e."ZipCode"
+FROM "Employees" AS e
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM "LeaveBalances" AS l
+    WHERE l."EmployeeId" = e."Id")
+2026-09-11 15:42:00.387 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?', @p4='?' (DbType = Int32), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (DbType = Guid), @p8='?' (DbType = Guid), @p9='?' (DbType = Int32), @p10='?', @p11='?' (DbType = Int32), @p12='?' (DbType = Int32), @p13='?' (DbType = Int32), @p14='?' (DbType = Guid), @p15='?' (DbType = Guid), @p16='?' (DbType = Int32), @p17='?', @p18='?' (DbType = Int32), @p19='?' (DbType = Int32), @p20='?' (DbType = Int32), @p21='?' (DbType = Guid), @p22='?' (DbType = Guid), @p23='?' (DbType = Int32), @p24='?', @p25='?' (DbType = Int32), @p26='?' (DbType = Int32), @p27='?' (DbType = Int32), @p28='?' (DbType = Guid), @p29='?' (DbType = Guid), @p30='?' (DbType = Int32), @p31='?', @p32='?' (DbType = Int32), @p33='?' (DbType = Int32), @p34='?' (DbType = Int32), @p35='?' (DbType = Guid), @p36='?' (DbType = Guid), @p37='?' (DbType = Int32), @p38='?', @p39='?' (DbType = Int32), @p40='?' (DbType = Int32), @p41='?' (DbType = Int32), @p42='?' (DbType = Guid), @p43='?' (DbType = Guid), @p44='?' (DbType = Int32), @p45='?', @p46='?' (DbType = Int32), @p47='?' (DbType = Int32), @p48='?' (DbType = Int32), @p49='?' (DbType = Guid), @p50='?' (DbType = Guid), @p51='?' (DbType = Int32), @p52='?', @p53='?' (DbType = Int32), @p54='?' (DbType = Int32), @p55='?' (DbType = Int32), @p56='?' (DbType = Guid), @p57='?' (DbType = Guid), @p58='?' (DbType = Int32), @p59='?', @p60='?' (DbType = Int32), @p61='?' (DbType = Int32), @p62='?' (DbType = Int32), @p63='?' (DbType = Guid), @p64='?' (DbType = Guid), @p65='?' (DbType = Int32), @p66='?', @p67='?' (DbType = Int32), @p68='?' (DbType = Int32), @p69='?' (DbType = Int32), @p70='?' (DbType = Guid), @p71='?' (DbType = Guid), @p72='?' (DbType = Int32), @p73='?', @p74='?' (DbType = Int32), @p75='?' (DbType = Int32), @p76='?' (DbType = Int32), @p77='?' (DbType = Guid), @p78='?' (DbType = Guid), @p79='?' (DbType = Int32), @p80='?', @p81='?' (DbType = Int32), @p82='?' (DbType = Int32), @p83='?' (DbType = Int32), @p84='?' (DbType = Guid), @p85='?' (DbType = Guid), @p86='?' (DbType = Int32), @p87='?', @p88='?' (DbType = Int32), @p89='?' (DbType = Int32), @p90='?' (DbType = Int32), @p91='?' (DbType = Guid), @p92='?' (DbType = Guid), @p93='?' (DbType = Int32), @p94='?', @p95='?' (DbType = Int32), @p96='?' (DbType = Int32), @p97='?' (DbType = Int32), @p98='?' (DbType = Guid), @p99='?' (DbType = Guid), @p100='?' (DbType = Int32), @p101='?', @p102='?' (DbType = Int32), @p103='?' (DbType = Int32), @p104='?' (DbType = Int32), @p105='?' (DbType = Guid), @p106='?' (DbType = Guid), @p107='?' (DbType = Int32), @p108='?', @p109='?' (DbType = Int32), @p110='?' (DbType = Int32), @p111='?' (DbType = Int32), @p112='?' (DbType = Guid), @p113='?' (DbType = Guid), @p114='?' (DbType = Int32), @p115='?', @p116='?' (DbType = Int32), @p117='?' (DbType = Int32), @p118='?' (DbType = Int32), @p119='?' (DbType = Guid), @p120='?' (DbType = Guid), @p121='?' (DbType = Int32), @p122='?', @p123='?' (DbType = Int32), @p124='?' (DbType = Int32), @p125='?' (DbType = Int32), @p126='?' (DbType = Guid), @p127='?' (DbType = Guid), @p128='?' (DbType = Int32), @p129='?', @p130='?' (DbType = Int32), @p131='?' (DbType = Int32), @p132='?' (DbType = Int32), @p133='?' (DbType = Guid), @p134='?' (DbType = Guid), @p135='?' (DbType = Int32), @p136='?', @p137='?' (DbType = Int32), @p138='?' (DbType = Int32), @p139='?' (DbType = Int32), @p140='?' (DbType = Guid), @p141='?' (DbType = Guid), @p142='?' (DbType = Int32), @p143='?', @p144='?' (DbType = Int32), @p145='?' (DbType = Int32), @p146='?' (DbType = Int32), @p147='?' (DbType = Guid), @p148='?' (DbType = Guid), @p149='?' (DbType = Int32), @p150='?', @p151='?' (DbType = Int32), @p152='?' (DbType = Int32), @p153='?' (DbType = Int32), @p154='?' (DbType = Guid), @p155='?' (DbType = Guid), @p156='?' (DbType = Int32), @p157='?', @p158='?' (DbType = Int32), @p159='?' (DbType = Int32), @p160='?' (DbType = Int32), @p161='?' (DbType = Guid), @p162='?' (DbType = Guid), @p163='?' (DbType = Int32), @p164='?', @p165='?' (DbType = Int32), @p166='?' (DbType = Int32), @p167='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p7, @p8, @p9, @p10, @p11, @p12, @p13);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p14, @p15, @p16, @p17, @p18, @p19, @p20);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p21, @p22, @p23, @p24, @p25, @p26, @p27);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p28, @p29, @p30, @p31, @p32, @p33, @p34);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p35, @p36, @p37, @p38, @p39, @p40, @p41);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p42, @p43, @p44, @p45, @p46, @p47, @p48);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p49, @p50, @p51, @p52, @p53, @p54, @p55);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p56, @p57, @p58, @p59, @p60, @p61, @p62);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p63, @p64, @p65, @p66, @p67, @p68, @p69);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p70, @p71, @p72, @p73, @p74, @p75, @p76);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p77, @p78, @p79, @p80, @p81, @p82, @p83);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p84, @p85, @p86, @p87, @p88, @p89, @p90);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p91, @p92, @p93, @p94, @p95, @p96, @p97);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p98, @p99, @p100, @p101, @p102, @p103, @p104);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p105, @p106, @p107, @p108, @p109, @p110, @p111);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p112, @p113, @p114, @p115, @p116, @p117, @p118);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p119, @p120, @p121, @p122, @p123, @p124, @p125);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p126, @p127, @p128, @p129, @p130, @p131, @p132);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p133, @p134, @p135, @p136, @p137, @p138, @p139);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p140, @p141, @p142, @p143, @p144, @p145, @p146);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p147, @p148, @p149, @p150, @p151, @p152, @p153);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p154, @p155, @p156, @p157, @p158, @p159, @p160);
+INSERT INTO "LeaveBalances" ("Id", "EmployeeId", "Entitled", "LeaveType", "Remaining", "Taken", "Year")
+VALUES (@p161, @p162, @p163, @p164, @p165, @p166, @p167);
+2026-09-11 15:42:00.395 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "SystemSettings" AS s)
+2026-09-11 15:42:00.414 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?', @p4='?' (DbType = DateTime), @p5='?' (DbType = Guid), @p6='?', @p7='?' (DbType = Guid), @p8='?', @p9='?', @p10='?', @p11='?' (DbType = DateTime), @p12='?' (DbType = Guid), @p13='?', @p14='?' (DbType = Guid), @p15='?', @p16='?', @p17='?', @p18='?' (DbType = DateTime), @p19='?' (DbType = Guid), @p20='?', @p21='?' (DbType = Guid), @p22='?', @p23='?', @p24='?', @p25='?' (DbType = DateTime), @p26='?' (DbType = Guid), @p27='?', @p28='?' (DbType = Guid), @p29='?', @p30='?', @p31='?', @p32='?' (DbType = DateTime), @p33='?' (DbType = Guid), @p34='?', @p35='?' (DbType = Guid), @p36='?', @p37='?', @p38='?', @p39='?' (DbType = DateTime), @p40='?' (DbType = Guid), @p41='?', @p42='?' (DbType = Guid), @p43='?', @p44='?', @p45='?', @p46='?' (DbType = DateTime), @p47='?' (DbType = Guid), @p48='?', @p49='?' (DbType = Guid), @p50='?', @p51='?', @p52='?', @p53='?' (DbType = DateTime), @p54='?' (DbType = Guid), @p55='?', @p56='?' (DbType = Guid), @p57='?', @p58='?', @p59='?', @p60='?' (DbType = DateTime), @p61='?' (DbType = Guid), @p62='?', @p63='?' (DbType = Guid), @p64='?', @p65='?', @p66='?', @p67='?' (DbType = DateTime), @p68='?' (DbType = Guid), @p69='?', @p70='?' (DbType = Guid), @p71='?', @p72='?', @p73='?', @p74='?' (DbType = DateTime), @p75='?' (DbType = Guid), @p76='?', @p77='?' (DbType = Guid), @p78='?', @p79='?', @p80='?', @p81='?' (DbType = DateTime), @p82='?' (DbType = Guid), @p83='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p7, @p8, @p9, @p10, @p11, @p12, @p13);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p14, @p15, @p16, @p17, @p18, @p19, @p20);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p21, @p22, @p23, @p24, @p25, @p26, @p27);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p28, @p29, @p30, @p31, @p32, @p33, @p34);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p35, @p36, @p37, @p38, @p39, @p40, @p41);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p42, @p43, @p44, @p45, @p46, @p47, @p48);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p49, @p50, @p51, @p52, @p53, @p54, @p55);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p56, @p57, @p58, @p59, @p60, @p61, @p62);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p63, @p64, @p65, @p66, @p67, @p68, @p69);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p70, @p71, @p72, @p73, @p74, @p75, @p76);
+INSERT INTO "SystemSettings" ("Id", "Category", "Description", "Key", "UpdatedAt", "UpdatedById", "Value")
+VALUES (@p77, @p78, @p79, @p80, @p81, @p82, @p83);
+2026-09-11 15:42:00.421 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "AppModules" AS a)
+2026-09-11 15:42:00.434 +05:30 [INF] Executed DbCommand (2ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?', @p3='?' (DbType = Boolean), @p4='?', @p5='?' (DbType = Guid), @p6='?' (DbType = Int32), @p7='?', @p8='?' (DbType = Boolean), @p9='?', @p10='?' (DbType = Guid), @p11='?' (DbType = Int32), @p12='?', @p13='?' (DbType = Boolean), @p14='?', @p15='?' (DbType = Guid), @p16='?' (DbType = Int32), @p17='?', @p18='?' (DbType = Boolean), @p19='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "AppModules" ("Id", "DisplayOrder", "Icon", "IsActive", "Name")
+VALUES (@p0, @p1, @p2, @p3, @p4);
+INSERT INTO "AppModules" ("Id", "DisplayOrder", "Icon", "IsActive", "Name")
+VALUES (@p5, @p6, @p7, @p8, @p9);
+INSERT INTO "AppModules" ("Id", "DisplayOrder", "Icon", "IsActive", "Name")
+VALUES (@p10, @p11, @p12, @p13, @p14);
+INSERT INTO "AppModules" ("Id", "DisplayOrder", "Icon", "IsActive", "Name")
+VALUES (@p15, @p16, @p17, @p18, @p19);
+2026-09-11 15:42:00.462 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?', @p3='?' (DbType = Boolean), @p4='?' (DbType = Guid), @p5='?', @p6='?', @p7='?' (DbType = Guid), @p8='?' (DbType = Int32), @p9='?', @p10='?' (DbType = Boolean), @p11='?' (DbType = Guid), @p12='?', @p13='?', @p14='?' (DbType = Guid), @p15='?' (DbType = Int32), @p16='?', @p17='?' (DbType = Boolean), @p18='?' (DbType = Guid), @p19='?', @p20='?', @p21='?' (DbType = Guid), @p22='?' (DbType = Int32), @p23='?', @p24='?' (DbType = Boolean), @p25='?' (DbType = Guid), @p26='?', @p27='?', @p28='?' (DbType = Guid), @p29='?' (DbType = Int32), @p30='?', @p31='?' (DbType = Boolean), @p32='?' (DbType = Guid), @p33='?', @p34='?', @p35='?' (DbType = Guid), @p36='?' (DbType = Int32), @p37='?', @p38='?' (DbType = Boolean), @p39='?' (DbType = Guid), @p40='?', @p41='?', @p42='?' (DbType = Guid), @p43='?' (DbType = Int32), @p44='?', @p45='?' (DbType = Boolean), @p46='?' (DbType = Guid), @p47='?', @p48='?', @p49='?' (DbType = Guid), @p50='?' (DbType = Int32), @p51='?', @p52='?' (DbType = Boolean), @p53='?' (DbType = Guid), @p54='?', @p55='?', @p56='?' (DbType = Guid), @p57='?' (DbType = Int32), @p58='?', @p59='?' (DbType = Boolean), @p60='?' (DbType = Guid), @p61='?', @p62='?', @p63='?' (DbType = Guid), @p64='?' (DbType = Int32), @p65='?', @p66='?' (DbType = Boolean), @p67='?' (DbType = Guid), @p68='?', @p69='?', @p70='?' (DbType = Guid), @p71='?' (DbType = Int32), @p72='?', @p73='?' (DbType = Boolean), @p74='?' (DbType = Guid), @p75='?', @p76='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p7, @p8, @p9, @p10, @p11, @p12, @p13);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p14, @p15, @p16, @p17, @p18, @p19, @p20);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p21, @p22, @p23, @p24, @p25, @p26, @p27);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p28, @p29, @p30, @p31, @p32, @p33, @p34);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p35, @p36, @p37, @p38, @p39, @p40, @p41);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p42, @p43, @p44, @p45, @p46, @p47, @p48);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p49, @p50, @p51, @p52, @p53, @p54, @p55);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p56, @p57, @p58, @p59, @p60, @p61, @p62);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p63, @p64, @p65, @p66, @p67, @p68, @p69);
+INSERT INTO "AppFeatures" ("Id", "DisplayOrder", "Icon", "IsActive", "ModuleId", "Name", "Path")
+VALUES (@p70, @p71, @p72, @p73, @p74, @p75, @p76);
+2026-09-11 15:42:00.483 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Guid), @p2='?', @p3='?' (DbType = Guid), @p4='?' (DbType = Guid), @p5='?', @p6='?' (DbType = Guid), @p7='?' (DbType = Guid), @p8='?', @p9='?' (DbType = Guid), @p10='?' (DbType = Guid), @p11='?', @p12='?' (DbType = Guid), @p13='?' (DbType = Guid), @p14='?', @p15='?' (DbType = Guid), @p16='?' (DbType = Guid), @p17='?', @p18='?' (DbType = Guid), @p19='?' (DbType = Guid), @p20='?', @p21='?' (DbType = Guid), @p22='?' (DbType = Guid), @p23='?', @p24='?' (DbType = Guid), @p25='?' (DbType = Guid), @p26='?', @p27='?' (DbType = Guid), @p28='?' (DbType = Guid), @p29='?', @p30='?' (DbType = Guid), @p31='?' (DbType = Guid), @p32='?', @p33='?' (DbType = Guid), @p34='?' (DbType = Guid), @p35='?', @p36='?' (DbType = Guid), @p37='?' (DbType = Guid), @p38='?', @p39='?' (DbType = Guid), @p40='?' (DbType = Guid), @p41='?', @p42='?' (DbType = Guid), @p43='?' (DbType = Guid), @p44='?', @p45='?' (DbType = Guid), @p46='?' (DbType = Guid), @p47='?', @p48='?' (DbType = Guid), @p49='?' (DbType = Guid), @p50='?', @p51='?' (DbType = Guid), @p52='?' (DbType = Guid), @p53='?', @p54='?' (DbType = Guid), @p55='?' (DbType = Guid), @p56='?', @p57='?' (DbType = Guid), @p58='?' (DbType = Guid), @p59='?', @p60='?' (DbType = Guid), @p61='?' (DbType = Guid), @p62='?', @p63='?' (DbType = Guid), @p64='?' (DbType = Guid), @p65='?', @p66='?' (DbType = Guid), @p67='?' (DbType = Guid), @p68='?', @p69='?' (DbType = Guid), @p70='?' (DbType = Guid), @p71='?', @p72='?' (DbType = Guid), @p73='?' (DbType = Guid), @p74='?', @p75='?' (DbType = Guid), @p76='?' (DbType = Guid), @p77='?', @p78='?' (DbType = Guid), @p79='?' (DbType = Guid), @p80='?', @p81='?' (DbType = Guid), @p82='?' (DbType = Guid), @p83='?', @p84='?' (DbType = Guid), @p85='?' (DbType = Guid), @p86='?', @p87='?' (DbType = Guid), @p88='?' (DbType = Guid), @p89='?', @p90='?' (DbType = Guid), @p91='?' (DbType = Guid), @p92='?', @p93='?' (DbType = Guid), @p94='?' (DbType = Guid), @p95='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p0, @p1, @p2);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p3, @p4, @p5);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p6, @p7, @p8);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p9, @p10, @p11);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p12, @p13, @p14);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p15, @p16, @p17);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p18, @p19, @p20);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p21, @p22, @p23);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p24, @p25, @p26);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p27, @p28, @p29);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p30, @p31, @p32);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p33, @p34, @p35);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p36, @p37, @p38);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p39, @p40, @p41);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p42, @p43, @p44);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p45, @p46, @p47);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p48, @p49, @p50);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p51, @p52, @p53);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p54, @p55, @p56);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p57, @p58, @p59);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p60, @p61, @p62);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p63, @p64, @p65);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p66, @p67, @p68);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p69, @p70, @p71);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p72, @p73, @p74);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p75, @p76, @p77);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p78, @p79, @p80);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p81, @p82, @p83);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p84, @p85, @p86);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p87, @p88, @p89);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p90, @p91, @p92);
+INSERT INTO "FeatureRoles" ("Id", "FeatureId", "Role")
+VALUES (@p93, @p94, @p95);
+2026-09-11 15:42:00.614 +05:30 [INF] User profile is available. Using 'C:\Users\Dell\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-09-11 15:42:00.652 +05:30 [WRN] The WebRootPath was not found: D:\HRM\HRM\SupportAPI\wwwroot. Static files may be unavailable.
+2026-09-11 15:42:00.668 +05:30 [INF] Now listening on: http://localhost:3000
+2026-09-11 15:42:00.669 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-11 15:42:00.669 +05:30 [INF] Hosting environment: Development
+2026-09-11 15:42:00.669 +05:30 [INF] Content root path: D:\HRM\HRM\SupportAPI
+2026-09-11 15:42:14.840 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:3000/api/onboarding - null null
+2026-09-11 15:42:14.840 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/department-distribution - null null
+2026-09-11 15:42:14.840 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/upcoming-birthdays?days=7 - null null
+2026-09-11 15:42:14.840 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/stats - null null
+2026-09-11 15:42:14.840 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/attendance-trend?days=6 - null null
+2026-09-11 15:42:14.857 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.857 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.857 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.857 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.857 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.865 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:3000/api/onboarding - 204 null null 25.4531ms
+2026-09-11 15:42:14.865 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/upcoming-birthdays?days=7 - 204 null null 25.4532ms
+2026-09-11 15:42:14.865 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/department-distribution - 204 null null 25.5336ms
+2026-09-11 15:42:14.865 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/stats - 204 null null 25.4528ms
+2026-09-11 15:42:14.867 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:3000/api/dashboard/attendance-trend?days=6 - 204 null null 25.4532ms
+2026-09-11 15:42:14.872 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:3000/api/dashboard/department-distribution - null null
+2026-09-11 15:42:14.872 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:3000/api/dashboard/upcoming-birthdays?days=7 - null null
+2026-09-11 15:42:14.872 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:3000/api/onboarding - null null
+2026-09-11 15:42:14.872 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:3000/api/dashboard/stats - null null
+2026-09-11 15:42:14.872 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:3000/api/dashboard/attendance-trend?days=6 - null null
+2026-09-11 15:42:14.882 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.882 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.882 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.882 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.882 +05:30 [INF] CORS policy execution successful.
+2026-09-11 15:42:14.946 +05:30 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-09-11 15:42:14.946 +05:30 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-09-11 15:42:14.946 +05:30 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-09-11 15:42:14.946 +05:30 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-09-11 15:42:14.946 +05:30 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-09-11 15:42:14.953 +05:30 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-09-11 15:42:14.953 +05:30 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-09-11 15:42:14.953 +05:30 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-09-11 15:42:14.953 +05:30 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-09-11 15:42:14.953 +05:30 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-09-11 15:42:14.957 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-11 15:42:14.957 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-11 15:42:14.957 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-11 15:42:14.957 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (ADMIN|HR)
+2026-09-11 15:42:14.957 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-11 15:42:14.962 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-11 15:42:14.962 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-11 15:42:14.962 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-11 15:42:14.962 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-11 15:42:14.962 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-11 15:42:14.963 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:3000/api/dashboard/attendance-trend?days=6 - 401 0 null 90.791ms
+2026-09-11 15:42:14.963 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:3000/api/dashboard/upcoming-birthdays?days=7 - 401 0 null 91.0775ms
+2026-09-11 15:42:14.963 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:3000/api/dashboard/stats - 401 0 null 91.0946ms
+2026-09-11 15:42:14.963 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:3000/api/dashboard/department-distribution - 401 0 null 91.0882ms
+2026-09-11 15:42:14.963 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:3000/api/onboarding - 401 0 null 91.0776ms

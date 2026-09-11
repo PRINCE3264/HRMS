@@ -1,7 +1,0 @@
-<div class="search-input" [class.search-input--focused]="focused">
-      <i class="fas fa-search"></i>
-      <input type="text" [placeholder]="placeholder" [(ngModel)]="value" (ngModelChange)="onChange.emit($event)" (focus)="focused = true" (blur)="focused = false">
-      <button *ngIf="value" class="search-input__clear" (click)="value = ''; onChange.emit('')">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
