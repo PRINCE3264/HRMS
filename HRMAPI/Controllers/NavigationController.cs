@@ -25,7 +25,17 @@ public class NavigationController : ControllerBase
     [HttpGet("menu")]
     public async Task<IActionResult> GetMenu()
     {
-        var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+        var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+        if (string.IsNullOrEmpty(role))
+        {
+            return Ok(Array.Empty<object>());
+        }
+
+        var allowedFeatureIds = (await _context.FeatureRoles
+            .Where(fr => fr.Role == role)
+            .Select(fr => fr.FeatureId)
+            .ToListAsync()).ToHashSet();
 
         var modules = await _context.Modules
             .Include(m => m.Features)
@@ -40,7 +50,7 @@ public class NavigationController : ControllerBase
             m.Icon,
             DisplayOrder = m.SortOrder,
             Features = m.Features
-                .Where(f => !f.IsDeleted)
+                .Where(f => !f.IsDeleted && allowedFeatureIds.Contains(f.Id))
                 .OrderBy(f => f.SortOrder)
                 .Select(f => new
                 {

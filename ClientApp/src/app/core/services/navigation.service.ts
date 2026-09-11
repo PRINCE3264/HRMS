@@ -22,7 +22,7 @@ export class NavigationService {
   constructor(private http: HttpClient) {}
 
   getNavItemsFromDb(): Observable<NavItem[]> {
-    return this.http.get<any[]>(`${this.apiBaseUrl}/navigation/menu`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/navigation/menu`).pipe(
       map(modules => {
         return modules.map(m => {
           // If the module has only one feature, flatten it to a single menu item

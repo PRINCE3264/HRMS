@@ -43,6 +43,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Interview> Interviews => Set<Interview>();
     public DbSet<Module> Modules => Set<Module>();
     public DbSet<Feature> Features => Set<Feature>();
+    public DbSet<FeatureRole> FeatureRoles => Set<FeatureRole>();
     
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -343,6 +344,14 @@ public class ApplicationDbContext : DbContext
             e.HasOne(i => i.Candidate).WithMany().HasForeignKey(i => i.CandidateId).OnDelete(DeleteBehavior.Cascade);
             e.HasOne(i => i.Job).WithMany().HasForeignKey(i => i.JobId).OnDelete(DeleteBehavior.Cascade);
             e.HasOne(i => i.Interviewer).WithMany().HasForeignKey(i => i.InterviewerId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // FeatureRole
+        modelBuilder.Entity<FeatureRole>(e =>
+        {
+            e.HasIndex(fr => new { fr.FeatureId, fr.Role }).IsUnique();
+            e.Property(fr => fr.Role).HasMaxLength(20);
+            e.HasOne(fr => fr.Feature).WithMany().HasForeignKey(fr => fr.FeatureId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
