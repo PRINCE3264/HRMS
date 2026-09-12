@@ -1,21 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.DTOs.Work;
+using HRMAPI.Models.DTOs.Work;
 using HRMAPI.Enums;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Services;
 
-public interface IWorkUpdateService
-{
-    Task<List<DailyWorkUpdateDto>> GetMyUpdatesAsync(Guid employeeId);
-    Task<List<DailyWorkUpdateDto>> GetUpdatesByEmployeeAsync(Guid employeeId);
-    Task<List<DailyWorkUpdateDto>> GetUpdatesByDateAsync(DateTime date);
-    Task<DailyWorkUpdateDto> SubmitAsync(Guid employeeId, CreateDailyWorkUpdateDto dto);
-    Task<DailyWorkUpdateDto> UpdateAsync(Guid id, Guid employeeId, UpdateDailyWorkUpdateDto dto);
-    Task<bool> DeleteAsync(Guid id, Guid? requesterEmployeeId = null);
-}
+
 
 public class WorkUpdateService : IWorkUpdateService
 {
@@ -54,6 +48,7 @@ public class WorkUpdateService : IWorkUpdateService
             existing.TasksCompleted = dto.TasksCompleted;
             existing.WorkSummary = dto.WorkSummary;
             existing.IssuesBlockers = dto.IssuesBlockers;
+            existing.Media = dto.Media;
             existing.HoursWorked = dto.HoursWorked;
             existing.Status = WorkUpdateStatus.REVISED;
             existing.UpdatedAt = DateTime.UtcNow;
@@ -68,6 +63,7 @@ public class WorkUpdateService : IWorkUpdateService
             TasksCompleted = dto.TasksCompleted,
             WorkSummary = dto.WorkSummary,
             IssuesBlockers = dto.IssuesBlockers,
+            Media = dto.Media,
             HoursWorked = dto.HoursWorked,
             Status = WorkUpdateStatus.SUBMITTED
         };
@@ -83,6 +79,7 @@ public class WorkUpdateService : IWorkUpdateService
         if (dto.TasksCompleted != null) update.TasksCompleted = dto.TasksCompleted;
         if (dto.WorkSummary != null) update.WorkSummary = dto.WorkSummary;
         if (dto.IssuesBlockers != null) update.IssuesBlockers = dto.IssuesBlockers;
+        if (dto.Media != null) update.Media = dto.Media;
         if (dto.HoursWorked.HasValue) update.HoursWorked = dto.HoursWorked;
         if (!string.IsNullOrWhiteSpace(dto.Status) &&
             Enum.TryParse<WorkUpdateStatus>(dto.Status, true, out var status)) update.Status = status;
@@ -111,9 +108,11 @@ public class WorkUpdateService : IWorkUpdateService
         TasksCompleted = wu.TasksCompleted,
         WorkSummary = wu.WorkSummary,
         IssuesBlockers = wu.IssuesBlockers,
+        Media = wu.Media,
         HoursWorked = wu.HoursWorked,
         Status = wu.Status.ToString(),
         CreatedAt = wu.CreatedAt,
         UpdatedAt = wu.UpdatedAt
     };
 }
+

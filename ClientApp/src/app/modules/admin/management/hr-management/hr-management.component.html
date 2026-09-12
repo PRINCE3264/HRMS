@@ -1,11 +1,38 @@
-<app-page-header title="HR Management" subtitle="Employees with HR roles and responsibilities" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'HR Management'}]">
+<app-page-header title="HR Management" subtitle="Assign, review, and manage HR team members" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'HR Management'}]">
 </app-page-header>
+
+<div class="assign-row">
+  <select class="assign-select" [(ngModel)]="selectedEmployeeId">
+    <option value="" disabled>Select an employee to assign an HR role</option>
+    <option *ngFor="let c of candidates" [value]="c.id">
+      {{ c.fullName }} &mdash; {{ c.employeeCode }} ({{ c.designation || 'No designation' }})
+    </option>
+  </select>
+  <button class="btn btn--primary" [disabled]="assigning" (click)="assignAsHR()">
+    <i class="fas fa-user-shield"></i> Assign HR Role
+  </button>
+  <span class="assign-hint" *ngIf="candidates.length === 0">
+    No eligible employees (need an active account) to assign.
+  </span>
+</div>
 
 <app-data-table
   [columns]="columns"
   [data]="hrMembers"
   [pageSize]="10"
+  [actions]="tableActions"
   emptyTitle="No HR members found"
-  emptyMessage="No employees have an HR role in the system yet."
-  emptyIcon="fas fa-user-shield">
+  emptyMessage="Assign an employee above to give them an HR role."
+  emptyIcon="fas fa-user-shield"
+  (onActionClick)="onAction($event)">
 </app-data-table>
+
+<app-confirm-dialog
+  [isOpen]="showRevokeConfirm"
+  title="Revoke HR Role"
+  [message]="revoking ? 'Remove ' + revoking.fullName + ' from the HR role? They will become a regular Employee.' : ''"
+  confirmText="Revoke"
+  type="danger"
+  (confirmed)="confirmRevoke()"
+  (cancelled)="cancelRevoke()">
+</app-confirm-dialog>

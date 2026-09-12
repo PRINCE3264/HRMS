@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HRMAPI.DTOs.Common;
-using HRMAPI.DTOs.Performance;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.DTOs.Performance;
 using HRMAPI.Services;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 
@@ -10,9 +12,9 @@ namespace HRMAPI.Controllers;
 public class PerformanceController : BaseController
 {
     private readonly IPerformanceService _performanceService;
-    private readonly Services.IUserService _userService;
+    private readonly IUserService _userService;
 
-    public PerformanceController(IPerformanceService performanceService, Services.IUserService userService)
+    public PerformanceController(IPerformanceService performanceService, IUserService userService)
     {
         _performanceService = performanceService;
         _userService = userService;

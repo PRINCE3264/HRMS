@@ -1,24 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.DTOs.Common;
-using HRMAPI.DTOs.Employee;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.DTOs.Employee;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Services;
 
-public interface IEmployeeService
-{
-    Task<PaginatedResponse<EmployeeDto>> GetEmployeesAsync(PaginationQuery query, string? status = null, Guid? departmentId = null);
-    Task<List<EmployeeDto>> GetAllEmployeesAsync();
-    Task<EmployeeDto> GetEmployeeAsync(Guid id);
-    Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeDto dto);
-    Task<EmployeeDto> UpdateEmployeeAsync(Guid id, UpdateEmployeeDto dto);
-    Task<bool> DeleteEmployeeAsync(Guid id);
-    Task<EmployeeDto> SetEmploymentStatusAsync(Guid id, string status, DateTime? exitDate = null, string? exitReason = null);
-    Task<List<EmployeeDto>> GetByDepartmentAsync(Guid departmentId);
-    Task<List<EmployeeDto>> GetByTeamAsync(Guid teamId);
-}
+
 
 public class EmployeeService : IEmployeeService
 {
@@ -115,6 +106,8 @@ public class EmployeeService : IEmployeeService
             DepartmentId = dto.DepartmentId,
             DesignationId = dto.DesignationId,
             BranchId = dto.BranchId,
+            BranchName = dto.BranchName
+                ?? await _context.Branches.Where(b => b.Id == dto.BranchId).Select(b => b.Name).FirstOrDefaultAsync(),
             TeamId = dto.TeamId,
             ReportingManagerId = dto.ReportingManagerId,
             JoiningDate = dto.JoiningDate,
@@ -162,7 +155,8 @@ public class EmployeeService : IEmployeeService
         if (dto.Avatar != null) employee.Avatar = dto.Avatar;
         if (dto.DepartmentId.HasValue) employee.DepartmentId = dto.DepartmentId.Value;
         if (dto.DesignationId.HasValue) employee.DesignationId = dto.DesignationId.Value;
-        if (dto.BranchId.HasValue) employee.BranchId = dto.BranchId.Value;
+        if (dto.BranchId.HasValue) { employee.BranchId = dto.BranchId.Value; employee.BranchName = await _context.Branches.Where(b => b.Id == dto.BranchId.Value).Select(b => b.Name).FirstOrDefaultAsync(); }
+        if (dto.BranchName != null) employee.BranchName = dto.BranchName;
         if (dto.TeamId.HasValue) employee.TeamId = dto.TeamId;
         if (dto.ReportingManagerId.HasValue) employee.ReportingManagerId = dto.ReportingManagerId;
         if (dto.EmploymentType != null) employee.EmploymentType = ParseEnum(dto.EmploymentType, employee.EmploymentType);
@@ -253,7 +247,7 @@ public class EmployeeService : IEmployeeService
 
         foreach (var item in defaults)
         {
-            _context.LeaveBalances.Add(new Models.LeaveBalance
+            _context.LeaveBalances.Add(new LeaveBalance
             {
                 EmployeeId = employee.Id,
                 LeaveType = item.Key,
@@ -291,6 +285,7 @@ public class EmployeeService : IEmployeeService
         Designation = e.Designation?.Title,
         BranchId = e.BranchId,
         Branch = e.Branch?.Name,
+        BranchName = e.BranchName,
         TeamId = e.TeamId,
         TeamName = e.Team?.Name,
         ReportingManagerId = e.ReportingManagerId,
@@ -319,3 +314,4 @@ public class EmployeeService : IEmployeeService
         UpdatedAt = e.UpdatedAt
     };
 }
+

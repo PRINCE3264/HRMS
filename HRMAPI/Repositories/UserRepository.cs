@@ -1,7 +1,8 @@
+using HRMAPI.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
 
 namespace HRMAPI.Repositories;
 
@@ -17,6 +18,9 @@ public class UserRepository : Repository<User>, IUserRepository
 
     public async Task<IEnumerable<User>> GetByRoleAsync(string role) =>
         await _dbSet.Where(u => u.Role == Enum.Parse<Enums.UserRole>(role)).ToListAsync();
+
+    public async Task<IEnumerable<User>> GetByRoleIdAsync(Guid roleId) =>
+        await _dbSet.Where(u => u.RoleId == roleId).ToListAsync();
 
     public async Task<IEnumerable<User>> SearchAsync(string query) =>
         await _dbSet.Where(u =>

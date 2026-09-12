@@ -1,23 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.DTOs.Common;
-using HRMAPI.DTOs.Leave;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.DTOs.Leave;
 using HRMAPI.Enums;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Services;
 
-public interface ILeaveService
-{
-    Task<PaginatedResponse<LeaveRequestDto>> GetRequestsAsync(PaginationQuery query, string? status = null);
-    Task<List<LeaveRequestDto>> GetByEmployeeAsync(Guid employeeId);
-    Task<List<LeaveRequestDto>> GetPendingAsync();
-    Task<LeaveRequestDto> ApplyAsync(Guid employeeId, CreateLeaveRequestDto dto);
-    Task<LeaveRequestDto> ApproveOrRejectAsync(Guid id, ApproveLeaveDto dto, Guid approvedById);
-    Task<List<LeaveBalanceDto>> GetBalancesAsync(Guid employeeId);
-    Task<bool> CancelAsync(Guid id);
-}
+
 
 public class LeaveService : ILeaveService
 {
@@ -235,3 +228,4 @@ public class LeaveService : ILeaveService
         };
     }
 }
+

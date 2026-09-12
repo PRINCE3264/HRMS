@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
 using HRMAPI.Enums;
-using HRMAPI.Models;
+using HRMAPI.Models.Entities;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Services;
 
@@ -64,21 +66,50 @@ public class DbInitializer
         {
             var eng = await _context.Departments.FirstOrDefaultAsync(d => d.Code == "ENG");
             var hr = await _context.Departments.FirstOrDefaultAsync(d => d.Code == "HR");
+            var sales = await _context.Departments.FirstOrDefaultAsync(d => d.Code == "SALES");
             _context.Designations.AddRange(
                 new Designation { Title = "Software Engineer", Level = "Senior", DepartmentId = eng?.Id, MinSalary = 80000, MaxSalary = 180000 },
                 new Designation { Title = "Software Engineer", Level = "Junior", DepartmentId = eng?.Id, MinSalary = 45000, MaxSalary = 90000 },
                 new Designation { Title = "Team Lead", Level = "Lead", DepartmentId = eng?.Id, MinSalary = 120000, MaxSalary = 240000 },
                 new Designation { Title = "HR Manager", Level = "Manager", DepartmentId = hr?.Id, MinSalary = 70000, MaxSalary = 140000 },
-                new Designation { Title = "Recruiter", Level = "Junior", DepartmentId = hr?.Id, MinSalary = 40000, MaxSalary = 75000 });
+                new Designation { Title = "Recruiter", Level = "Junior", DepartmentId = hr?.Id, MinSalary = 40000, MaxSalary = 75000 },
+                new Designation { Title = "Branch Manager", Level = "Manager", DepartmentId = sales?.Id, MinSalary = 90000, MaxSalary = 180000 });
+            await _context.SaveChangesAsync();
+        }
+
+        // ============ Seed Company Profile ============
+        if (!await _context.CompanyProfiles.AnyAsync())
+        {
+            _context.CompanyProfiles.Add(new CompanyProfile
+            {
+                CompanyName = "HRM Pro Pvt Ltd",
+                Website = "https://www.hrmpro.com",
+                Email = "admin@hrmpro.com",
+                Phone = "+91-22-12345678",
+                Address = "100 Business Park",
+                City = "Mumbai",
+                State = "Maharashtra",
+                Country = "India",
+                ZipCode = "400001",
+                RegistrationNumber = "U74999MH2020PTC345678",
+                TaxId = "GSTIN-27AAACH7409R1ZD",
+                Currency = "INR",
+                FiscalYearStart = "April",
+                WorkingDays = "Mon - Sat",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
             await _context.SaveChangesAsync();
         }
 
         // ============ Seed Branches ============
         if (!await _context.Branches.AnyAsync())
         {
+            var company = await _context.CompanyProfiles.FirstOrDefaultAsync();
+            var companyId = company?.Id ?? Guid.Empty;
             _context.Branches.AddRange(
-                new Branch { Name = "Head Office", Code = "HQ", Address = "100 Business Park", City = "Mumbai", State = "Maharashtra", Country = "India", Phone = "+91-22-12345678", Email = "hq@hrmpro.com" },
-                new Branch { Name = "Pune Office", Code = "PNQ", Address = "Tech Hub", City = "Pune", State = "Maharashtra", Country = "India", Phone = "+91-20-87654321", Email = "pune@hrmpro.com" });
+                new Branch { Name = "Head Office", Code = "HQ", Address = "100 Business Park", City = "Mumbai", State = "Maharashtra", Country = "India", Phone = "+91-22-12345678", Email = "hq@hrmpro.com", CompanyId = companyId },
+                new Branch { Name = "Pune Office", Code = "PNQ", Address = "Tech Hub", City = "Pune", State = "Maharashtra", Country = "India", Phone = "+91-20-87654321", Email = "pune@hrmpro.com", CompanyId = companyId });
             await _context.SaveChangesAsync();
         }
 
@@ -87,9 +118,11 @@ public class DbInitializer
         {
             var eng = await _context.Departments.FirstOrDefaultAsync(d => d.Code == "ENG");
             var hr = await _context.Departments.FirstOrDefaultAsync(d => d.Code == "HR");
+            var sales = await _context.Departments.FirstOrDefaultAsync(d => d.Code == "SALES");
             var tlDes = await _context.Designations.FirstOrDefaultAsync(d => d.Title == "Team Lead");
             var seDes = await _context.Designations.FirstOrDefaultAsync(d => d.Title == "Software Engineer");
             var hrDes = await _context.Designations.FirstOrDefaultAsync(d => d.Title == "HR Manager");
+            var bmDes = await _context.Designations.FirstOrDefaultAsync(d => d.Title == "Branch Manager");
             var hq = await _context.Branches.FirstOrDefaultAsync(b => b.Code == "HQ");
 
             var adminEmp = new Employee
@@ -161,7 +194,26 @@ public class DbInitializer
                 Salary = 90000
             };
 
-            _context.Employees.AddRange(adminEmp, hrEmp, tlEmp, emp);
+            var jamesEmp = new Employee
+            {
+                EmployeeId = "EMP-24-0005",
+                FirstName = "James",
+                LastName = "Roberts",
+                Email = "james.roberts@hrm.com",
+                Phone = "+1-555-0100",
+                DepartmentId = sales?.Id ?? Guid.Empty,
+                DesignationId = bmDes?.Id ?? Guid.Empty,
+                BranchId = hq?.Id ?? Guid.Empty,
+                ReportingManagerId = null,
+                JoiningDate = new DateTime(2024, 5, 20, 0, 0, 0, DateTimeKind.Utc),
+                EmploymentType = EmploymentType.FULL_TIME,
+                EmploymentStatus = EmploymentStatus.ACTIVE,
+                Gender = Gender.MALE,
+                WorkLocation = "Head Office",
+                Salary = 95000
+            };
+
+            _context.Employees.AddRange(adminEmp, hrEmp, tlEmp, emp, jamesEmp);
             await _context.SaveChangesAsync();
         }
 
@@ -172,6 +224,7 @@ public class DbInitializer
             var hrEmp = await _context.Employees.FirstOrDefaultAsync(e => e.Email == "hr@hrm.com");
             var tlEmp = await _context.Employees.FirstOrDefaultAsync(e => e.Email == "tl@hrm.com");
             var emp = await _context.Employees.FirstOrDefaultAsync(e => e.Email == "emp@hrm.com");
+            var jamesEmp = await _context.Employees.FirstOrDefaultAsync(e => e.Email == "james.roberts@hrm.com");
 
             _context.Users.AddRange(
                 new User
@@ -181,6 +234,7 @@ public class DbInitializer
                     Email = "admin@hrm.com",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
                     Role = UserRole.ADMIN,
+                    RoleId = SeedRoles.ADMIN,
                     Department = "Human Resources",
                     Designation = "HR Manager",
                     EmployeeId = adminEmp?.Id,
@@ -193,6 +247,7 @@ public class DbInitializer
                     Email = "hr@hrm.com",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
                     Role = UserRole.HR,
+                    RoleId = SeedRoles.HR,
                     Department = "Human Resources",
                     Designation = "HR Manager",
                     EmployeeId = hrEmp?.Id,
@@ -205,6 +260,7 @@ public class DbInitializer
                     Email = "tl@hrm.com",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
                     Role = UserRole.TL,
+                    RoleId = SeedRoles.TL,
                     Department = "Engineering",
                     Designation = "Team Lead",
                     EmployeeId = tlEmp?.Id,
@@ -217,9 +273,23 @@ public class DbInitializer
                     Email = "emp@hrm.com",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
                     Role = UserRole.EMPLOYEE,
+                    RoleId = SeedRoles.EMPLOYEE,
                     Department = "Engineering",
                     Designation = "Software Engineer",
                     EmployeeId = emp?.Id,
+                    IsActive = true
+                },
+                new User
+                {
+                    FirstName = "James",
+                    LastName = "Roberts",
+                    Email = "james.roberts@hrm.com",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
+                    Role = UserRole.EMPLOYEE,
+                    RoleId = SeedRoles.EMPLOYEE,
+                    Department = "Sales",
+                    Designation = "Branch Manager",
+                    EmployeeId = jamesEmp?.Id,
                     IsActive = true
                 });
             await _context.SaveChangesAsync();
@@ -282,31 +352,6 @@ public class DbInitializer
                 new SystemSetting { Key = "AnnualLeaveDays", Value = "15", Category = "LeavePolicy" },
                 new SystemSetting { Key = "SickLeaveDays", Value = "10", Category = "LeavePolicy" },
                 new SystemSetting { Key = "EmailNotifications", Value = "true", Category = "Notifications" });
-            await _context.SaveChangesAsync();
-        }
-
-        // ============ Seed Company Profile ============
-        if (!await _context.CompanyProfiles.AnyAsync())
-        {
-            _context.CompanyProfiles.Add(new CompanyProfile
-            {
-                CompanyName = "HRM Pro Pvt Ltd",
-                Website = "https://www.hrmpro.com",
-                Email = "admin@hrmpro.com",
-                Phone = "+91-22-12345678",
-                Address = "100 Business Park",
-                City = "Mumbai",
-                State = "Maharashtra",
-                Country = "India",
-                ZipCode = "400001",
-                RegistrationNumber = "U74999MH2020PTC345678",
-                TaxId = "GSTIN-27AAACH7409R1ZD",
-                Currency = "INR",
-                FiscalYearStart = "April",
-                WorkingDays = "Mon - Sat",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            });
             await _context.SaveChangesAsync();
         }
 
@@ -1057,8 +1102,8 @@ public class DbInitializer
         var featureRoles = await _context.FeatureRoles.ToListAsync();
         foreach (var fr in featureRoles.Where(fr => fr.RoleId == null || !_context.Roles.Any(r => r.Id == fr.RoleId)))
         {
-            var code = fr.Role.ToUpperInvariant();
-            if (roleIdByCode.TryGetValue(code, out var rid))
+            var code = fr.Role?.ToUpperInvariant();
+            if (roleIdByCode.TryGetValue(code ?? "", out var rid))
                 fr.RoleId = rid;
         }
         await _context.SaveChangesAsync();
@@ -1079,7 +1124,7 @@ public class DbInitializer
         }
         await _context.SaveChangesAsync();
 
-        // 3. Modules -> RollId (primary/owner role across its features)
+        // 3. Modules -> RoleId (primary/owner role across its features)
         var modules = await _context.Modules.Include(m => m.Features).ToListAsync();
         foreach (var module in modules)
         {
@@ -1090,11 +1135,11 @@ public class DbInitializer
                 .ToList();
             if (roleIds.Count == 1)
             {
-                module.RollId = roleIds[0];
+                module.RoleId = roleIds[0];
             }
             else if (roleIds.Count > 1)
             {
-                module.RollId = roleIds
+                module.RoleId = roleIds
                     .Select(rid => new { rid, pos = Array.IndexOf(RolePriority, roleIdByCode.FirstOrDefault(kv => kv.Value == rid).Key ?? string.Empty) })
                     .OrderBy(x => x.pos == -1 ? int.MaxValue : x.pos)
                     .First().rid;

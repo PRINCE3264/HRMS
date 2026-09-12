@@ -17,9 +17,9 @@ export class AdminEmployeeFormComponent implements OnInit {
     { label: 'Job Details', icon: 'fas fa-briefcase' },
     { label: 'Salary & Bank', icon: 'fas fa-money-bill' }
   ];
-  departments: string[] = [];
-  designations: string[] = [];
-  branches: string[] = [];
+  departments: { id: string; name: string }[] = [];
+  designations: { id: string; title: string }[] = [];
+  branches: { id: string; name: string }[] = [];
   employmentTypes = ['Full-Time', 'Part-Time', 'Contract', 'Internship', 'Probation'];
   submitted = false;
   isSubmitting = false;
@@ -52,7 +52,7 @@ export class AdminEmployeeFormComponent implements OnInit {
       emergencyContactName: [''],
       emergencyContactPhone: [''],
       emergencyContactRelation: [''],
-      employeeId: ['', [Validators.required]],
+      employeeId: [''],
       department: ['', Validators.required],
       designation: ['', Validators.required],
       branch: ['', Validators.required],
@@ -79,15 +79,15 @@ export class AdminEmployeeFormComponent implements OnInit {
 
   loadLookups(): void {
     this.departmentService.getDepartments().subscribe({
-      next: (data) => this.departments = data.map(d => d.name as string),
+      next: (data) => this.departments = data.map(d => ({ id: d.id, name: d.name })),
       error: () => this.toast.error('Failed to load departments')
     });
     this.departmentService.getDesignations().subscribe({
-      next: (data) => this.designations = data.map(d => d.title as string),
+      next: (data) => this.designations = data.map(d => ({ id: d.id, title: d.title })),
       error: () => this.toast.error('Failed to load designations')
     });
     this.departmentService.getBranches().subscribe({
-      next: (data) => this.branches = data.map(b => b.name as string),
+      next: (data) => this.branches = data.map(b => ({ id: b.id, name: b.name })),
       error: () => this.toast.error('Failed to load branches')
     });
   }
@@ -113,9 +113,9 @@ export class AdminEmployeeFormComponent implements OnInit {
           emergencyContactPhone: e.emergencyContactPhone,
           emergencyContactRelation: e.emergencyContactRelation,
           employeeId: e.employeeId,
-          department: e.department,
-          designation: e.designation,
-          branch: e.branch,
+          department: e.departmentId,
+          designation: e.designationId,
+          branch: e.branchId,
           joiningDate: e.joiningDate,
           employmentType: e.employmentType,
           reportingManager: e.reportingManagerName || '',
@@ -165,10 +165,9 @@ export class AdminEmployeeFormComponent implements OnInit {
         emergencyContactName: v.emergencyContactName,
         emergencyContactPhone: v.emergencyContactPhone,
         emergencyContactRelation: v.emergencyContactRelation,
-        employeeId: v.employeeId,
-        department: v.department,
-        designation: v.designation,
-        branch: v.branch,
+        departmentId: v.department,
+        designationId: v.designation,
+        branchId: v.branch,
         joiningDate: v.joiningDate,
         employmentType: v.employmentType,
         reportingManagerName: v.reportingManager,

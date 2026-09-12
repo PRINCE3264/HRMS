@@ -25,7 +25,7 @@ namespace HRMAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("HRMAPI.Models.Announcement", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Announcement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,7 +72,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Announcements");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AnnouncementAttachment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AnnouncementAttachment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,7 +98,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("AnnouncementAttachments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AppFeature", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AppFeature", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -135,7 +135,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("AppFeatures");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AppModule", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AppModule", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -162,7 +162,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("AppModules");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Attendance", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Attendance", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -218,7 +218,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Attendances");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AuditLog", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AuditLog", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,7 +257,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Branch", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Branch", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -320,7 +320,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Branches");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.BreakRecord", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.BreakRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -354,7 +354,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("BreakRecords");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Candidate", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Candidate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -416,7 +416,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Candidates");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.DailyWorkUpdate", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.DailyWorkUpdate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -463,7 +463,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("DailyWorkUpdates");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Department", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Department", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -508,7 +508,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Designation", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Designation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -551,7 +551,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Designations");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Document", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Document", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -598,7 +598,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Documents");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Employee", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Employee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -757,7 +757,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.FeatureRole", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.FeatureRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -779,7 +779,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("FeatureRoles");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Interview", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Interview", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -843,7 +843,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Interviews");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.JobOpening", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.JobOpening", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -909,7 +909,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("JobOpenings");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.KPI", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.KPI", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -963,7 +963,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("KPIs");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.LeaveBalance", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.LeaveBalance", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -997,7 +997,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("LeaveBalances");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.LeaveRequest", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.LeaveRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1052,7 +1052,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("LeaveRequests");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Notification", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1093,7 +1093,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Onboarding", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Onboarding", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1132,7 +1132,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Onboardings");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.OnboardingTask", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.OnboardingTask", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1167,7 +1167,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("OnboardingTasks");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.PayrollRecord", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.PayrollRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1218,7 +1218,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("PayrollRecords");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Payslip", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Payslip", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1296,7 +1296,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Payslips");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.PerformanceFeedback", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.PerformanceFeedback", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1337,7 +1337,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("PerformanceFeedbacks");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.PerformanceReview", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.PerformanceReview", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1387,7 +1387,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("PerformanceReviews");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.RolePermission", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.RolePermission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1422,7 +1422,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("RolePermissions");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Shift", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Shift", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1459,7 +1459,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Shifts");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.ShiftAssignment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.ShiftAssignment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1486,7 +1486,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("ShiftAssignments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.SystemSetting", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.SystemSetting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1527,7 +1527,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("SystemSettings");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.TaskAssignment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.TaskAssignment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1589,7 +1589,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("TaskAssignments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Team", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Team", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1624,7 +1624,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Training", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Training", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1683,7 +1683,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Trainings");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.TrainingEnrollment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.TrainingEnrollment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1708,7 +1708,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("TrainingEnrollments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.User", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1784,7 +1784,7 @@ namespace HRMAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.UserPermission", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.UserPermission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1811,9 +1811,9 @@ namespace HRMAPI.Migrations
                     b.ToTable("UserPermissions");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Announcement", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Announcement", b =>
                 {
-                    b.HasOne("HRMAPI.Models.User", "Author")
+                    b.HasOne("HRMAPI.Models.Entities.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1822,9 +1822,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AnnouncementAttachment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AnnouncementAttachment", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Announcement", "Announcement")
+                    b.HasOne("HRMAPI.Models.Entities.Announcement", "Announcement")
                         .WithMany("Attachments")
                         .HasForeignKey("AnnouncementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1833,9 +1833,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Announcement");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AppFeature", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AppFeature", b =>
                 {
-                    b.HasOne("HRMAPI.Models.AppModule", "Module")
+                    b.HasOne("HRMAPI.Models.Entities.AppModule", "Module")
                         .WithMany("Features")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1844,9 +1844,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Module");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Attendance", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Attendance", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany("Attendances")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1855,9 +1855,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AuditLog", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AuditLog", b =>
                 {
-                    b.HasOne("HRMAPI.Models.User", "User")
+                    b.HasOne("HRMAPI.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1866,9 +1866,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.BreakRecord", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.BreakRecord", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Attendance", "Attendance")
+                    b.HasOne("HRMAPI.Models.Entities.Attendance", "Attendance")
                         .WithMany("Breaks")
                         .HasForeignKey("AttendanceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1877,9 +1877,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Attendance");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Candidate", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Candidate", b =>
                 {
-                    b.HasOne("HRMAPI.Models.JobOpening", "Job")
+                    b.HasOne("HRMAPI.Models.Entities.JobOpening", "Job")
                         .WithMany("Candidates")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1888,9 +1888,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Job");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.DailyWorkUpdate", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.DailyWorkUpdate", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1899,9 +1899,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Department", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Department", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Head")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Head")
                         .WithMany()
                         .HasForeignKey("HeadId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -1909,9 +1909,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Head");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Designation", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Designation", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Department", "Department")
+                    b.HasOne("HRMAPI.Models.Entities.Department", "Department")
                         .WithMany("Designations")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -1919,14 +1919,14 @@ namespace HRMAPI.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Document", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Document", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("HRMAPI.Models.User", "UploadedBy")
+                    b.HasOne("HRMAPI.Models.Entities.User", "UploadedBy")
                         .WithMany()
                         .HasForeignKey("UploadedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1937,32 +1937,32 @@ namespace HRMAPI.Migrations
                     b.Navigation("UploadedBy");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Employee", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Employee", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Branch", "Branch")
+                    b.HasOne("HRMAPI.Models.Entities.Branch", "Branch")
                         .WithMany("Employees")
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Department", "Department")
+                    b.HasOne("HRMAPI.Models.Entities.Department", "Department")
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Designation", "Designation")
+                    b.HasOne("HRMAPI.Models.Entities.Designation", "Designation")
                         .WithMany("Employees")
                         .HasForeignKey("DesignationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Employee", "ReportingManager")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "ReportingManager")
                         .WithMany("DirectReports")
                         .HasForeignKey("ReportingManagerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("HRMAPI.Models.Team", "Team")
+                    b.HasOne("HRMAPI.Models.Entities.Team", "Team")
                         .WithMany("Members")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -1978,9 +1978,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.FeatureRole", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.FeatureRole", b =>
                 {
-                    b.HasOne("HRMAPI.Models.AppFeature", "Feature")
+                    b.HasOne("HRMAPI.Models.Entities.AppFeature", "Feature")
                         .WithMany("FeatureRoles")
                         .HasForeignKey("FeatureId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1989,20 +1989,20 @@ namespace HRMAPI.Migrations
                     b.Navigation("Feature");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Interview", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Interview", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Candidate", "Candidate")
+                    b.HasOne("HRMAPI.Models.Entities.Candidate", "Candidate")
                         .WithMany()
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Employee", "Interviewer")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Interviewer")
                         .WithMany()
                         .HasForeignKey("InterviewerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("HRMAPI.Models.JobOpening", "Job")
+                    b.HasOne("HRMAPI.Models.Entities.JobOpening", "Job")
                         .WithMany()
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2015,21 +2015,21 @@ namespace HRMAPI.Migrations
                     b.Navigation("Job");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.JobOpening", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.JobOpening", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Branch", "Branch")
+                    b.HasOne("HRMAPI.Models.Entities.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Department", "Department")
+                    b.HasOne("HRMAPI.Models.Entities.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Designation", "Designation")
+                    b.HasOne("HRMAPI.Models.Entities.Designation", "Designation")
                         .WithMany()
                         .HasForeignKey("DesignationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2042,9 +2042,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Designation");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.KPI", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.KPI", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany("KPIs")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2053,9 +2053,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.LeaveBalance", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.LeaveBalance", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2064,14 +2064,14 @@ namespace HRMAPI.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.LeaveRequest", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.LeaveRequest", b =>
                 {
-                    b.HasOne("HRMAPI.Models.User", "ApprovedBy")
+                    b.HasOne("HRMAPI.Models.Entities.User", "ApprovedBy")
                         .WithMany()
                         .HasForeignKey("ApprovedById")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany("LeaveRequests")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2082,9 +2082,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Notification", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Notification", b =>
                 {
-                    b.HasOne("HRMAPI.Models.User", "User")
+                    b.HasOne("HRMAPI.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2093,15 +2093,15 @@ namespace HRMAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Onboarding", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Onboarding", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Employee", "Mentor")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Mentor")
                         .WithMany()
                         .HasForeignKey("MentorId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -2111,9 +2111,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Mentor");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.OnboardingTask", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.OnboardingTask", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Onboarding", "Onboarding")
+                    b.HasOne("HRMAPI.Models.Entities.Onboarding", "Onboarding")
                         .WithMany("Tasks")
                         .HasForeignKey("OnboardingId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2122,9 +2122,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Onboarding");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.PayrollRecord", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.PayrollRecord", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2133,17 +2133,17 @@ namespace HRMAPI.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Payslip", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Payslip", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.PayrollRecord", "Payroll")
+                    b.HasOne("HRMAPI.Models.Entities.PayrollRecord", "Payroll")
                         .WithOne("Payslip")
-                        .HasForeignKey("HRMAPI.Models.Payslip", "PayrollId")
+                        .HasForeignKey("HRMAPI.Models.Entities.Payslip", "PayrollId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2152,15 +2152,15 @@ namespace HRMAPI.Migrations
                     b.Navigation("Payroll");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.PerformanceFeedback", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.PerformanceFeedback", b =>
                 {
-                    b.HasOne("HRMAPI.Models.User", "Reviewer")
+                    b.HasOne("HRMAPI.Models.Entities.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Employee", "TargetEmployee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "TargetEmployee")
                         .WithMany()
                         .HasForeignKey("TargetEmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2171,15 +2171,15 @@ namespace HRMAPI.Migrations
                     b.Navigation("TargetEmployee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.PerformanceReview", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.PerformanceReview", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany("PerformanceReviews")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.User", "Reviewer")
+                    b.HasOne("HRMAPI.Models.Entities.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2190,15 +2190,15 @@ namespace HRMAPI.Migrations
                     b.Navigation("Reviewer");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.ShiftAssignment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.ShiftAssignment", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany("ShiftAssignments")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Shift", "Shift")
+                    b.HasOne("HRMAPI.Models.Entities.Shift", "Shift")
                         .WithMany("ShiftAssignments")
                         .HasForeignKey("ShiftId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2209,9 +2209,9 @@ namespace HRMAPI.Migrations
                     b.Navigation("Shift");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.SystemSetting", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.SystemSetting", b =>
                 {
-                    b.HasOne("HRMAPI.Models.User", "UpdatedBy")
+                    b.HasOne("HRMAPI.Models.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -2219,15 +2219,15 @@ namespace HRMAPI.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.TaskAssignment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.TaskAssignment", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "AssignedBy")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "AssignedBy")
                         .WithMany("CreatedTasks")
                         .HasForeignKey("AssignedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Employee", "AssignedTo")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "AssignedTo")
                         .WithMany("AssignedTasks")
                         .HasForeignKey("AssignedToId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2238,15 +2238,15 @@ namespace HRMAPI.Migrations
                     b.Navigation("AssignedTo");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Team", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Team", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Department", "Department")
+                    b.HasOne("HRMAPI.Models.Entities.Department", "Department")
                         .WithMany("Teams")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Employee", "TeamLead")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "TeamLead")
                         .WithMany()
                         .HasForeignKey("TeamLeadId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2257,15 +2257,15 @@ namespace HRMAPI.Migrations
                     b.Navigation("TeamLead");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.TrainingEnrollment", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.TrainingEnrollment", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HRMAPI.Models.Training", "Training")
+                    b.HasOne("HRMAPI.Models.Entities.Training", "Training")
                         .WithMany("Enrollments")
                         .HasForeignKey("TrainingId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2276,18 +2276,18 @@ namespace HRMAPI.Migrations
                     b.Navigation("Training");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.User", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.User", b =>
                 {
-                    b.HasOne("HRMAPI.Models.Employee", "Employee")
+                    b.HasOne("HRMAPI.Models.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.UserPermission", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.UserPermission", b =>
                 {
-                    b.HasOne("HRMAPI.Models.User", "User")
+                    b.HasOne("HRMAPI.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2296,32 +2296,32 @@ namespace HRMAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Announcement", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Announcement", b =>
                 {
                     b.Navigation("Attachments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AppFeature", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AppFeature", b =>
                 {
                     b.Navigation("FeatureRoles");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.AppModule", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.AppModule", b =>
                 {
                     b.Navigation("Features");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Attendance", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Attendance", b =>
                 {
                     b.Navigation("Breaks");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Branch", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Branch", b =>
                 {
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Department", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Department", b =>
                 {
                     b.Navigation("Designations");
 
@@ -2330,12 +2330,12 @@ namespace HRMAPI.Migrations
                     b.Navigation("Teams");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Designation", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Designation", b =>
                 {
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Employee", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Employee", b =>
                 {
                     b.Navigation("AssignedTasks");
 
@@ -2354,32 +2354,32 @@ namespace HRMAPI.Migrations
                     b.Navigation("ShiftAssignments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.JobOpening", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.JobOpening", b =>
                 {
                     b.Navigation("Candidates");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Onboarding", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Onboarding", b =>
                 {
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.PayrollRecord", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.PayrollRecord", b =>
                 {
                     b.Navigation("Payslip");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Shift", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Shift", b =>
                 {
                     b.Navigation("ShiftAssignments");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Team", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Team", b =>
                 {
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("HRMAPI.Models.Training", b =>
+            modelBuilder.Entity("HRMAPI.Models.Entities.Training", b =>
                 {
                     b.Navigation("Enrollments");
                 });

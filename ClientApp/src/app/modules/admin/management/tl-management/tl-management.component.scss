@@ -12,3 +12,11 @@
 .stat-icon--indigo { background: #eef2ff; color: #6366f1; }
 .stat-value { font-size: 22px; font-weight: 700; color: #1e293b; }
 .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; }
+
+.assign-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.assign-select {
+  padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+  font-size: 13px; min-width: 280px; color: #334155; background: #fff;
+}
+.assign-select:focus { outline: none; border-color: #6366f1; }
+.assign-hint { font-size: 12px; color: #94a3b8; }

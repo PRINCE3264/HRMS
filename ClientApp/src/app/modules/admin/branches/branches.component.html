@@ -1,32 +1,102 @@
 <app-page-header title="Branches" subtitle="Manage office locations" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Branches'}]">
-      <button class="btn btn--primary" (click)="showAdd = true"><i class="fas fa-plus"></i> Add Branch</button>
-    </app-page-header>
-    <div class="card-grid">
-      <div class="branch-card" *ngFor="let branch of branches">
-        <div class="branch-card__header">
-          <div class="branch-card__icon" [style.background]="branch.color">
-            <i class="fas fa-map-marker-alt"></i>
-          </div>
-          <app-status-badge [status]="branch.status"></app-status-badge>
+  <button class="btn btn--primary" (click)="openAdd()"><i class="fas fa-plus"></i> Add Branch</button>
+</app-page-header>
+
+<div class="card-grid" *ngIf="branches.length > 0; else emptyState">
+  <div class="branch-card" *ngFor="let branch of branches">
+    <div class="branch-card__header">
+      <div class="branch-card__icon" [style.background]="branch.color">
+        <i class="fas fa-map-marker-alt"></i>
+      </div>
+      <app-status-badge [status]="branch.status"></app-status-badge>
+    </div>
+    <h3>{{ branch.name }} <span class="branch-card__code">{{ branch.code }}</span></h3>
+    <div class="branch-card__address">
+      <i class="fas fa-location-dot"></i>
+      <span>{{ branch.address || getLocation(branch) }}</span>
+    </div>
+    <div class="branch-card__meta">
+      <div class="meta-item">
+        <i class="fas fa-users"></i>
+        <span>{{ branch.employeeCount }} employees</span>
+      </div>
+      <div class="meta-item">
+        <i class="fas fa-phone"></i>
+        <span>{{ branch.phone || 'No phone' }}</span>
+      </div>
+      <div class="meta-item">
+        <i class="fas fa-envelope"></i>
+        <span>{{ branch.email || 'No email' }}</span>
+      </div>
+    </div>
+    <div class="branch-card__actions">
+      <button class="action-btn action-btn--edit" (click)="openEdit(branch)"><i class="fas fa-edit"></i> Edit</button>
+      <button class="action-btn action-btn--delete" (click)="deleteBranch(branch)"><i class="fas fa-trash"></i> Delete</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyState>
+  <div class="empty-state">
+    <i class="fas fa-map-marker-alt"></i>
+    <h3>No branches found</h3>
+    <p>Create your first branch to get started.</p>
+  </div>
+</ng-template>
+
+<!-- Create / Edit Branch Modal -->
+<div class="modal-backdrop" *ngIf="showForm">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-map-marker-alt text-blue"></i> {{ isEdit ? 'Edit Branch' : 'Create New Branch' }}</h3>
+      <button class="close-btn" (click)="closeForm()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Branch Name <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="form.name" placeholder="e.g. Head Office" class="form-control" />
         </div>
-        <h3>{{ branch.name }}</h3>
-        <div class="branch-card__address">
-          <i class="fas fa-location-dot"></i>
-          <span>{{ branch.address }}</span>
+
+        <div class="form-group">
+          <label>Branch Code <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="form.code" placeholder="e.g. HO" class="form-control" />
         </div>
-        <div class="branch-card__meta">
-          <div class="meta-item">
-            <i class="fas fa-users"></i>
-            <span>{{ branch.employeeCount }} employees</span>
-          </div>
-          <div class="meta-item">
-            <i class="fas fa-phone"></i>
-            <span>{{ branch.phone }}</span>
-          </div>
-          <div class="meta-item">
-            <i class="fas fa-user-tie"></i>
-            <span>{{ branch.manager }}</span>
-          </div>
+
+        <div class="form-group full-width">
+          <label>Address</label>
+          <textarea [(ngModel)]="form.address" rows="2" placeholder="Street address..." class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>City <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="form.city" placeholder="e.g. New York" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>State</label>
+          <input type="text" [(ngModel)]="form.state" placeholder="e.g. NY" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Country</label>
+          <input type="text" [(ngModel)]="form.country" placeholder="e.g. USA" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" [(ngModel)]="form.phone" placeholder="e.g. +1 555 0100" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="form.email" placeholder="e.g. hq@company.com" class="form-control" />
         </div>
       </div>
     </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeForm()">Cancel</button>
+      <button class="btn-save" (click)="saveForm()"><i class="fas fa-check"></i> {{ isEdit ? 'Update Branch' : 'Create Branch' }}</button>
+    </div>
+  </div>
+</div>

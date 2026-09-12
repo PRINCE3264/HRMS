@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HRMAPI.DTOs.Common;
-using HRMAPI.DTOs.Leave;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.DTOs.Leave;
 using HRMAPI.Services;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 

@@ -1,7 +1,8 @@
+using HRMAPI.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Interfaces.Repositories;
 
 namespace HRMAPI.Filters;
 
@@ -87,7 +88,7 @@ public class GlobalExceptionFilter : IAsyncExceptionFilter
             _ => "An unexpected error occurred."
         };
 
-        context.Result = new Microsoft.AspNetCore.Mvc.ObjectResult(new DTOs.Common.ApiResponse<object?>
+        context.Result = new Microsoft.AspNetCore.Mvc.ObjectResult(new Models.DTOs.Common.ApiResponse<object?>
         {
             Success = false,
             Message = message,

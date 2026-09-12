@@ -1,13 +1,13 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using HRMAPI.Data;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
+
+using HRMAPI.Interfaces.Services;
+using HRMAPI.Helpers;
 
 namespace HRMAPI.Services;
 
@@ -26,13 +26,7 @@ public class PermissionClaim
     public List<string> Actions { get; set; } = new();
 }
 
-public interface IAuthService
-{
-    Task<User?> AuthenticateAsync(string email, string password);
-    Task<string> GenerateTokenAsync(User user);
-    string GenerateRefreshToken();
-    Task<User?> ValidateRefreshTokenAsync(string refreshToken);
-}
+
 
 public class AuthService : IAuthService
 {
@@ -51,7 +45,7 @@ public class AuthService : IAuthService
     {
         var user = await _userRepository.GetByEmailAsync(email);
         if (user == null || !user.IsActive) return null;
-        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash)) return null;
+        if (!PasswordHelper.Verify(password, user.PasswordHash)) return null;
         user.LastLoginAt = DateTime.UtcNow;
         await _userRepository.UpdateAsync(user);
         return user;
@@ -65,7 +59,8 @@ public class AuthService : IAuthService
             new(ClaimTypes.Name, user.Email),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}"),
-            new(ClaimTypes.Role, user.Role.ToString())
+            new(ClaimTypes.Role, user.Role.ToString()),
+            new("role_id", user.RoleId.ToString())
         };
 
         var permissionMap = await _rolesService.GetEffectivePermissionMapAsync(user.Role.ToString());
@@ -78,18 +73,7 @@ public class AuthService : IAuthService
 
         claims.Add(new Claim("permissions", JsonSerializer.Serialize(grouped)));
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expiry = DateTime.UtcNow.AddMinutes(_jwt.ExpiryInMinutes);
-
-        var token = new JwtSecurityToken(
-            issuer: _jwt.Issuer,
-            audience: _jwt.Audience,
-            claims: claims,
-            expires: expiry,
-            signingCredentials: creds);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return JwtHelper.GenerateToken(_jwt, claims);
     }
 
     public string GenerateRefreshToken()
@@ -207,3 +191,4 @@ public static class RolePermissionDefaults
         }
     };
 }
+

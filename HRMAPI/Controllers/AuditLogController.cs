@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.Models;
+using HRMAPI.Models.Entities;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 

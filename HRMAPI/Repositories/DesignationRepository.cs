@@ -1,7 +1,8 @@
+using HRMAPI.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
 
 namespace HRMAPI.Repositories;
 

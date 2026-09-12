@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HRMAPI.DTOs.Common;
-using HRMAPI.DTOs.Management;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.DTOs.Management;
 using HRMAPI.Services;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 
@@ -30,4 +32,9 @@ public class ManagementController : BaseController
     [Authorize(Roles = "ADMIN")]
     public async Task<ActionResult<ApiResponse<List<ManagedEmployeeDto>>>> GetHrMembers()
         => Ok(ApiResponse<List<ManagedEmployeeDto>>.Ok(await _managementService.GetHrMembersAsync()));
+
+    [HttpPut("role")]
+    [Authorize(Roles = "ADMIN")]
+    public async Task<ActionResult<ApiResponse<ManagedEmployeeDto>>> AssignRole([FromBody] AssignRoleDto dto)
+        => Ok(ApiResponse<ManagedEmployeeDto>.Ok(await _managementService.AssignRoleAsync(dto.EmployeeId, dto.Role)));
 }

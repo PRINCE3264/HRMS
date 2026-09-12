@@ -23,4 +23,9 @@ export class ManagementService extends BaseApiService {
     return this.http.get<any>(`${this.apiBase}/management/hr`)
       .pipe(map(res => this.unwrap<ManagedEmployee[]>(res)));
   }
+
+  assignRole(employeeId: string, role: string): Observable<ManagedEmployee> {
+    return this.http.put<any>(`${this.apiBase}/management/role`, { employeeId, role })
+      .pipe(map(res => this.unwrap<ManagedEmployee>(res)));
+  }
 }

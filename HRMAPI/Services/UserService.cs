@@ -1,26 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.DTOs.User;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.DTOs.User;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
 using HRMAPI.Services;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Services;
 
-public interface IUserService
-{
-    Task<User?> GetByIdAsync(Guid id);
-    Task<User?> GetByEmailAsync(string email);
-    Task<IEnumerable<User>> GetAllAsync();
-    Task<User> CreateUserAsync(RegisterRequestDto request);
-    Task<UserDto> GetUserDtoAsync(Guid id);
-    Task<List<UserDto>> GetUserDtosAsync();
-    Task<User> UpdateUserAsync(Guid id, UpdateUserDto dto);
-    Task<bool> ChangePasswordAsync(Guid id, ChangePasswordDto dto);
-    Task<bool> ResetPasswordAsync(Guid id, string newPassword);
-    Task<bool> DeleteUserAsync(Guid id);
-    Task<bool> SetMfaAsync(Guid id, bool enabled);
-}
+
 
 public class UserService : IUserService
 {
@@ -61,6 +50,8 @@ public class UserService : IUserService
             Email = request.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
             Role = role,
+            RoleId = SeedRoles.ForCode(role.ToString()) ?? Guid.Empty,
+            PPT = request.PPT,
             Department = request.Department,
             Designation = request.Designation,
             EmployeeId = employee?.Id
@@ -99,6 +90,13 @@ public class UserService : IUserService
             user.Email = dto.Email;
         }
         if (dto.Avatar != null) user.Avatar = dto.Avatar;
+        if (dto.Role != null && Enum.TryParse<Enums.UserRole>(dto.Role, true, out var newRole))
+        {
+            user.Role = newRole;
+            user.RoleId = SeedRoles.ForCode(newRole.ToString()) ?? Guid.Empty;
+        }
+        if (dto.RoleId.HasValue && dto.RoleId.Value != Guid.Empty) user.RoleId = dto.RoleId.Value;
+        if (dto.PPT != null) user.PPT = dto.PPT;
         if (dto.Department != null) user.Department = dto.Department;
         if (dto.Designation != null) user.Designation = dto.Designation;
         if (dto.Branch != null) user.Branch = dto.Branch;
@@ -164,6 +162,8 @@ public class UserService : IUserService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Role = user.Role.ToString(),
+            RoleId = user.RoleId,
+            PPT = user.PPT,
             Avatar = user.Avatar,
             Department = user.Department,
             Designation = user.Designation,
@@ -173,3 +173,4 @@ public class UserService : IUserService
         };
     }
 }
+

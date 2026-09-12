@@ -1,21 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.DTOs.Security;
+using HRMAPI.Models.DTOs.Security;
 using HRMAPI.Enums;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Services;
 
-public interface IRolesService
-{
-    Task<List<RoleDto>> GetRolesAsync();
-    Task<RoleDto> GetRoleAsync(string role);
-    Task<RoleDto> UpdateRolePermissionsAsync(string role, List<RoleModuleDto> permissions);
-    Task<bool> ResetRolePermissionsAsync(string role);
-    Task<Dictionary<string, List<string>>> GetEffectivePermissionMapAsync(string role);
-    Task<RoleCatalogDto> GetCatalogAsync();
-}
+
 
 public static class RolesCatalog
 {
@@ -58,6 +52,7 @@ public class RolesService : IRolesService
         var effective = await GetEffectivePermissionMapAsync(role);
         return new RoleDto
         {
+            Id = SeedRoles.ForCode(role) ?? Guid.Empty,
             Role = role,
             Description = RolesCatalog.RoleDescriptions[role],
             Permissions = effective
@@ -74,6 +69,7 @@ public class RolesService : IRolesService
     {
         if (!RolesCatalog.IsValidRole(role)) throw new KeyNotFoundException("Role not found.");
 
+        var roleId = SeedRoles.ForCode(role) ?? Guid.Empty;
         var rows = new List<RolePermission>();
         foreach (var module in permissions)
         {
@@ -81,24 +77,27 @@ public class RolesService : IRolesService
             foreach (var action in module.Actions)
             {
                 if (!Enum.TryParse<PermissionAction>(action, true, out var parsed)) continue;
-                rows.Add(new RolePermission { Role = role, Module = module.Module, Action = parsed });
+                rows.Add(new RolePermission { Role = role, RoleId = roleId, Module = module.Module, Action = parsed });
             }
         }
 
-        await _rolePermissionRepository.ReplaceForRoleAsync(role, rows);
+        await _rolePermissionRepository.ReplaceForRoleAsync(role, roleId, rows);
         return await GetRoleAsync(role);
     }
 
     public async Task<bool> ResetRolePermissionsAsync(string role)
     {
         if (!RolesCatalog.IsValidRole(role)) throw new KeyNotFoundException("Role not found.");
-        await _rolePermissionRepository.ReplaceForRoleAsync(role, new List<RolePermission>());
+        var roleId = SeedRoles.ForCode(role) ?? Guid.Empty;
+        await _rolePermissionRepository.ReplaceForRoleAsync(role, roleId, new List<RolePermission>());
         return true;
     }
 
     public async Task<Dictionary<string, List<string>>> GetEffectivePermissionMapAsync(string role)
     {
-        var stored = await _rolePermissionRepository.GetByRoleAsync(role);
+        var roleId = SeedRoles.ForCode(role) ?? Guid.Empty;
+        var stored = await _rolePermissionRepository.GetByRoleIdAsync(roleId);
+        if (!stored.Any()) stored = await _rolePermissionRepository.GetByRoleAsync(role);
         if (stored.Any())
         {
             return stored
@@ -132,3 +131,4 @@ public class RolesService : IRolesService
         return new RoleCatalogDto { Modules = modules, Actions = actions };
     }
 }
+

@@ -1,0 +1,49 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using HRMAPI.Enums;
+
+namespace HRMAPI.Models.Entities;
+
+public class Interview
+{
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    public Guid CandidateId { get; set; }
+
+    public Guid JobId { get; set; }
+
+    public Guid? InterviewerId { get; set; }
+
+    public DateTime ScheduledAt { get; set; }
+
+    [Required, MaxLength(50)]
+    public string Round { get; set; } = "SCREENING";
+
+    public InterviewType InterviewType { get; set; } = InterviewType.ONLINE;
+
+    public InterviewStatus Status { get; set; } = InterviewStatus.SCHEDULED;
+
+    public int? DurationMinutes { get; set; }
+
+    [MaxLength(500)]
+    public string? MeetingLink { get; set; }
+
+    [MaxLength(2000)]
+    public string? Feedback { get; set; }
+
+    public int? Rating { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    [ForeignKey(nameof(CandidateId))]
+    public virtual Candidate Candidate { get; set; } = null!;
+
+    [ForeignKey(nameof(JobId))]
+    public virtual JobOpening Job { get; set; } = null!;
+
+    [ForeignKey(nameof(InterviewerId))]
+    public virtual Employee? Interviewer { get; set; }
+}

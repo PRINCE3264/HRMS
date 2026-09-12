@@ -1,4 +1,4 @@
-<app-page-header title="TL Management" subtitle="Team Leads and the teams they manage" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'TL Management'}]">
+<app-page-header title="TL Management" subtitle="Assign, review, and manage Team Leads" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'TL Management'}]">
 </app-page-header>
 
 <div class="stat-cards">
@@ -25,13 +25,38 @@
   </div>
 </div>
 
+<div class="assign-row">
+  <select class="assign-select" [(ngModel)]="selectedEmployeeId">
+    <option value="" disabled>Select an employee to assign as Team Lead</option>
+    <option *ngFor="let c of candidates" [value]="c.id">
+      {{ c.fullName }} &mdash; {{ c.employeeCode }} ({{ c.designation || 'No designation' }})
+    </option>
+  </select>
+  <button class="btn btn--primary" [disabled]="assigning" (click)="assignAsTL()">
+    <i class="fas fa-user-tie"></i> Assign as Team Lead
+  </button>
+  <span class="assign-hint" *ngIf="candidates.length === 0">
+    No eligible employees (need an active account) to assign.
+  </span>
+</div>
+
 <app-data-table
   [columns]="columns"
   [data]="teamLeads"
   [pageSize]="10"
   [actions]="tableActions"
   emptyTitle="No team leads found"
-  emptyMessage="Create a team and assign a team lead to see them here."
+  emptyMessage="Assign an employee above to make them a Team Lead."
   emptyIcon="fas fa-user-tie"
   (onActionClick)="onAction($event)">
 </app-data-table>
+
+<app-confirm-dialog
+  [isOpen]="showRevokeConfirm"
+  title="Revoke Team Lead"
+  [message]="revoking ? 'Remove ' + revoking.fullName + ' from the Team Lead role? They will become a regular Employee.' : ''"
+  confirmText="Revoke"
+  type="danger"
+  (confirmed)="confirmRevoke()"
+  (cancelled)="cancelRevoke()">
+</app-confirm-dialog>

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HRMAPI.DTOs.Attendance;
-using HRMAPI.DTOs.Common;
+using HRMAPI.Models.DTOs.Attendance;
+using HRMAPI.Models.DTOs.Common;
 using HRMAPI.Services;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 
@@ -102,7 +104,7 @@ public class AttendanceController : BaseController
     }
 
     [HttpGet("summary")]
-    [Authorize(Roles = "ADMIN,HR,TEAM_LEAD")]
+    [Authorize(Roles = "ADMIN,HR,TL")]
     public async Task<ActionResult<ApiResponse<List<AttendanceSummaryDto>>>> GetTeamSummary([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
     {
         var result = await _attendanceService.GetTeamSummaryAsync(startDate, endDate);
@@ -110,7 +112,7 @@ public class AttendanceController : BaseController
     }
 
     [HttpGet("late-arrivals")]
-    [Authorize(Roles = "ADMIN,HR,TEAM_LEAD")]
+    [Authorize(Roles = "ADMIN,HR,TL")]
     public async Task<ActionResult<ApiResponse<List<AttendanceDto>>>> GetLateArrivals([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
     {
         var result = await _attendanceService.GetLateArrivalsAsync(startDate, endDate);
@@ -118,7 +120,7 @@ public class AttendanceController : BaseController
     }
 
     [HttpGet("corrections")]
-    [Authorize(Roles = "ADMIN,HR,TEAM_LEAD")]
+    [Authorize(Roles = "ADMIN,HR,TL")]
     public async Task<ActionResult<ApiResponse<List<AttendanceCorrectionDto>>>> GetCorrections([FromQuery] PaginationQuery query, [FromQuery] string? status = null, [FromQuery] Guid? employeeId = null)
     {
         var result = await _attendanceService.GetCorrectionsAsync(query, status, employeeId);
@@ -126,7 +128,7 @@ public class AttendanceController : BaseController
     }
 
     [HttpPut("corrections/{id:guid}")]
-    [Authorize(Roles = "ADMIN,HR,TEAM_LEAD")]
+    [Authorize(Roles = "ADMIN,HR,TL")]
     public async Task<ActionResult<ApiResponse<AttendanceCorrectionDto>>> ReviewCorrection(Guid id, [FromBody] UpdateAttendanceCorrectionDto dto)
     {
         var result = await _attendanceService.ReviewCorrectionAsync(id, dto, CurrentUserId);

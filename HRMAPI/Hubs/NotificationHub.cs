@@ -1,3 +1,4 @@
+using HRMAPI.Interfaces.Services;
 using Microsoft.AspNetCore.SignalR;
 
 namespace HRMAPI.Hubs;

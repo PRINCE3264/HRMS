@@ -279,16 +279,16 @@
           <div class="form-grid">
             <div class="form-row">
               <div class="form-group">
-                <label for="employeeId">Employee ID <span class="required">*</span></label>
+                <label for="employeeId">Employee ID</label>
                 <input
                   id="employeeId"
                   type="text"
                   class="form-control"
                   formControlName="employeeId"
-                  placeholder="e.g. EMP001"
-                  [class.is-invalid]="isFieldInvalid('employeeId')"
+                  [placeholder]="editingId ? 'Auto-generated' : 'Auto-generated on save'"
+                  [disabled]="true"
                 />
-                <span class="error-text" *ngIf="isFieldInvalid('employeeId')">Employee ID is required</span>
+                <span class="form-hint">Employee ID is generated automatically by the system.</span>
               </div>
               <div class="form-group">
                 <label for="joiningDate">Joining Date <span class="required">*</span></label>
@@ -307,7 +307,7 @@
                 <label for="department">Department <span class="required">*</span></label>
                 <select id="department" class="form-control" formControlName="department" [class.is-invalid]="isFieldInvalid('department')">
                   <option value="">Select department</option>
-                  <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+                  <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
                 </select>
                 <span class="error-text" *ngIf="isFieldInvalid('department')">Department is required</span>
               </div>
@@ -315,7 +315,7 @@
                 <label for="designation">Designation <span class="required">*</span></label>
                 <select id="designation" class="form-control" formControlName="designation" [class.is-invalid]="isFieldInvalid('designation')">
                   <option value="">Select designation</option>
-                  <option *ngFor="let desig of designations" [value]="desig">{{ desig }}</option>
+                  <option *ngFor="let desig of designations" [value]="desig.id">{{ desig.title }}</option>
                 </select>
                 <span class="error-text" *ngIf="isFieldInvalid('designation')">Designation is required</span>
               </div>
@@ -325,7 +325,7 @@
                 <label for="branch">Branch <span class="required">*</span></label>
                 <select id="branch" class="form-control" formControlName="branch" [class.is-invalid]="isFieldInvalid('branch')">
                   <option value="">Select branch</option>
-                  <option *ngFor="let branch of branches" [value]="branch">{{ branch }}</option>
+                  <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.name }}</option>
                 </select>
                 <span class="error-text" *ngIf="isFieldInvalid('branch')">Branch is required</span>
               </div>

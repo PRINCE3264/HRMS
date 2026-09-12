@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ManagementService, ToastService } from '../../../../core/services';
-import { TeamLeadManagement } from '../../../../core/models';
-import { TableColumn } from '../../../../core/models';
+import { TeamLeadManagement, ManagedEmployee, TableColumn } from '../../../../core/models';
 
 @Component({
   selector: 'app-admin-tl-management',
@@ -11,7 +10,13 @@ import { TableColumn } from '../../../../core/models';
 })
 export class AdminTlManagementComponent implements OnInit {
   teamLeads: TeamLeadManagement[] = [];
+  candidates: ManagedEmployee[] = [];
+  selectedEmployeeId = '';
+  assigning = false;
   loading = true;
+
+  showRevokeConfirm = false;
+  revoking: TeamLeadManagement | null = null;
 
   columns: TableColumn[] = [
     { key: 'employeeCode', label: 'Code', sortable: true, width: '110px' },
@@ -25,7 +30,8 @@ export class AdminTlManagementComponent implements OnInit {
   ];
 
   tableActions = [
-    { label: 'Open Projects', icon: 'fas fa-project-diagram', action: 'projects', color: '#10b981' }
+    { label: 'Open Projects', icon: 'fas fa-project-diagram', action: 'projects', color: '#10b981' },
+    { label: 'Revoke TL', icon: 'fas fa-user-minus', action: 'revoke', color: '#ef4444' }
   ];
 
   constructor(
@@ -36,6 +42,7 @@ export class AdminTlManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTeamLeads();
+    this.loadCandidates();
   }
 
   loadTeamLeads(): void {
@@ -52,8 +59,72 @@ export class AdminTlManagementComponent implements OnInit {
     });
   }
 
+  loadCandidates(): void {
+    this.managementService.getEmployees().subscribe({
+      next: (data) => this.refreshCandidates(data),
+      error: () => this.toast.error('Failed to load employees')
+    });
+  }
+
+  refreshCandidates(data: ManagedEmployee[]): void {
+    this.candidates = (data || []).filter(
+      (e) => e.hasAccount && e.active && e.role !== 'TL' && e.role !== 'ADMIN'
+    );
+    if (!this.candidates.some((c) => c.id === this.selectedEmployeeId)) {
+      this.selectedEmployeeId = '';
+    }
+  }
+
+  assignAsTL(): void {
+    if (!this.selectedEmployeeId) {
+      this.toast.warning('Select an employee to assign as Team Lead');
+      return;
+    }
+    this.assigning = true;
+    this.managementService.assignRole(this.selectedEmployeeId, 'TL').subscribe({
+      next: () => {
+        this.assigning = false;
+        this.toast.success('Employee assigned as Team Lead');
+        this.reloadAll();
+      },
+      error: () => {
+        this.assigning = false;
+        this.toast.error('Failed to assign role');
+      }
+    });
+  }
+
   onAction(event: { action: string; row: TeamLeadManagement }): void {
-    this.router.navigate(['/admin/projects']);
+    if (event.action === 'projects') {
+      this.router.navigate(['/admin/projects']);
+    } else if (event.action === 'revoke') {
+      this.revoking = event.row;
+      this.showRevokeConfirm = true;
+    }
+  }
+
+  confirmRevoke(): void {
+    if (!this.revoking) return;
+    const employee = this.revoking;
+    this.revoking = null;
+    this.showRevokeConfirm = false;
+    this.managementService.assignRole(employee.id, 'EMPLOYEE').subscribe({
+      next: () => {
+        this.toast.success(`${employee.fullName} is no longer a Team Lead`);
+        this.reloadAll();
+      },
+      error: () => this.toast.error('Failed to revoke role')
+    });
+  }
+
+  cancelRevoke(): void {
+    this.revoking = null;
+    this.showRevokeConfirm = false;
+  }
+
+  reloadAll(): void {
+    this.loadTeamLeads();
+    this.managementService.getEmployees().subscribe((data) => this.refreshCandidates(data));
   }
 
   get totalMembers(): number {

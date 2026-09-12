@@ -1,7 +1,8 @@
+using HRMAPI.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 using HRMAPI.Data;
-using HRMAPI.Models;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Models.Entities;
+using HRMAPI.Interfaces.Repositories;
 
 namespace HRMAPI.Repositories;
 
@@ -328,12 +329,15 @@ public class RolePermissionRepository : Repository<RolePermission>, IRolePermiss
     public async Task<IEnumerable<RolePermission>> GetByRoleAsync(string role) =>
         await _dbSet.Where(rp => rp.Role == role).ToListAsync();
 
-    public async Task ReplaceForRoleAsync(string role, IEnumerable<RolePermission> permissions)
+    public async Task<IEnumerable<RolePermission>> GetByRoleIdAsync(Guid roleId) =>
+        await _dbSet.Where(rp => rp.RoleId == roleId).ToListAsync();
+
+    public async Task ReplaceForRoleAsync(string role, Guid roleId, IEnumerable<RolePermission> permissions)
     {
-        var existing = await _dbSet.Where(rp => rp.Role == role).ToListAsync();
+        var existing = await _dbSet.Where(rp => rp.Role == role || rp.RoleId == roleId).ToListAsync();
         _dbSet.RemoveRange(existing);
         await _context.SaveChangesAsync();
-        foreach (var p in permissions) { p.Role = role; p.UpdatedAt = DateTime.UtcNow; }
+        foreach (var p in permissions) { p.Role = role; p.RoleId = roleId; p.UpdatedAt = DateTime.UtcNow; }
         if (permissions.Any())
         {
             await _dbSet.AddRangeAsync(permissions);

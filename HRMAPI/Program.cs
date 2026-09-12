@@ -1,3 +1,4 @@
+using HRMAPI.Interfaces.Services;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,9 @@ using Serilog;
 using HRMAPI.Data;
 using HRMAPI.Filters;
 using HRMAPI.Hubs;
+using HRMAPI.Middleware;
 using HRMAPI.Repositories;
-using HRMAPI.Repositories.Interfaces;
+using HRMAPI.Interfaces.Repositories;
 using HRMAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -167,6 +169,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IDesignationService, DesignationService>();
+builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IPayrollService, PayrollService>();
@@ -175,6 +180,7 @@ builder.Services.AddScoped<ITrainingService, TrainingService>();
 builder.Services.AddScoped<IRecruitmentService, RecruitmentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
+builder.Services.AddScoped<INavigationService, NavigationService>();
 builder.Services.AddScoped<IWorkUpdateService, WorkUpdateService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
   builder.Services.AddScoped<IManagementService, ManagementService>();
@@ -206,12 +212,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AngularClient");
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseMiddleware<JwtMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<AuditMiddleware>();
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");

@@ -1,6 +1,60 @@
 <app-page-header title="Designations" subtitle="Manage job titles and levels" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Designations'}]">
-      <button class="btn btn--primary" (click)="showAdd = true"><i class="fas fa-plus"></i> Add Designation</button>
-      <button class="btn btn--outline"><i class="fas fa-file-export"></i> Export</button>
-    </app-page-header>
-    <app-data-table [columns]="columns" [data]="designations" [pageSize]="10" [actions]="tableActions" (onActionClick)="onAction($event)">
-    </app-data-table>
+  <button class="btn btn--primary" (click)="openAdd()"><i class="fas fa-plus"></i> Add Designation</button>
+  <button class="btn btn--outline"><i class="fas fa-file-export"></i> Export</button>
+</app-page-header>
+
+<app-data-table
+  [columns]="columns"
+  [data]="designations"
+  [pageSize]="10"
+  [actions]="tableActions"
+  emptyTitle="No designations found"
+  emptyMessage="Create your first designation to get started."
+  emptyIcon="fas fa-id-badge"
+  (onActionClick)="onAction($event)">
+</app-data-table>
+
+<!-- Create / Edit Designation Modal -->
+<div class="modal-backdrop" *ngIf="showForm">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-id-badge text-blue"></i> {{ isEdit ? 'Edit Designation' : 'Create New Designation' }}</h3>
+      <button class="close-btn" (click)="closeForm()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Designation Title <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="form.title" placeholder="e.g. Software Engineer" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Level <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="form.level" placeholder="e.g. Senior" class="form-control" />
+        </div>
+
+        <div class="form-group full-width">
+          <label>Department</label>
+          <select [(ngModel)]="form.departmentId" class="form-control">
+            <option value="">-- Select Department --</option>
+            <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Min Salary</label>
+          <input type="number" [(ngModel)]="form.minSalary" placeholder="e.g. 45000" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Max Salary</label>
+          <input type="number" [(ngModel)]="form.maxSalary" placeholder="e.g. 90000" class="form-control" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeForm()">Cancel</button>
+      <button class="btn-save" (click)="saveForm()"><i class="fas fa-check"></i> {{ isEdit ? 'Update Designation' : 'Create Designation' }}</button>
+    </div>
+  </div>
+</div>

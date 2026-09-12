@@ -344,6 +344,19 @@
   font-weight: 500;
 }
 
+.form-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+input.form-control:disabled {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
 /* --- BUTTONS & ACTIONS --- */
 .form-actions {
   display: flex;

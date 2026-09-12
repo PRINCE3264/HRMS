@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HRMAPI.DTOs.Common;
-using HRMAPI.DTOs.User;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.DTOs.User;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 
@@ -14,9 +16,9 @@ public interface IUserController
 [Route("api/users")]
 public class UserController : ControllerBase, IUserController
 {
-    private readonly Services.IUserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(Services.IUserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }

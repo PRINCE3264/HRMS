@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HRMAPI.DTOs.Attendance;
-using HRMAPI.DTOs.Common;
-using HRMAPI.Models;
+using HRMAPI.Models.DTOs.Attendance;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.Entities;
 using HRMAPI.Data;
 using Microsoft.EntityFrameworkCore;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 

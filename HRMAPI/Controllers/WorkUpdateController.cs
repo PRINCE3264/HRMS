@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HRMAPI.DTOs.Common;
-using HRMAPI.DTOs.Work;
+using HRMAPI.Models.DTOs.Common;
+using HRMAPI.Models.DTOs.Work;
 using HRMAPI.Services;
+
+using HRMAPI.Interfaces.Services;
 
 namespace HRMAPI.Controllers;
 
@@ -10,9 +12,9 @@ namespace HRMAPI.Controllers;
 public class WorkUpdateController : BaseController
 {
     private readonly IWorkUpdateService _workUpdateService;
-    private readonly Services.IUserService _userService;
+    private readonly IUserService _userService;
 
-    public WorkUpdateController(IWorkUpdateService workUpdateService, Services.IUserService userService)
+    public WorkUpdateController(IWorkUpdateService workUpdateService, IUserService userService)
     {
         _workUpdateService = workUpdateService;
         _userService = userService;

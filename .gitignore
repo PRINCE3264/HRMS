@@ -1,24 +1,19 @@
-﻿# ===== .NET / API =====
-bin/
-obj/
-*.user
-*.suo
-.vs/
-HRMAPI/Logs/
-
-# ===== Angular / Client =====
+# Node / Angular
 ClientApp/node_modules/
 ClientApp/.angular/
 ClientApp/dist/
-ClientApp/.angular-cache/
-
-# ===== IDE / OS =====
 .vscode/
-.idea/
-*.swp
+
+# .NET / C#
+HRMAPI/bin/
+HRMAPI/obj/
+HRMAPI/Logs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# OS / Temp
 .DS_Store
 Thumbs.db
-
-# ===== Secrets / env =====
-appsettings.Development.json
-*.env
+*.log
