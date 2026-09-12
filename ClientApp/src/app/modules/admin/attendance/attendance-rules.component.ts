@@ -62,11 +62,12 @@ export class AdminAttendanceRulesComponent implements OnInit {
     this.showForm = true;
   }
 
-  onAction(event: { action: string; row: AttendanceRule }): void {
+  async onAction(event: { action: string; row: AttendanceRule }): Promise<void> {
     if (event.action === 'edit') {
       this.openEdit(event.row);
     } else if (event.action === 'delete') {
-      if (confirm(`Delete attendance rule "${event.row.name}"?`)) {
+      const confirmed = await this.toast.confirm(`Delete attendance rule "${event.row.name}"?`, 'Are you sure you want to delete this rule?');
+      if (confirmed) {
         this.attendanceService.deleteRule(event.row.id).subscribe({
           next: () => { this.toast.success('Attendance rule deleted'); this.loadRules(); },
           error: () => this.toast.error('Failed to delete attendance rule')

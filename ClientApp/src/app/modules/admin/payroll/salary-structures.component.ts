@@ -121,7 +121,7 @@ export class AdminSalaryStructuresComponent implements OnInit {
     this.showForm = true;
   }
 
-  onAction(event: { action: string; row: SalaryStructure }): void {
+  async onAction(event: { action: string; row: any }): Promise<void> {
     if (event.action === 'edit') {
       this.openEdit(event.row);
     } else if (event.action === 'breakdown') {
@@ -130,7 +130,8 @@ export class AdminSalaryStructuresComponent implements OnInit {
         error: () => this.toast.error('Failed to load salary breakdown')
       });
     } else if (event.action === 'deactivate') {
-      if (confirm(`Deactivate salary structure for ${event.row.employeeName}?`)) {
+      const confirmed = await this.toast.confirm(`Deactivate salary structure for ${event.row.employeeName}?`, 'This action will deactivate the salary structure.');
+      if (confirmed) {
         this.payrollService.deactivateSalaryStructure(event.row.id).subscribe({
           next: () => { this.toast.success('Salary structure deactivated'); this.loadStructures(); },
           error: () => this.toast.error('Failed to deactivate salary structure')

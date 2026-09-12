@@ -191,10 +191,12 @@
             background: rgba(59, 130, 246, 0.3);
             color: #60a5fa;
           }
+
           &.icon-purple {
             background: rgba(168, 85, 247, 0.3);
             color: #c084fc;
           }
+
           &.icon-teal {
             background: rgba(20, 184, 166, 0.3);
             color: #2dd4bf;
@@ -235,6 +237,7 @@
 
         .spinning-icon {
           transition: transform 0.5s ease;
+
           &:hover {
             transform: rotate(180deg);
           }
@@ -435,6 +438,7 @@
 
         &.field-error {
           border-color: #ef4444;
+
           &:focus-within {
             box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
           }
@@ -451,7 +455,8 @@
           color: #2563eb;
         }
 
-        input, select {
+        input,
+        select {
           border: none;
           outline: none;
           background: transparent;
@@ -580,7 +585,9 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .divider {
@@ -677,15 +684,23 @@
       }
 
       .form-header {
-        h2 { color: #f8fafc; }
-        p { color: #94a3b8; }
+        h2 {
+          color: #f8fafc;
+        }
+
+        p {
+          color: #94a3b8;
+        }
       }
 
       .demo-bar {
         background: rgba(30, 58, 138, 0.4);
         border-color: rgba(59, 130, 246, 0.3);
 
-        .demo-label { color: #93c5fd; }
+        .demo-label {
+          color: #93c5fd;
+        }
+
         .demo-chip {
           background: #1e293b;
           color: #93c5fd;
@@ -699,15 +714,21 @@
       }
 
       .form-field {
-        label { color: #cbd5e1; }
+        label {
+          color: #cbd5e1;
+        }
 
         .field-wrapper {
           background: #1e293b;
           border-color: #334155;
 
-          input, select {
+          input,
+          select {
             color: #f8fafc;
-            &::placeholder { color: #64748b; }
+
+            &::placeholder {
+              color: #64748b;
+            }
           }
         }
       }
@@ -717,8 +738,14 @@
       }
 
       .divider {
-        &::before { background: #334155; }
-        span { background: #0f172a; color: #64748b; }
+        &::before {
+          background: #334155;
+        }
+
+        span {
+          background: #0f172a;
+          color: #64748b;
+        }
       }
 
       .btn-google {
@@ -739,38 +766,77 @@
 
   /* --- KEYFRAME ANIMATIONS --- */
   @keyframes floatOrb1 {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-24px) scale(1.08); }
+    0% {
+      transform: translateY(0) scale(1);
+    }
+
+    100% {
+      transform: translateY(-24px) scale(1.08);
+    }
   }
 
   @keyframes floatOrb2 {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-30px) scale(1.1); }
+    0% {
+      transform: translateY(0) scale(1);
+    }
+
+    100% {
+      transform: translateY(-30px) scale(1.1);
+    }
   }
 
   @keyframes floatOrb3 {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-18px) scale(1.05); }
+    0% {
+      transform: translateY(0) scale(1);
+    }
+
+    100% {
+      transform: translateY(-18px) scale(1.05);
+    }
   }
 
   @keyframes textShimmer {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+
+    100% {
+      background-position: 200% 50%;
+    }
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Responsive Adjustments */
@@ -778,6 +844,7 @@
     .auth-hero {
       display: none;
     }
+
     .auth-form-panel {
       padding: 32px 24px;
     }

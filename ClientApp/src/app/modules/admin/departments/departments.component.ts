@@ -104,8 +104,9 @@ export class AdminDepartmentsComponent implements OnInit {
     });
   }
 
-  deleteDepartment(dept: Department): void {
-    if (!confirm(`Deactivate department "${dept.name}"?`)) return;
+  async deleteDepartment(dept: Department): Promise<void> {
+    const confirmed = await this.toast.confirm(`Deactivate department "${dept.name}"?`, 'This action will deactivate the selected department.');
+    if (!confirmed) return;
     this.departmentService.deleteDepartment(dept.id).subscribe({
       next: () => {
         this.toast.success('Department deactivated');

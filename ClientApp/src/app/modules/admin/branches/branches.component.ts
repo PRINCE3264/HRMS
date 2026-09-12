@@ -132,8 +132,9 @@ export class AdminBranchesComponent implements OnInit {
     });
   }
 
-  deleteBranch(branch: Branch): void {
-    if (!confirm(`Deactivate branch "${branch.name}"?`)) return;
+  async deleteBranch(branch: Branch): Promise<void> {
+    const confirmed = await this.toast.confirm(`Deactivate branch "${branch.name}"?`, 'This action will deactivate the selected branch.');
+    if (!confirmed) return;
     this.departmentService.deleteBranch(branch.id).subscribe({
       next: () => {
         this.toast.success('Branch deactivated');

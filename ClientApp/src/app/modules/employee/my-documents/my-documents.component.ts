@@ -186,8 +186,9 @@ export class EmpDocumentsComponent implements OnInit {
     });
   }
 
-  deleteDocument(doc: DocumentItem): void {
-    if (!confirm(`Are you sure you want to delete "${doc.name}"?`)) return;
+  async deleteDocument(doc: DocumentItem): Promise<void> {
+    const confirmed = await this.toast.confirm(`Delete document "${doc.name}"?`, 'Are you sure you want to delete this document?');
+    if (!confirmed) return;
 
     this.documentService.deleteDocument(doc.id).subscribe({
       next: () => {

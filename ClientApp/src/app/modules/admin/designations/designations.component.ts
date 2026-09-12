@@ -109,9 +109,10 @@ export class AdminDesignationsComponent implements OnInit {
     });
   }
 
-  onAction(event: { action: string; row: any }): void {
+  async onAction(event: { action: string; row: any }): Promise<void> {
     if (event.action === 'delete') {
-      if (!confirm(`Deactivate designation "${event.row.title}"?`)) return;
+      const confirmed = await this.toast.confirm(`Deactivate designation "${event.row.title}"?`, 'This action will deactivate the selected designation.');
+      if (!confirmed) return;
       this.departmentService.deleteDesignation(event.row.id).subscribe({
         next: () => {
           this.toast.success('Designation deactivated');

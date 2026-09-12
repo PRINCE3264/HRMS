@@ -430,3 +430,51 @@ textarea.form-control {
   .app-main { margin-left: 0 !important; }
   .app-content { padding: 0; }
 }
+
+/* ================================================
+   SWEETALERT2 CUSTOM STYLING
+   ================================================ */
+.swal2-container {
+  font-family: var(--font-family, 'Inter', sans-serif) !important;
+  z-index: 100000 !important;
+}
+
+.swal2-popup {
+  border-radius: 16px !important;
+  padding: 1.5rem 1.75rem !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+.swal2-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+}
+
+.swal2-html-container {
+  font-size: 0.95rem !important;
+  color: #475569 !important;
+}
+
+.swal2-styled.swal2-confirm {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  padding: 8px 20px !important;
+  font-size: 0.9rem !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+}
+
+.swal2-styled.swal2-cancel {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  padding: 8px 20px !important;
+  font-size: 0.9rem !important;
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+.swal2-styled.swal2-cancel:hover {
+  background-color: #e2e8f0 !important;
+}
+

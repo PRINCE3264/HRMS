@@ -8,4 +8,4 @@ import { LoginComponent } from './login.component';
   declarations: [LoginComponent],
   imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
-export class LoginModule {}
+export class LoginModule { }

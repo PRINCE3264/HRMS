@@ -224,8 +224,9 @@ export class AdminProjectsComponent implements OnInit {
     });
   }
 
-  deleteProject(project: Project): void {
-    if (!confirm(`Delete project "${project.name}"?`)) return;
+  async deleteProject(project: Project): Promise<void> {
+    const confirmed = await this.toast.confirm(`Delete project "${project.name}"?`, 'Are you sure you want to delete this project?');
+    if (!confirmed) return;
     this.projectService.deleteProject(project.id).subscribe({
       next: () => {
         this.toast.success('Project deleted');

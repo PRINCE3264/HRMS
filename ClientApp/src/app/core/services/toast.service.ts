@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import Swal, { SweetAlertIcon, SweetAlertOptions } from 'sweetalert2';
 
 export interface Toast {
   id: number;
@@ -10,26 +10,83 @@ export interface Toast {
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
-  private toastsSubject = new BehaviorSubject<Toast[]>([]);
-  public toasts$ = this.toastsSubject.asObservable();
-  private counter = 0;
-
-  show(message: string, type: Toast['type'] = 'info', duration = 3000): void {
-    const toast: Toast = { id: ++this.counter, message, type, duration };
-    const current = this.toastsSubject.value;
-    this.toastsSubject.next([...current, toast]);
-    if (duration > 0) {
-      setTimeout(() => this.dismiss(toast.id), duration);
+  private toastMixin = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3500,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
     }
+  });
+
+  show(message: string, type: Toast['type'] = 'info', duration = 3500): void {
+    this.toastMixin.fire({
+      icon: type,
+      title: message,
+      timer: duration
+    });
   }
 
-  success(message: string): void { this.show(message, 'success'); }
-  error(message: string): void { this.show(message, 'error', 5000); }
-  warning(message: string): void { this.show(message, 'warning'); }
-  info(message: string): void { this.show(message, 'info'); }
+  success(message: string): void {
+    this.show(message, 'success');
+  }
 
-  dismiss(id: number): void {
-    const current = this.toastsSubject.value.filter(t => t.id !== id);
-    this.toastsSubject.next(current);
+  error(message: string, duration = 5000): void {
+    this.show(message, 'error', duration);
+  }
+
+  warning(message: string): void {
+    this.show(message, 'warning');
+  }
+
+  info(message: string): void {
+    this.show(message, 'info');
+  }
+
+  /**
+   * Confirmation Popup using SweetAlert2
+   */
+  async confirm(
+    title: string,
+    text: string = '',
+    confirmButtonText: string = 'Yes, proceed',
+    cancelButtonText: string = 'Cancel',
+    icon: SweetAlertIcon = 'warning'
+  ): Promise<boolean> {
+    const result = await Swal.fire({
+      title,
+      text,
+      icon,
+      showCancelButton: true,
+      confirmButtonText,
+      cancelButtonText,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      reverseButtons: true
+    });
+    return result.isConfirmed;
+  }
+
+  /**
+   * Alert Popup using SweetAlert2
+   */
+  async alert(title: string, text: string = '', icon: SweetAlertIcon = 'info'): Promise<void> {
+    await Swal.fire({
+      title,
+      text,
+      icon,
+      confirmButtonColor: '#6366f1'
+    });
+  }
+
+  /**
+   * Generic SweetAlert2 modal trigger
+   */
+  fire(options: SweetAlertOptions) {
+    return Swal.fire(options);
   }
 }
+

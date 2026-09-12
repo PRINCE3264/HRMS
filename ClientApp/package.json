@@ -25,6 +25,7 @@
     "@syncfusion/ej2-angular-navigations": "^34.2.7",
     "@syncfusion/ej2-base": "^34.2.6",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.26.25",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },

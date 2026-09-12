@@ -79,8 +79,9 @@ export class HrDocumentsComponent implements OnInit {
     });
   }
 
-  deleteDocument(doc: any): void {
-    if (!confirm('Are you sure you want to delete this document?')) return;
+  async deleteDocument(doc: any): Promise<void> {
+    const confirmed = await this.toast.confirm('Delete Document?', 'Are you sure you want to delete this document?');
+    if (!confirmed) return;
     this.documentService.deleteDocument(doc.id).subscribe({
       next: () => {
         this.toast.success('Document deleted.');
