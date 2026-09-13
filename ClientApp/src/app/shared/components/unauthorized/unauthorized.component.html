@@ -1,8 +1,28 @@
 <div class="unauthorized-page">
-      <div class="unauthorized-card">
-        <div class="unauthorized-icon"><i class="fas fa-lock"></i></div>
-        <h2>Access Denied</h2>
-        <p>You don't have permission to access this page.</p>
-        <a routerLink="/dashboard" class="btn-back"><i class="fas fa-home"></i> Go to Dashboard</a>
-      </div>
+  <div class="unauthorized-card">
+    <div class="lottie-wrapper">
+      <iframe 
+        src="https://lottie.host/embed/9c2eb1eb-f288-49ba-a219-bc48a13ffac2/TovgV0bQr9.lottie" 
+        class="lottie-frame"
+        title="Unauthorized Access Lottie Animation"
+        allowfullscreen>
+      </iframe>
     </div>
+
+    <div class="status-badge">
+      <i class="fas fa-shield-halved"></i> 403 Restricted Access
+    </div>
+
+    <h2>Access Denied</h2>
+    <p>You don't have permission to access this page or module. If you believe this is an error, please contact your system administrator.</p>
+
+    <div class="action-buttons">
+      <button (click)="goBack()" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Go Back
+      </button>
+      <a routerLink="/dashboard" class="btn btn-primary">
+        <i class="fas fa-home"></i> Go to Dashboard
+      </a>
+    </div>
+  </div>
+</div>
