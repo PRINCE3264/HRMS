@@ -11,6 +11,8 @@ public class UserPermission
 
     public Guid UserId { get; set; }
 
+    public Guid? RoleId { get; set; }
+
     [Required, MaxLength(100)]
     public string Module { get; set; } = string.Empty;
 
@@ -18,4 +20,7 @@ public class UserPermission
 
     [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; } = null!;
+
+    [ForeignKey(nameof(RoleId))]
+    public virtual Role? RoleRef { get; set; }
 }

@@ -15,27 +15,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorMessage = '';
   returnUrl = '/dashboard';
   isDarkMode = false;
-  activeDot = 0;
-  private carouselInterval: any;
-
-  heroSlides = [
-    {
-      title: 'Employee Management',
-      sub: 'People • Roles • Growth',
-      quote: 'A smarter way to manage your workforce from hiring to growth — all in one place.'
-    },
-    {
-      title: 'Leave & Attendance',
-      sub: 'Track • Approve • Insights',
-      quote: 'Real-time tracking, intelligent leave approvals, and seamless attendance management.'
-    },
-    {
-      title: 'Performance & Reports',
-      sub: 'Data • Decisions • Success',
-      quote: 'Actionable analytics, appraisal reviews, and data-driven workforce decisions.'
-    }
-  ];
-
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -59,20 +38,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (savedTheme === 'dark') {
       this.isDarkMode = true;
     }
-
-    this.carouselInterval = setInterval(() => {
-      this.activeDot = (this.activeDot + 1) % 3;
-    }, 3500);
   }
 
   ngOnDestroy(): void {
-    if (this.carouselInterval) {
-      clearInterval(this.carouselInterval);
-    }
-  }
-
-  setSlide(index: number): void {
-    this.activeDot = index;
   }
 
   toggleDarkMode(): void {

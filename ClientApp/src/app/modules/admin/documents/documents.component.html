@@ -2,28 +2,42 @@
   <button class="btn btn--primary" (click)="openUploadModal()"><i class="fas fa-cloud-upload-alt"></i> Upload Document</button>
 </app-page-header>
 
-<!-- Category Cards Grid -->
-<div class="doc-categories">
-  <div class="doc-cat" [class.active]="selectedCategory === 'ALL'" (click)="selectedCategory = 'ALL'">
-    <div class="doc-cat__icon all-icon">
-      <i class="fas fa-folder-open"></i>
-    </div>
-    <div class="doc-cat__info">
-      <span class="doc-cat__name">All Files</span>
-      <span class="doc-cat__count">{{ documents.length }} Files</span>
+<!-- Metrics Overview Cards (Executive Light Style) -->
+<div class="doc-stats">
+  <div class="d-stat metric-blue">
+    <div class="d-icon"><i class="fas fa-folder-open"></i></div>
+    <div class="d-info">
+      <span class="d-label">Total Documents</span>
+      <span class="d-val">{{ documents.length }}</span>
+      <span class="d-sub"><i class="fas fa-file-alt"></i> Active Repository</span>
     </div>
   </div>
-
-  <div class="doc-cat" *ngFor="let cat of categories" [class.active]="selectedCategory === cat.name" (click)="filterByCategory(cat.name)">
-    <div class="doc-cat__icon" [style.background]="cat.color">
-      <i [class]="cat.icon"></i>
+  <div class="d-stat metric-emerald">
+    <div class="d-icon"><i class="fas fa-file-contract"></i></div>
+    <div class="d-info">
+      <span class="d-label">Contracts & Policies</span>
+      <span class="d-val">{{ getCategoryCount('Contracts') + getCategoryCount('Policies') }}</span>
+      <span class="d-sub"><i class="fas fa-shield-alt"></i> Compliant & Verified</span>
     </div>
-    <div class="doc-cat__info">
-      <span class="doc-cat__name">{{ cat.name }}</span>
-      <span class="doc-cat__count">{{ cat.count }} Files</span>
+  </div>
+  <div class="d-stat metric-violet">
+    <div class="d-icon"><i class="fas fa-hdd"></i></div>
+    <div class="d-info">
+      <span class="d-label">Storage Used</span>
+      <span class="d-val">4.2 GB</span>
+      <span class="d-sub"><i class="fas fa-cloud"></i> 14% of 30 GB Allocated</span>
+    </div>
+  </div>
+  <div class="d-stat metric-amber">
+    <div class="d-icon"><i class="fas fa-check-circle"></i></div>
+    <div class="d-info">
+      <span class="d-label">Verification Rate</span>
+      <span class="d-val">98.5%</span>
+      <span class="d-sub"><i class="fas fa-user-check"></i> Audit Ready</span>
     </div>
   </div>
 </div>
+
 
 <!-- Toolbar Controls -->
 <div class="doc-toolbar">

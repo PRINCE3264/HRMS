@@ -12,6 +12,7 @@ public class CreateEmployeeDto
     public string? Gender { get; set; }
     public string? MaritalStatus { get; set; }
     public string? Nationality { get; set; }
+    public string? Avatar { get; set; }
 
     public Guid DepartmentId { get; set; }
     public Guid DesignationId { get; set; }

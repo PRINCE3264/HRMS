@@ -1,89 +1,192 @@
-import { Component, OnInit } from '@angular/core';
-import { DashboardService, ReportService } from '../../../core/services';
-import { DashboardStats, ChartData } from '../../../core/models';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ReportService, ToastService, ExcelExportService } from '../../../core/services';
 
 @Component({
   selector: 'app-hr-reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
-export class HrReportsComponent implements OnInit {
-  headcountData = [
-    { label: 'Jan', value: 65, color: '#6366f1' },
-    { label: 'Feb', value: 68, color: '#6366f1' },
-    { label: 'Mar', value: 72, color: '#6366f1' },
-    { label: 'Apr', value: 70, color: '#6366f1' },
-    { label: 'May', value: 75, color: '#6366f1' },
-    { label: 'Jun', value: 78, color: '#6366f1' },
-    { label: 'Jul', value: 80, color: '#6366f1' },
-    { label: 'Aug', value: 82, color: '#6366f1' },
-    { label: 'Sep', value: 85, color: '#6366f1' },
-    { label: 'Oct', value: 88, color: '#6366f1' },
-    { label: 'Nov', value: 90, color: '#6366f1' },
-    { label: 'Dec', value: 95, color: '#10b981' },
+export class HrReportsComponent implements OnInit, OnDestroy {
+  activeTab: string = 'hr';
+  selectedDateRange: string = 'THIS_MONTH';
+
+  private querySub?: Subscription;
+
+  headcountData: any = [
+    { label: 'Engineering', value: 68 }, { label: 'Marketing', value: 32 },
+    { label: 'Sales', value: 45 }, { label: 'HR', value: 18 },
+    { label: 'Finance', value: 28 }, { label: 'Design', value: 22 },
+    { label: 'Others', value: 35 }
   ];
-  deptDistribution: any[] = [];
+  genderData = [
+    { label: 'Male', value: 142, color: '#4461f6' },
+    { label: 'Female', value: 98, color: '#ec4899' },
+    { label: 'Non-binary', value: 8, color: '#06b6d4' }
+  ];
   turnoverData = [
-    { reason: 'Voluntary Resignation', pct: 5.2, color: '#6366f1' },
-    { reason: 'End of Contract', pct: 1.8, color: '#f59e0b' },
-    { reason: 'Termination', pct: 0.9, color: '#ef4444' },
-    { reason: 'Retirement', pct: 0.3, color: '#10b981' },
+    { label: 'Jul', value: 4 }, { label: 'Aug', value: 6 },
+    { label: 'Sep', value: 3 }, { label: 'Oct', value: 5 },
+    { label: 'Nov', value: 2 }, { label: 'Dec', value: 7 }
   ];
-  attendanceData = [
-    { day: 'Mon', present: 92, absent: 5, leave: 3 },
-    { day: 'Tue', present: 88, absent: 7, leave: 5 },
-    { day: 'Wed', present: 90, absent: 4, leave: 6 },
-    { day: 'Thu', present: 85, absent: 8, leave: 7 },
-    { day: 'Fri', present: 78, absent: 10, leave: 12 },
-  ];
-  metrics = [
-    { label: 'Avg. Time to Hire', value: '23 days', icon: 'fas fa-clock', bgColor: '#ede9fe', iconColor: '#7c3aed', change: '-3 days', trend: 'up' },
-    { label: 'Employee Satisfaction', value: '4.3/5', icon: 'fas fa-smile', bgColor: '#ecfdf5', iconColor: '#10b981', change: '+0.2', trend: 'up' },
-    { label: 'Training Hours', value: '1,240 hrs', icon: 'fas fa-graduation-cap', bgColor: '#dbeafe', iconColor: '#2563eb', change: '+180', trend: 'up' },
-    { label: 'Absenteeism Rate', value: '3.2%', icon: 'fas fa-user-slash', bgColor: '#fef2f2', iconColor: '#ef4444', change: '-0.5%', trend: 'up' },
-    { label: 'Overtime Hours', value: '320 hrs', icon: 'fas fa-hourglass-half', bgColor: '#fef3c7', iconColor: '#d97706', change: '+45 hrs', trend: 'down' },
-  ];
-  hiringFunnel = [
-    { stage: 'Applications', count: 248, width: '100%', color: '#6366f1' },
-    { stage: 'Screened', count: 142, width: '75%', color: '#818cf8' },
-    { stage: 'Interviewed', count: 68, width: '50%', color: '#a78bfa' },
-    { stage: 'Offered', count: 24, width: '30%', color: '#c4b5fd' },
-    { stage: 'Hired', count: 18, width: '22%', color: '#10b981' },
+  salaryData = [
+    { level: 'Executive', avg: 200000, percent: 100, color: '#4461f6' },
+    { level: 'VP', avg: 150000, percent: 75, color: '#8b5cf6' },
+    { level: 'Senior', avg: 110000, percent: 55, color: '#06b6d4' },
+    { level: 'Mid-Level', avg: 75000, percent: 37, color: '#10b981' },
+    { level: 'Junior', avg: 50000, percent: 25, color: '#f59e0b' },
+    { level: 'Intern', avg: 28000, percent: 14, color: '#94a3b8' },
   ];
 
-  private deptColors: string[] = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+  attendanceTrendData: any = [
+    { label: 'Jul', value: 94 }, { label: 'Aug', value: 96 },
+    { label: 'Sep', value: 92 }, { label: 'Oct', value: 95 },
+    { label: 'Nov', value: 98 }, { label: 'Dec', value: 96 }
+  ];
+  attendanceBreakdownData = [
+    { label: 'Present', value: 218, color: '#10b981' },
+    { label: 'Late', value: 14, color: '#f59e0b' },
+    { label: 'On Leave', value: 8, color: '#4461f6' },
+    { label: 'Absent', value: 3, color: '#ef4444' }
+  ];
+  deptAttendanceData = [
+    { dept: 'Engineering', rate: 96.5, present: 66, absent: 2 },
+    { dept: 'Marketing', rate: 94.2, present: 30, absent: 2 },
+    { dept: 'Sales', rate: 91.8, present: 41, absent: 4 },
+    { dept: 'Human Resources', rate: 98.0, present: 18, absent: 0 },
+    { dept: 'Finance', rate: 95.4, present: 27, absent: 1 }
+  ];
 
-  constructor(private dashboardService: DashboardService, private reportService: ReportService) {}
+  payrollExpensesData: any = [
+    { label: 'Jul', value: 420000 }, { label: 'Aug', value: 435000 },
+    { label: 'Sep', value: 430000 }, { label: 'Oct', value: 445000 },
+    { label: 'Nov', value: 450000 }, { label: 'Dec', value: 480000 }
+  ];
+  payrollCategoryData = [
+    { label: 'Base Salaries', value: 380000, color: '#4461f6' },
+    { label: 'Bonuses & Incentives', value: 45000, color: '#10b981' },
+    { label: 'Health Insurance', value: 32000, color: '#8b5cf6' },
+    { label: 'Tax Deductions', value: 23000, color: '#f59e0b' }
+  ];
+  deptPayrollData = [
+    { dept: 'Engineering', totalCost: '₹185,000', avgSalary: '₹115,000', employeeCount: 68 },
+    { dept: 'Sales', totalCost: '₹110,000', avgSalary: '₹85,000', employeeCount: 45 },
+    { dept: 'Marketing', totalCost: '₹72,000', avgSalary: '₹78,000', employeeCount: 32 },
+    { dept: 'Finance', totalCost: '₹64,000', avgSalary: '₹92,000', employeeCount: 28 },
+    { dept: 'Human Resources', totalCost: '₹49,000', avgSalary: '₹74,000', employeeCount: 18 }
+  ];
+
+  quickReports = [
+    { name: 'Employee Directory', description: 'Complete list of all employees', icon: 'fas fa-address-book', color: '#4461f6' },
+    { name: 'Attendance Summary', description: 'Monthly attendance report', icon: 'fas fa-calendar-check', color: '#10b981' },
+    { name: 'Leave Balance', description: 'Current leave balances', icon: 'fas fa-calendar-alt', color: '#f59e0b' },
+    { name: 'Payroll Register', description: 'Monthly payroll breakdown', icon: 'fas fa-file-invoice-dollar', color: '#ef4444' },
+    { name: 'Performance Summary', description: 'Quarterly performance ratings', icon: 'fas fa-star', color: '#8b5cf6' },
+    { name: 'Training Completion', description: 'Training program completion rates', icon: 'fas fa-graduation-cap', color: '#06b6d4' },
+  ];
+
+  constructor(
+    private route: ActivatedRoute,
+    private reportService: ReportService,
+    private toast: ToastService,
+    private excelExport: ExcelExportService
+  ) {}
 
   ngOnInit(): void {
-    this.loadDeptDistribution();
-    this.loadAttendanceTrend();
-  }
-
-  loadDeptDistribution(): void {
-    this.dashboardService.getDepartmentDistribution().subscribe({
-      next: (data) => {
-        this.deptDistribution = data.labels.map((label, i) => ({
-          name: label,
-          count: data.datasets?.[0]?.data?.[i] || 0,
-          color: this.deptColors[i % this.deptColors.length],
-        }));
-      }
-    });
-  }
-
-  loadAttendanceTrend(): void {
-    this.reportService.getAttendanceTrend(30).subscribe({
-      next: (data) => {
-        if (data.labels?.length) {
-          this.attendanceData = data.labels.map((day, i) => ({
-            day,
-            present: data.datasets?.[0]?.data?.[i] || 0,
-            absent: data.datasets?.[1]?.data?.[i] || 0,
-            leave: data.datasets?.[2]?.data?.[i] || 0,
-          }));
+    this.querySub = this.route.queryParams.subscribe(params => {
+      if (params['tab']) {
+        const tab = params['tab'].toLowerCase();
+        if (tab === 'attendance') {
+          this.activeTab = 'attendance';
+        } else if (tab === 'payroll') {
+          this.activeTab = 'payroll';
+        } else {
+          this.activeTab = 'hr';
         }
       }
     });
+    this.loadReports();
+  }
+
+  ngOnDestroy(): void {
+    if (this.querySub) {
+      this.querySub.unsubscribe();
+    }
+  }
+
+  loadReports(): void {
+    this.reportService.getDepartmentDistribution().subscribe({
+      next: (chart) => {
+        if (chart?.labels?.length) {
+          this.headcountData = this.chartToBarData(chart);
+        }
+      },
+      error: () => {}
+    });
+    this.reportService.getAttendanceTrend(7).subscribe({
+      next: (chart) => {
+        if (chart?.labels?.length) {
+          this.attendanceTrendData = this.chartToBarData(chart);
+        }
+      },
+      error: () => {}
+    });
+    this.reportService.getPayrollTrend(6).subscribe({
+      next: (chart) => {
+        if (chart?.labels?.length) {
+          this.payrollExpensesData = this.chartToBarData(chart);
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  private chartToBarData(chart: any): { label: string; value: number }[] {
+    const labels: string[] = chart?.labels || [];
+    const dataset = chart?.datasets?.[0];
+    const data: number[] = dataset?.data || [];
+    return labels.map((label: string, i: number) => ({ label, value: data[i] || 0 }));
+  }
+
+  exportReport(): void {
+    if (this.activeTab === 'hr') {
+      this.excelExport.exportToExcel(this.headcountData, 'HR_Headcount_Report');
+    } else if (this.activeTab === 'attendance') {
+      this.excelExport.exportToExcel(this.deptAttendanceData, 'Attendance_Report');
+    } else if (this.activeTab === 'payroll') {
+      this.excelExport.exportToExcel(this.deptPayrollData, 'Payroll_Report');
+    } else {
+      this.excelExport.exportToExcel(this.headcountData, 'HRM_Analytics_Report');
+    }
+    this.toast.success('Excel report downloaded successfully');
+  }
+
+  downloadQuickReport(report: any): void {
+    const reportDataMap: Record<string, any[]> = {
+      'Employee Directory': [
+        { EmployeeID: 'EMP001', Name: 'John Doe', Department: 'Engineering', Position: 'Senior Dev' },
+        { EmployeeID: 'EMP002', Name: 'Jane Smith', Department: 'HR', Position: 'HR Manager' }
+      ],
+      'Attendance Summary': this.deptAttendanceData,
+      'Leave Balance': [
+        { Employee: 'John Doe', CasualLeave: 5, SickLeave: 3, EarnedLeave: 12 },
+        { Employee: 'Jane Smith', CasualLeave: 7, SickLeave: 4, EarnedLeave: 10 }
+      ],
+      'Payroll Register': this.deptPayrollData,
+      'Performance Summary': [
+        { Employee: 'John Doe', Rating: '4.8/5', Status: 'Exceeds Expectations' },
+        { Employee: 'Jane Smith', Rating: '4.5/5', Status: 'Meets Expectations' }
+      ],
+      'Training Completion': [
+        { Program: 'Cybersecurity 101', Enrolled: 120, Completed: 115, PassRate: '95.8%' },
+        { Program: 'Leadership 2026', Enrolled: 25, Completed: 24, PassRate: '96.0%' }
+      ]
+    };
+
+    const exportData = reportDataMap[report.name] || this.headcountData;
+    const filename = report.name.replace(/\s+/g, '_');
+    this.excelExport.exportToExcel(exportData, filename);
+    this.toast.success(`${report.name} exported to Excel!`);
   }
 }

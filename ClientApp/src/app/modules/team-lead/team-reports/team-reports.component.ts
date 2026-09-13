@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { ReportService, PerformanceService, LeaveService, AuthService, EmployeeService } from '../../../core/services';
+import { ReportService, PerformanceService, LeaveService, AuthService, EmployeeService, ExcelExportService } from '../../../core/services';
 
 export interface AttendanceReportItem {
   day: string;
@@ -52,11 +52,20 @@ export class TlReportsComponent implements OnInit {
     private performanceService: PerformanceService,
     private leaveService: LeaveService,
     private authService: AuthService,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private excelExport: ExcelExportService
   ) {}
 
   ngOnInit(): void {
     this.loadData();
+  }
+
+  exportExcel(): void {
+    if (this.attendanceData && this.attendanceData.length > 0) {
+      this.excelExport.exportToExcel(this.attendanceData, 'Team_Attendance_Report');
+    } else {
+      this.excelExport.exportToExcel(this.taskDistribution, 'Team_Task_Distribution');
+    }
   }
 
   loadData(): void {

@@ -61,4 +61,11 @@ export class EmployeeService extends BaseApiService {
     return this.http.put<any>(`${this.apiBase}/employees/${id}/status`, { status, exitDate, exitReason })
       .pipe(map(res => this.unwrap<Employee>(res)));
   }
+
+  uploadAvatar(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<any>(`${this.apiBase}/employees/upload-avatar`, formData)
+      .pipe(map(res => this.unwrap<{ imageUrl: string }>(res)));
+  }
 }

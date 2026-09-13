@@ -1,138 +1,119 @@
-<div class="login-wrapper">
-  <!-- Right Background Office Image & Hero Overlay -->
-  <div class="right-panel">
-    <!-- Cloud HRMS Badge -->
-    <div class="cloud-badge">
-      <span>CLOUD HRMS</span>
-    </div>
-
-    <!-- Center Hero Headline Overlay -->
-    <div class="hero-overlay">
-      <h1 class="hero-title">
-        Great<br>
-        People.<br>
-        Better<br>
-        Tomorrows.
-      </h1>
-      <div class="hero-blue-bar"></div>
-    </div>
-
-    <!-- Bottom-Right Tagline Overlay -->
-    <div class="hero-tagline">
-      <span>Empower.</span>
-      <span>Engage.</span>
-      <span>Grow.</span>
-    </div>
-  </div>
-
-  <!-- Left White Form Container with Curved Edge -->
-  <div class="left-panel">
-    <div class="form-container">
-      <!-- Brand Header -->
-      <div class="brand-header">
-        <div class="brand-logo-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#1d70f5"/>
-          </svg>
-        </div>
-        <div class="brand-info">
-          <span class="brand-title">HRMS</span>
-          <span class="brand-subtitle">People. Process. Progress.</span>
-        </div>
-      </div>
-
-      <!-- Welcome Title -->
-      <div class="welcome-header">
-        <span class="portal-tag">EMPLOYEE PORTAL</span>
-        <h1 class="welcome-title">Welcome Back</h1>
-        <p class="welcome-sub">Sign in to continue to your HRMS</p>
-      </div>
-
-      <!-- Login Form -->
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="main-form">
-        <!-- Email Field -->
-        <div class="form-group">
-          <label class="form-label">Email or Employee ID</label>
-          <div class="input-wrapper" [class.input-error]="isFieldInvalid('email')">
-            <i class="far fa-envelope input-icon"></i>
-            <input type="email" formControlName="email" placeholder="Enter your email or employee ID">
+<div class="auth-page-wrapper">
+  <div class="auth-split-container">
+    <!-- Left Form Section (50%) -->
+    <div class="auth-left-section">
+      <div class="auth-form-box">
+        <!-- Brand Header -->
+        <div class="brand-header">
+          <div class="brand-logo-icon">
+            <i class="fas fa-users text-blue"></i>
           </div>
-          <span class="error-msg" *ngIf="isFieldInvalid('email')">Please enter a valid email address</span>
+          <div class="brand-info">
+            <span class="brand-title">HRMS</span>
+            <span class="brand-subtitle">People. Process. Progress.</span>
+          </div>
         </div>
 
-        <!-- Password Field -->
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <div class="input-wrapper" [class.input-error]="isFieldInvalid('password')">
-            <i class="fas fa-lock input-icon"></i>
-            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Enter your password">
-            <button type="button" class="eye-toggle" (click)="showPassword = !showPassword" tabindex="-1">
-              <i [class]="showPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
+        <!-- Welcome Title -->
+        <div class="welcome-header">
+          <h1 class="welcome-title">Welcome Back</h1>
+          <p class="welcome-sub">Sign in to continue to your HRMS</p>
+        </div>
+
+        <!-- Login Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="main-form">
+          <!-- Email Field -->
+          <div class="form-group">
+            <label class="form-label">Email or Employee ID</label>
+            <div class="input-wrapper" [class.input-error]="isFieldInvalid('email')">
+              <i class="far fa-envelope input-icon"></i>
+              <input type="email" formControlName="email" placeholder="Email or Employee ID">
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('email')">Please enter a valid email address</span>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrapper" [class.input-error]="isFieldInvalid('password')">
+              <i class="fas fa-lock input-icon"></i>
+              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password">
+              <button type="button" class="eye-toggle" (click)="showPassword = !showPassword" tabindex="-1">
+                <i [class]="showPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
+              </button>
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('password')">Password is required</span>
+          </div>
+
+          <!-- Options: Remember Me & Forgot Password -->
+          <div class="options-row">
+            <label class="remember-me">
+              <input type="checkbox" formControlName="rememberMe" class="checkbox-input">
+              <span>Remember me</span>
+            </label>
+            <a routerLink="/auth/forgot-password" class="forgot-link">Forgot Password?</a>
+          </div>
+
+          <!-- Error Banner -->
+          <div class="alert-banner" *ngIf="errorMessage">
+            <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+          </div>
+
+          <!-- Sign In Button -->
+          <button type="submit" class="submit-btn" [disabled]="loading">
+            <span *ngIf="loading" class="spinner"></span>
+            <span>{{ loading ? 'Signing in...' : 'Sign In' }}</span>
+          </button>
+
+          <!-- Or Continue With Divider -->
+          <div class="divider">
+            <span>or continue with</span>
+          </div>
+
+          <!-- Social Login Box (Google Only) -->
+          <div class="sso-box">
+            <button type="button" class="sso-btn" (click)="loginWithGoogle()" title="Sign in with Google">
+              <svg width="20" height="20" viewBox="0 0 18 18">
+                <path
+                  d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"
+                  fill="#4285F4" />
+                <path
+                  d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
+                  fill="#34A853" />
+                <path
+                  d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+                  fill="#FBBC05" />
+                <path
+                  d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
+                  fill="#EA4335" />
+              </svg>
+              <span>Sign in with Google</span>
             </button>
           </div>
-          <span class="error-msg" *ngIf="isFieldInvalid('password')">Password is required</span>
+        </form>
+
+        <!-- Create Account Link -->
+        <div class="signup-prompt">
+          <span>Don't have an account? </span>
+          <a routerLink="/auth/register" class="signup-link">Create Account</a>
         </div>
 
-        <!-- Options: Remember Me & Forgot Password -->
-        <div class="options-row">
-          <label class="remember-me">
-            <input type="checkbox" formControlName="rememberMe" class="checkbox-input">
-            <span>Remember me</span>
-          </label>
-          <a routerLink="/auth/forgot-password" class="forgot-link">Forgot Password?</a>
+        <!-- Footer Text -->
+        <div class="form-footer">
+          <span>Together We Build A Better Workplace</span>
         </div>
-
-        <!-- Error Banner -->
-        <div class="alert-banner" *ngIf="errorMessage">
-          <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
-        </div>
-
-        <!-- Sign In Button -->
-        <button type="submit" class="submit-btn" [disabled]="loading">
-          <span *ngIf="loading" class="spinner"></span>
-          <span>{{ loading ? 'Signing in...' : 'Sign In' }}</span>
-        </button>
-
-        <!-- Or Continue With Divider -->
-        <div class="divider">
-          <span>or continue with</span>
-        </div>
-
-        <!-- Social Login Grid -->
-        <div class="sso-grid">
-          <!-- Microsoft SSO -->
-          <button type="button" class="sso-btn" (click)="loginWithGoogle()" title="Sign in with Microsoft">
-            <svg width="18" height="18" viewBox="0 0 23 23">
-              <path fill="#f35325" d="M1 1h10v10H1z"/>
-              <path fill="#81bc06" d="M12 1h10v10H12z"/>
-              <path fill="#05a6f0" d="M1 12h10v10H1z"/>
-              <path fill="#ffba08" d="M12 12h10v10H12z"/>
-            </svg>
-          </button>
-
-          <!-- Google SSO -->
-          <button type="button" class="sso-btn" (click)="loginWithGoogle()" title="Sign in with Google">
-            <svg width="18" height="18" viewBox="0 0 18 18">
-              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z" fill="#4285F4"/>
-              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
-              <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-            </svg>
-          </button>
-
-          <!-- Apple SSO -->
-          <button type="button" class="sso-btn" (click)="loginWithGoogle()" title="Sign in with Apple">
-            <svg width="18" height="18" viewBox="0 0 170 170" fill="#000">
-              <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.34.13-9.16-1.9-14.48-6.1-3.23-2.63-7.14-7.27-11.72-13.91-6.73-9.75-12.18-20.97-16.36-33.65-4.18-12.68-6.27-24.81-6.27-36.39 0-14.72 3.6-26.97 10.8-36.75 7.2-9.78 16.36-14.77 27.48-14.97 4.58 0 9.77 1.22 15.57 3.66 5.8 2.44 9.77 3.66 11.9 3.66 1.77 0 5.84-1.28 12.21-3.84 6.37-2.56 11.64-3.72 15.82-3.48 11.83.95 21.08 5.43 27.75 13.44-10.45 6.33-15.54 15.11-15.28 26.33.26 8.78 3.59 16.14 9.99 22.08 6.4 5.94 14.1 9.4 23.1 10.38-2.3 6.74-5.32 13.68-9.06 20.82zM119.22 31.84c0-7.39 2.66-14.49 7.98-21.3 5.32-6.81 12.02-10.54 20.1-11.19.14.95.21 1.9.21 2.85 0 7.25-2.8 14.41-8.4 21.48-5.6 7.07-12.39 10.9-20.37 11.49-.07-.95-.14-2.06-.14-3.33z"/>
-            </svg>
-          </button>
-        </div>
-      </form>
-
-      <!-- Footer Text -->
-      <div class="form-footer">
-        <span>Together, We Build A Better Workplace.</span>
       </div>
+    </div>
+
+    <!-- Organic S-Curve Divider -->
+    <svg class="curve-divider" viewBox="0 0 140 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 0 0 C 90 250, -20 750, 80 1000 L 0 1000 Z" fill="#ffffff" />
+    </svg>
+
+    <!-- Right Animated Image Banner Section (50%) -->
+    <div class="auth-right-banner">
+      <!-- Gradient Overlay -->
+      <div class="banner-overlay"></div>
     </div>
   </div>
 </div>

@@ -2,7 +2,7 @@
 
 <div class="my-payslips-container">
 
-  <!-- Top Salary Overview Stats -->
+  <!-- Top Salary Overview Stats (INR Rupee Format) -->
   <div class="salary-summary-grid">
     <div class="salary-card">
       <div class="salary-icon-box box-blue">
@@ -10,7 +10,7 @@
       </div>
       <div class="salary-details">
         <span class="salary-label">Monthly Gross</span>
-        <span class="salary-amount">$7,500.00</span>
+        <span class="salary-amount">₹75,000.00</span>
         <span class="salary-sub">Base + Allowances</span>
       </div>
     </div>
@@ -21,7 +21,7 @@
       </div>
       <div class="salary-details">
         <span class="salary-label">Total Deductions</span>
-        <span class="salary-amount text-danger">-$1,575.00</span>
+        <span class="salary-amount text-danger">-₹15,750.00</span>
         <span class="salary-sub">Taxes & PF (21%)</span>
       </div>
     </div>
@@ -32,7 +32,7 @@
       </div>
       <div class="salary-details">
         <span class="salary-label">Net Take-Home Pay</span>
-        <span class="salary-amount text-success">$5,925.00</span>
+        <span class="salary-amount text-success">₹59,250.00</span>
         <span class="salary-sub">Transferred to account</span>
       </div>
     </div>
@@ -43,7 +43,7 @@
       </div>
       <div class="salary-details">
         <span class="salary-label">YTD Total Earnings</span>
-        <span class="salary-amount">$71,100.00</span>
+        <span class="salary-amount">₹7,11,000.00</span>
         <span class="salary-sub">Cumulative (2026)</span>
       </div>
     </div>
@@ -178,13 +178,13 @@
           </div>
           <div class="line-items">
             <div class="row-line"><span>Basic Salary</span> <strong>{{ activePayslipModal.basic }}</strong></div>
-            <div class="row-line"><span>House Rent Allowance (HRA)</span> <strong>$1,200.00</strong></div>
-            <div class="row-line"><span>Special Allowance</span> <strong>$800.00</strong></div>
-            <div class="row-line"><span>Performance Bonus</span> <strong>$0.00</strong></div>
+            <div class="row-line"><span>House Rent Allowance (HRA)</span> <strong>₹12,000.00</strong></div>
+            <div class="row-line"><span>Special Allowance</span> <strong>₹18,000.00</strong></div>
+            <div class="row-line"><span>Performance Bonus</span> <strong>₹0.00</strong></div>
           </div>
           <div class="box-total-footer green-total">
             <span>Total Gross Earnings</span>
-            <strong>$7,500.00</strong>
+            <strong>₹75,000.00</strong>
           </div>
         </div>
 
@@ -195,14 +195,14 @@
             <span class="badge-pill red-pill">Debit</span>
           </div>
           <div class="line-items">
-            <div class="row-line"><span>Provident Fund (PF)</span> <strong>$675.00</strong></div>
-            <div class="row-line"><span>Income Tax (TDS)</span> <strong>$700.00</strong></div>
-            <div class="row-line"><span>Health Insurance</span> <strong>$200.00</strong></div>
-            <div class="row-line"><span>Professional Tax</span> <strong>$0.00</strong></div>
+            <div class="row-line"><span>Provident Fund (PF)</span> <strong>₹6,750.00</strong></div>
+            <div class="row-line"><span>Income Tax (TDS)</span> <strong>₹7,000.00</strong></div>
+            <div class="row-line"><span>Health Insurance</span> <strong>₹2,000.00</strong></div>
+            <div class="row-line"><span>Professional Tax</span> <strong>₹0.00</strong></div>
           </div>
           <div class="box-total-footer red-total">
             <span>Total Deductions</span>
-            <strong>-${{ activePayslipModal.deductions }}</strong>
+            <strong>-{{ activePayslipModal.deductions }}</strong>
           </div>
         </div>
       </div>

@@ -1,0 +1,170 @@
+<app-page-header [title]="team ? team.name : 'Team Details'"
+  subtitle="Manage team members, team lead allocations, and active projects"
+  [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Teams',link:'/admin/teams'},{label: team ? team.name : 'Detail'}]">
+  <div class="header-actions-group">
+    <a routerLink="/admin/teams" class="btn btn--outline">
+      <i class="fas fa-arrow-left"></i> Back to Teams
+    </a>
+    <a *ngIf="team" [routerLink]="['/admin/teams', team.id, 'edit']" class="btn btn--primary">
+      <i class="fas fa-edit"></i> Edit Team
+    </a>
+  </div>
+</app-page-header>
+
+<div *ngIf="loading" class="loading-state">
+  <i class="fas fa-spinner fa-spin"></i> Loading team details...
+</div>
+
+<div *ngIf="!loading && team" class="team-detail-container">
+  <!-- Team Header Hero Card -->
+  <div class="team-hero-card">
+    <div class="hero-top-accent"></div>
+    <div class="hero-body">
+      <div class="team-avatar-box">
+        <span>{{ getTeamInitial() }}</span>
+      </div>
+
+      <div class="hero-info">
+        <div class="title-row">
+          <h2 class="team-title">{{ team.name }}</h2>
+          <span class="status-pill" [class.inactive]="team.status !== 'Active'">
+            <span class="dot"></span> {{ team.status || 'Active' }}
+          </span>
+        </div>
+        <p class="dept-sub-text">
+          <i class="fas fa-sitemap text-blue"></i> {{ team.departmentName || 'General Department' }}
+        </p>
+        <p class="team-desc-text">
+          {{ team.description || 'Core functional team driving platform features and project architectural goals.' }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metric Summary Row -->
+  <div class="metrics-summary-row">
+    <div class="metric-stat-card">
+      <div class="stat-icon blue-bg">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ team.memberCount || teamMembers.length }}</span>
+        <span class="stat-lbl">Team Members</span>
+      </div>
+    </div>
+
+    <div class="metric-stat-card">
+      <div class="stat-icon purple-bg">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ team.teamLeadName || 'Unassigned' }}</span>
+        <span class="stat-lbl">Team Lead</span>
+      </div>
+    </div>
+
+    <div class="metric-stat-card">
+      <div class="stat-icon green-bg">
+        <i class="fas fa-briefcase"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ team.activeProjectsCount || 2 }} Active Projects</span>
+        <span class="stat-lbl">Project Workload</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid Content -->
+  <div class="detail-content-grid">
+    <!-- Left Column: Team Members Table -->
+    <div class="content-card">
+      <div class="card-title-header">
+        <h3><i class="fas fa-user-friends text-blue"></i> Assigned Team Members ({{ teamMembers.length }})</h3>
+      </div>
+
+      <div class="emp-table-wrapper" *ngIf="teamMembers.length > 0; else noMembers">
+        <table class="emp-table">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Code</th>
+              <th>Designation</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let emp of teamMembers">
+              <td>
+                <div class="emp-user-cell">
+                  <div class="emp-avatar-circle">{{ emp.fullName.charAt(0) }}</div>
+                  <div class="emp-user-info">
+                    <span class="emp-name">{{ emp.fullName }}</span>
+                    <span class="emp-email">{{ emp.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="code-badge">{{ emp.employeeCode }}</span></td>
+              <td>{{ emp.designation || 'Team Member' }}</td>
+              <td><span class="role-badge">{{ emp.role || 'Employee' }}</span></td>
+              <td>
+                <span class="status-pill-small" [class.active]="emp.active">
+                  {{ emp.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td class="text-right">
+                <a [routerLink]="['/admin/employees', emp.id]" class="link-action">View <i
+                    class="fas fa-chevron-right"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noMembers>
+        <div class="empty-list-box">
+          <i class="fas fa-users-slash"></i>
+          <p>No members currently assigned to {{ team.name }}.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Right Side Column: Actions & Details -->
+    <div class="side-column">
+      <div class="content-card mb-4">
+        <div class="card-title-header">
+          <h3><i class="fas fa-info-circle text-blue"></i> Team Overview</h3>
+        </div>
+        <div class="info-list">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-user-shield"></i> Team Lead</span>
+            <span class="info-value">{{ team.teamLeadName || 'Unassigned' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-sitemap"></i> Department</span>
+            <span class="info-value">{{ team.departmentName || 'General' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-toggle-on"></i> Status</span>
+            <span class="info-value">{{ team.status || 'Active' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-title-header">
+          <h3><i class="fas fa-cog text-blue"></i> Quick Actions</h3>
+        </div>
+        <div class="actions-stack">
+          <a [routerLink]="['/admin/teams', team.id, 'edit']" class="action-bar-btn">
+            <i class="far fa-edit text-blue"></i> Edit Team Information
+          </a>
+          <button class="action-bar-btn text-danger" (click)="deactivateTeam()">
+            <i class="far fa-trash-alt"></i> Deactivate Team
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

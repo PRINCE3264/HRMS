@@ -5,6 +5,7 @@ namespace HRMAPI.Models.DTOs.User;
 public class UserDto
 {
     public Guid Id { get; set; }
+    public string Username => !string.IsNullOrEmpty(Email) ? Email.Split('@')[0] : (FirstName ?? "user").ToLower();
     public string Email { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;

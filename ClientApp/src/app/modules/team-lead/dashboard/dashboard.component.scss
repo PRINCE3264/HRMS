@@ -1,682 +1,764 @@
-.emp-dashboard-container {
-  width: 100%;
+:host {
+  display: block;
+}
+
+.tl-dashboard {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 0 0 32px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f4f6fa;
+  min-height: 100vh;
+  padding: 4px;
+}
 
-  /* --- 1. PROFILE HEADER BAR --- */
-  .profile-header-bar {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 4px;
+/* Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
 
-    .profile-avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-      .avatar-img-box {
-        font-size: 52px;
-        color: #94a3b8;
-        line-height: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-
-    .profile-info {
-      display: flex;
-      flex-direction: column;
-
-      .welcome-text {
-        font-size: 13px;
-        color: #64748b;
-        font-weight: 500;
-      }
-
-      .user-full-name {
-        font-size: 22px;
-        font-weight: 800;
-        color: #0f172a;
-        margin: 2px 0;
-        letter-spacing: -0.3px;
-        text-transform: uppercase;
-      }
-
-      .user-meta-line {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1d64f2;
-        margin: 0;
-      }
-    }
-  }
-
-  /* --- 2. REAL-TIME CLOCK BANNER --- */
-  .clock-banner-card {
-    position: relative;
-    background: linear-gradient(135deg, #1d64f2 0%, #1757db 100%);
-    border-radius: 20px;
-    padding: 24px 32px;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(29, 100, 242, 0.25);
-
-    .clock-icon-badge {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  .header-title {
+    h2 {
+      margin: 0 0 4px 0;
       font-size: 22px;
-      color: #ffffff;
-      flex-shrink: 0;
+      font-weight: 800;
+      color: #0f172a;
     }
-
-    .clock-details {
-      display: flex;
-      flex-direction: column;
-      z-index: 2;
-
-      .clock-time-row {
-        display: flex;
-        align-items: center;
-
-        .time-digits {
-          font-size: 40px;
-          font-weight: 800;
-          letter-spacing: 0.5px;
-          line-height: 1;
-        }
-
-        .ampm-badge {
-          font-size: 12px;
-          font-weight: 700;
-          background: rgba(255, 255, 255, 0.25);
-          padding: 4px 10px;
-          border-radius: 8px;
-          margin-left: 12px;
-          text-transform: uppercase;
-        }
-      }
-
-      .clock-date-row {
-        font-size: 14px;
-        font-weight: 500;
-        color: #e0f2fe;
-        margin-top: 8px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-    }
-
-    .clock-bg-watermark {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 140px;
-      color: rgba(255, 255, 255, 0.08);
-      pointer-events: none;
+    p {
+      margin: 0;
+      font-size: 13px;
+      color: #64748b;
     }
   }
 
-  /* --- 3. SHIFT STATUS CARD --- */
-  .shift-status-card {
+  .date-pill {
     background: #ffffff;
-    border-radius: 20px;
-    padding: 24px;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    .shift-info-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-
-      .shift-icon-box {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: #eff6ff;
-        color: #1d64f2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        flex-shrink: 0;
-      }
-
-      .shift-text {
-        .shift-title {
-          font-size: 18px;
-          font-weight: 700;
-          color: #1e293b;
-          margin: 0 0 4px;
-        }
-
-        .shift-sub {
-          font-size: 14px;
-          color: #64748b;
-          margin: 0;
-        }
-      }
-    }
-
-    .btn-clock-in {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: #1d64f2;
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(29, 100, 242, 0.35);
-
-      &:hover {
-        background: #1757db;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(29, 100, 242, 0.45);
-      }
-
-      &.clocked-in {
-        background: #ef4444;
-        box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
-
-        &:hover {
-          background: #dc2626;
-        }
-      }
-    }
-  }
-
-  /* --- 4. ATTENDANCE SCORE BANNER --- */
-  .attendance-score-card {
-    background: linear-gradient(135deg, #1d64f2 0%, #1757db 100%);
-    border-radius: 20px;
-    padding: 24px 32px;
-    color: #ffffff;
-    box-shadow: 0 8px 24px rgba(29, 100, 242, 0.25);
-
-    .score-header {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      .trophy-icon {
-        color: #facc15;
-        font-size: 18px;
-      }
-    }
-
-    .score-metrics-grid {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-
-      .metric-col {
-        text-align: center;
-        flex: 1;
-
-        .metric-val {
-          font-size: 24px;
-          font-weight: 800;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-
-          .emoji {
-            font-size: 20px;
-          }
-        }
-
-        .metric-lbl {
-          font-size: 13px;
-          color: #e0f2fe;
-          font-weight: 500;
-          margin-top: 4px;
-        }
-      }
-
-      .metric-divider {
-        width: 1px;
-        height: 36px;
-        background: rgba(255, 255, 255, 0.25);
-      }
-    }
-  }
-
-  /* --- 5. QUICK ACTIONS ROW --- */
-  .quick-actions-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-
-    .btn-quick-outline {
-      padding: 14px;
-      border: 2px solid #1d64f2;
-      border-radius: 14px;
-      background: #ffffff;
-      color: #1d64f2;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #eff6ff;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(29, 100, 242, 0.15);
-      }
-    }
-  }
-
-  /* --- 6. DAILY WORK REPORT CARD --- */
-  .work-report-card {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 24px;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    .report-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-
-      .report-icon-box {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: #e0f2fe;
-        color: #0284c7;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        flex-shrink: 0;
-      }
-
-      .report-text {
-        .report-title-row {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          flex-wrap: wrap;
-
-          .report-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e293b;
-            margin: 0;
-          }
-
-          .assigned-tag {
-            font-size: 12px;
-            font-weight: 700;
-            color: #0284c7;
-          }
-        }
-
-        .report-sub {
-          font-size: 14px;
-          color: #64748b;
-          margin: 6px 0 0;
-        }
-      }
-    }
-
-    .btn-submit-report {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: #1d64f2;
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(29, 100, 242, 0.35);
-
-      &:hover {
-        background: #1757db;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(29, 100, 242, 0.45);
-      }
-    }
-  }
-
-  /* --- 7. 30-DAY ATTENDANCE OVERVIEW --- */
-  .overview-section {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-
-    .overview-section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      h3 {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1e293b;
-        margin: 0;
-      }
-
-      .link-my-attendance {
-        font-size: 14px;
-        font-weight: 700;
-        color: #1d64f2;
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-
-    .overview-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-
-      @media (max-width: 900px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      @media (max-width: 480px) {
-        grid-template-columns: 1fr;
-      }
-
-      .overview-card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 20px;
-        border: 1px solid #f1f5f9;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        min-height: 120px;
-
-        .card-top-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .badge-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-
-            &.badge-green { background: #dcfce7; color: #16a34a; }
-            &.badge-blue { background: #e0f2fe; color: #0284c7; }
-            &.badge-red { background: #fee2e2; color: #dc2626; }
-            &.badge-orange { background: #fef3c7; color: #d97706; }
-          }
-
-          .top-tag {
-            font-size: 12px;
-            font-weight: 600;
-
-            &.green-tag { color: #16a34a; }
-            &.blue-tag { color: #0284c7; }
-            &.red-tag { color: #dc2626; }
-            &.orange-tag { color: #d97706; }
-          }
-        }
-
-        .card-value {
-          font-size: 28px;
-          font-weight: 800;
-          color: #0f172a;
-          margin-top: 12px;
-          line-height: 1;
-        }
-
-        .card-label {
-          font-size: 13px;
-          color: #64748b;
-          font-weight: 500;
-          margin-top: 4px;
-        }
-      }
-    }
-  }
-
-  /* --- 8. RECENT ACTIVITY LOG SECTION --- */
-  .activity-log-section {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-
-    .log-section-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1e293b;
-      margin: 8px 0 0;
-    }
-
-    .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-
-      .log-item-card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 18px 24px;
-        border: 1px solid #f1f5f9;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        transition: transform 0.2s ease;
-
-        &:hover {
-          transform: translateX(4px);
-        }
-
-        .log-user-avatar {
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background: #cbd5e1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 700;
-          color: #334155;
-          font-size: 15px;
-          flex-shrink: 0;
-        }
-
-        .log-details {
-          flex: 1;
-
-          .log-date {
-            font-size: 15px;
-            font-weight: 700;
-            color: #1e293b;
-            margin: 0 0 4px;
-          }
-
-          .log-meta {
-            font-size: 13px;
-            color: #64748b;
-            margin: 0 0 8px;
-          }
-
-          .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-
-            &.pill-success {
-              background: #dcfce7;
-              color: #15803d;
-              border: 1px solid #bbf7d0;
-            }
-
-            &.pill-primary {
-              background: #eff6ff;
-              color: #1d4ed8;
-              border: 1px solid #bfdbfe;
-            }
-          }
-        }
-
-        .log-ontime-status {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 13px;
-          font-weight: 600;
-          color: #64748b;
-
-          .dot-green {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #22c55e;
-          }
-        }
-      }
-    }
-  }
-
-  /* --- 9. UPCOMING BIRTHDAYS --- */
-  .tl-birthdays-section {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 24px;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  }
-
-  .tl-birthday-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .tl-birthday-row {
+    border: 1px solid #e2e8f0;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
-    border-radius: 12px;
-    transition: background 0.15s;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 
-    &:hover { background: #fdf2f8; }
+    i {
+      color: #4461f6;
+    }
+  }
+}
+
+/* Row 1: Executive Stat Cards (Tint Backgrounds) */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
   }
 
-  .tl-birthday-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ec4899, #f9a8d4);
-    color: #fff;
+  &.blue-card { background: #f0f4ff; }
+  &.green-card { background: #eafaf1; }
+  &.orange-card { background: #fff6ef; }
+  &.purple-card { background: #f6f0ff; }
+
+  .stat-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 18px;
+    color: #ffffff;
     flex-shrink: 0;
+
+    &.blue-icon { background: #3b82f6; }
+    &.green-icon { background: #10b981; }
+    &.orange-icon { background: #f97316; }
+    &.purple-icon { background: #8b5cf6; }
   }
 
-  .tl-birthday-info {
+  .stat-body {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
 
-  .tl-birthday-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1e293b;
+  .stat-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
   }
 
-  .tl-birthday-dept {
-    font-size: 12px;
+  .stat-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+  }
+
+  .stat-pill {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    small {
+      font-weight: 500;
+      color: #64748b;
+    }
+
+    &.green-pill { background: #dcfce7; color: #15803d; }
+    &.gray-pill { background: #ffffff; color: #64748b; }
+    &.red-pill { background: #fee2e2; color: #b91c1c; }
+  }
+
+  .stat-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: 4px;
+  }
+}
+
+/* Card Wrapper */
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+
+      small {
+        font-weight: 500;
+        color: #94a3b8;
+      }
+    }
+
+    .view-all {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4461f6;
+      text-decoration: none;
+      &:hover { text-decoration: underline; }
+    }
+
+    .card-select select {
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      outline: none;
+      background: #fff;
+    }
+  }
+}
+
+/* Row 2: Charts Grid */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Chart 1: Attendance Stacked Bars */
+.attendance-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 180px;
+
+  .stacked-bars {
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    flex: 1;
+    height: 100%;
+    padding-bottom: 20px;
+  }
+
+  .bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .bar-stack {
+    width: 22px;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #f1f5f9;
+  }
+
+  .bar-absent {
+    background: #e2e8f0;
+    width: 100%;
+    transition: height 0.3s ease;
+  }
+
+  .bar-present {
+    background: #10b981;
+    width: 100%;
+    transition: height 0.3s ease;
+  }
+
+  .bar-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .chart-legend-side {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 12px;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #475569;
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        &.green { background: #10b981; }
+        &.gray { background: #cbd5e1; }
+      }
+    }
+  }
+}
+
+/* Chart 2: Task Donut */
+.donut-chart-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 180px;
+
+  app-chart-donut {
+    width: 100%;
+  }
+
+  ::ng-deep .chart-container {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100%;
+  }
+}
+
+/* Chart 3: Productivity Line */
+.productivity-chart {
+  display: flex;
+  flex-direction: column;
+  height: 180px;
+  justify-content: space-between;
+
+  .line-chart-svg {
+    height: 110px;
+    width: 100%;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+  }
+
+  .line-labels {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .line-legend {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: #475569;
+    font-weight: 600;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      &.blue { background: #3b82f6; }
+      &.purple { background: #a78bfa; }
+    }
+  }
+}
+
+/* Row 3: Lists Grid */
+.lists-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 0.9fr;
+  gap: 16px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* List Card 1: My Team Table */
+.team-card {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+  }
+
+  td {
+    padding: 10px;
+    font-size: 12.5px;
+    border-bottom: 1px solid #f8fafc;
+    vertical-align: middle;
+  }
+
+  .num {
+    font-weight: 600;
     color: #94a3b8;
   }
 
-  .tl-birthday-date {
-    font-size: 12px;
-    color: #64748b;
-    white-space: nowrap;
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .name {
+      font-weight: 700;
+      color: #0f172a;
+    }
   }
 
-  .tl-birthday-badge {
+  .sub-text {
+    color: #64748b;
+    font-size: 12px;
+  }
+
+  .badge {
+    padding: 3px 10px;
+    border-radius: 12px;
     font-size: 11px;
     font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    background: #f1f5f9;
-    color: #64748b;
-    white-space: nowrap;
 
-    &.tl-badge-today { background: #fce7f3; color: #be185d; }
-    &.tl-badge-tomorrow { background: #ede9fe; color: #7c3aed; }
+    &.badge-present { background: #dcfce7; color: #15803d; }
+    &.badge-leave { background: #fee2e2; color: #b91c1c; }
   }
 
-  @media (max-width: 640px) {
-    .quick-actions-row {
-      grid-template-columns: 1fr;
+  .work-tag {
+    font-size: 12px;
+    color: #3b82f6;
+    font-weight: 600;
+  }
+
+  .no-work {
+    color: #cbd5e1;
+  }
+}
+
+/* List Card 2: Today's Tasks */
+.tasks-card {
+  .tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    .task-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 10px;
+      flex-shrink: 0;
+
+      &.checked {
+        background: #10b981;
+        border-color: #10b981;
+      }
+    }
+
+    .task-title {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+
+      &.done {
+        text-decoration: line-through;
+        color: #94a3b8;
+      }
+    }
+
+    .priority-pill {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+
+      &.prio-high { background: #fee2e2; color: #ef4444; }
+      &.prio-medium { background: #fef3c7; color: #d97706; }
+      &.prio-low { background: #dbeafe; color: #2563eb; }
+    }
+  }
+}
+
+/* List Card 3: Leave Requests */
+.leave-card {
+  .leave-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .leave-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #f1f5f9;
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .leave-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .type {
+        font-size: 11.5px;
+        color: #64748b;
+      }
+    }
+
+    .status-pill {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #d97706;
+
+      &.approved {
+        background: #dcfce7;
+        color: #15803d;
+      }
+    }
+
+    .leave-actions {
+      display: flex;
+      gap: 6px;
+
+      .btn-act {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+
+        &.btn-approve { background: #dcfce7; color: #16a34a; }
+        &.btn-reject { background: #fee2e2; color: #ef4444; }
+      }
+    }
+  }
+}
+
+/* Row 4: Bottom Widgets Grid */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.1fr;
+  gap: 16px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Widget 1: Upcoming Meetings */
+.meetings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .meeting-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+
+    .date-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+
+      .day { font-size: 15px; font-weight: 800; line-height: 1; }
+      .month { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+
+      &.date-red { background: linear-gradient(135deg, #f87171, #ef4444); }
+      &.date-amber { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+      &.date-blue { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+    }
+
+    .meeting-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .title { font-size: 13px; font-weight: 700; color: #0f172a; }
+      .time { font-size: 11.5px; color: #64748b; margin-top: 2px; }
+    }
+
+    .platform-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+      background: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+
+      i { color: #3b82f6; }
+    }
+  }
+}
+
+/* Widget 2: Recent Team Activity */
+.activity-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .feed-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .feed-info {
+      flex: 1;
+
+      p {
+        margin: 0;
+        font-size: 12.5px;
+        color: #475569;
+        strong { color: #0f172a; font-weight: 700; }
+      }
+
+      .time {
+        font-size: 11px;
+        color: #94a3b8;
+      }
+    }
+  }
+}
+
+/* Widget 3: Quick Actions Tiles */
+.quick-actions-card {
+  .actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .action-tile {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .tile-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .tile-text {
+      h4 {
+        margin: 0 0 2px 0;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      span {
+        font-size: 11px;
+        color: #64748b;
+        line-height: 1.2;
+        display: block;
+      }
+    }
+
+    &.tile-blue {
+      background: #eff6ff;
+      .tile-icon { background: #3b82f6; color: #ffffff; }
+    }
+
+    &.tile-green {
+      background: #f0fdf4;
+      .tile-icon { background: #10b981; color: #ffffff; }
+    }
+
+    &.tile-purple {
+      background: #faf5ff;
+      .tile-icon { background: #8b5cf6; color: #ffffff; }
+    }
+
+    &.tile-orange {
+      background: #fff7ed;
+      .tile-icon { background: #f97316; color: #ffffff; }
     }
   }
 }

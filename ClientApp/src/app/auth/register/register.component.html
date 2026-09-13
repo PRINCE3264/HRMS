@@ -1,160 +1,150 @@
-<div class="login-wrapper">
-  <!-- Right Background Office Image & Hero Overlay -->
-  <div class="right-panel">
-    <!-- Cloud HRMS Badge -->
-    <div class="cloud-badge">
-      <span>CLOUD HRMS</span>
-    </div>
-
-    <!-- Center Hero Headline Overlay -->
-    <div class="hero-overlay">
-      <h1 class="hero-title">
-        Great<br>
-        People.<br>
-        Better<br>
-        Tomorrows.
-      </h1>
-      <div class="hero-blue-bar"></div>
-    </div>
-
-    <!-- Bottom-Right Tagline Overlay -->
-    <div class="hero-tagline">
-      <span>Empower.</span>
-      <span>Engage.</span>
-      <span>Grow.</span>
-    </div>
-  </div>
-
-  <!-- Left White Form Container with Curved Edge -->
-  <div class="left-panel">
-    <div class="form-container register-container">
-      <!-- Brand Header -->
-      <div class="brand-header">
-        <div class="brand-logo-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#1d70f5"/>
-          </svg>
+<div class="auth-page-wrapper">
+  <div class="auth-split-container">
+    <!-- Left Form Section (50%) -->
+    <div class="auth-left-section">
+      <div class="auth-form-box">
+        <!-- Brand Header -->
+        <div class="brand-header">
+          <div class="brand-logo-icon">
+            <i class="fas fa-users text-blue"></i>
+          </div>
+          <div class="brand-info">
+            <span class="brand-title">HRMS</span>
+            <span class="brand-subtitle">People. Process. Progress.</span>
+          </div>
         </div>
-        <div class="brand-info">
-          <span class="brand-title">HRMS</span>
-          <span class="brand-subtitle">People. Process. Progress.</span>
+
+        <!-- Welcome Title -->
+        <div class="welcome-header">
+          <h1 class="welcome-title">Create Account</h1>
+          <p class="welcome-sub">Register to get started with your HRMS</p>
+        </div>
+
+        <!-- Register Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="main-form">
+          <!-- Name Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <div class="input-wrapper" [class.input-error]="isFieldInvalid('firstName')">
+                <i class="far fa-user input-icon"></i>
+                <input type="text" formControlName="firstName" placeholder="First name">
+              </div>
+              <span class="error-msg" *ngIf="isFieldInvalid('firstName')">Required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <div class="input-wrapper" [class.input-error]="isFieldInvalid('lastName')">
+                <i class="far fa-user input-icon"></i>
+                <input type="text" formControlName="lastName" placeholder="Last name">
+              </div>
+              <span class="error-msg" *ngIf="isFieldInvalid('lastName')">Required</span>
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-wrapper" [class.input-error]="isFieldInvalid('email')">
+              <i class="far fa-envelope input-icon"></i>
+              <input type="email" formControlName="email" placeholder="you@company.com">
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('email')">Valid email required</span>
+          </div>
+
+          <!-- Role & Department Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Role</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user-shield input-icon"></i>
+                <select formControlName="role" class="select-input">
+                  <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <div class="input-wrapper">
+                <i class="fas fa-building input-icon"></i>
+                <select formControlName="department" class="select-input">
+                  <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Password Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <div class="input-wrapper" [class.input-error]="isFieldInvalid('password')">
+                <i class="fas fa-lock input-icon"></i>
+                <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••">
+                <button type="button" class="eye-toggle" (click)="showPassword = !showPassword" tabindex="-1">
+                  <i [class]="showPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
+                </button>
+              </div>
+              <span class="error-msg" *ngIf="isFieldInvalid('password')">Min 6 chars</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <div class="input-wrapper" [class.input-error]="hasPasswordMismatch() || isFieldInvalid('confirmPassword')">
+                <i class="fas fa-lock input-icon"></i>
+                <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="••••••••">
+                <button type="button" class="eye-toggle" (click)="showConfirmPassword = !showConfirmPassword" tabindex="-1">
+                  <i [class]="showConfirmPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
+                </button>
+              </div>
+              <span class="error-msg" *ngIf="hasPasswordMismatch()">Must match</span>
+            </div>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="options-row">
+            <label class="remember-me">
+              <input type="checkbox" formControlName="acceptTerms" class="checkbox-input">
+              <span>I accept Terms & Conditions</span>
+            </label>
+          </div>
+
+          <!-- Error Banner -->
+          <div class="alert-banner" *ngIf="errorMessage">
+            <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+          </div>
+
+          <!-- Create Account Button -->
+          <button type="submit" class="submit-btn" [disabled]="loading">
+            <span *ngIf="loading" class="spinner"></span>
+            <span>{{ loading ? 'Creating Account...' : 'Create Account' }}</span>
+          </button>
+        </form>
+
+        <!-- Already Have Account Link -->
+        <div class="signup-prompt">
+          <span>Already have an account? </span>
+          <a routerLink="/auth/login" class="signup-link">Sign In</a>
+        </div>
+
+        <!-- Footer Text -->
+        <div class="form-footer">
+          <span>Together We Build A Better Workplace</span>
         </div>
       </div>
+    </div>
 
-      <!-- Welcome Title -->
-      <div class="welcome-header">
-        <span class="portal-tag">EMPLOYEE PORTAL</span>
-        <h1 class="welcome-title">Create Account</h1>
-        <p class="welcome-sub">Register to get started with HRMS</p>
-      </div>
+    <!-- Organic S-Curve Divider -->
+    <svg class="curve-divider" viewBox="0 0 140 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 0 0 C 60 250, -30 750, 80 1000 L 0 1000 Z" fill="#ffffff" />
+    </svg>
 
-      <!-- Register Form -->
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="main-form">
-        <!-- Name Row -->
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">First Name</label>
-            <div class="input-wrapper" [class.input-error]="isFieldInvalid('firstName')">
-              <i class="far fa-user input-icon"></i>
-              <input type="text" formControlName="firstName" placeholder="First name">
-            </div>
-            <span class="error-msg" *ngIf="isFieldInvalid('firstName')">Required</span>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Last Name</label>
-            <div class="input-wrapper" [class.input-error]="isFieldInvalid('lastName')">
-              <i class="far fa-user input-icon"></i>
-              <input type="text" formControlName="lastName" placeholder="Last name">
-            </div>
-            <span class="error-msg" *ngIf="isFieldInvalid('lastName')">Required</span>
-          </div>
-        </div>
-
-        <!-- Email Field -->
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <div class="input-wrapper" [class.input-error]="isFieldInvalid('email')">
-            <i class="far fa-envelope input-icon"></i>
-            <input type="email" formControlName="email" placeholder="you@company.com">
-          </div>
-          <span class="error-msg" *ngIf="isFieldInvalid('email')">Valid email required</span>
-        </div>
-
-        <!-- Role & Department Row -->
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Role</label>
-            <div class="input-wrapper">
-              <i class="fas fa-user-shield input-icon"></i>
-              <select formControlName="role" class="select-input">
-                <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Department</label>
-            <div class="input-wrapper">
-              <i class="fas fa-building input-icon"></i>
-              <select formControlName="department" class="select-input">
-                <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Password Row -->
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <div class="input-wrapper" [class.input-error]="isFieldInvalid('password')">
-              <i class="fas fa-lock input-icon"></i>
-              <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••">
-              <button type="button" class="eye-toggle" (click)="showPassword = !showPassword" tabindex="-1">
-                <i [class]="showPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
-              </button>
-            </div>
-            <span class="error-msg" *ngIf="isFieldInvalid('password')">Min 6 characters</span>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Confirm Password</label>
-            <div class="input-wrapper" [class.input-error]="hasPasswordMismatch() || isFieldInvalid('confirmPassword')">
-              <i class="fas fa-lock input-icon"></i>
-              <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="••••••••">
-              <button type="button" class="eye-toggle" (click)="showConfirmPassword = !showConfirmPassword" tabindex="-1">
-                <i [class]="showConfirmPassword ? 'far fa-eye-slash' : 'far fa-eye'"></i>
-              </button>
-            </div>
-            <span class="error-msg" *ngIf="hasPasswordMismatch()">Passwords must match</span>
-          </div>
-        </div>
-
-        <!-- Terms & Conditions Checkbox -->
-        <div class="options-row">
-          <label class="remember-me">
-            <input type="checkbox" formControlName="acceptTerms" class="checkbox-input">
-            <span>I accept the Terms & Conditions</span>
-          </label>
-        </div>
-
-        <!-- Error Banner -->
-        <div class="alert-banner" *ngIf="errorMessage">
-          <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
-        </div>
-
-        <!-- Create Account Button -->
-        <button type="submit" class="submit-btn" [disabled]="loading">
-          <span *ngIf="loading" class="spinner"></span>
-          <span>{{ loading ? 'Creating Account...' : 'Create Account' }}</span>
-        </button>
-      </form>
-
-      <!-- Already Have Account Footer -->
-      <div class="form-footer">
-        <span>Already have an account? <a routerLink="/auth/login" class="link-blue">Sign In</a></span>
-      </div>
+    <!-- Right Animated Image Banner Section (50%) -->
+    <div class="auth-right-banner">
+      <!-- Gradient Overlay -->
+      <div class="banner-overlay"></div>
     </div>
   </div>
 </div>

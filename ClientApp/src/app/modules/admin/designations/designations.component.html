@@ -1,60 +1,207 @@
-<app-page-header title="Designations" subtitle="Manage job titles and levels" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Designations'}]">
-  <button class="btn btn--primary" (click)="openAdd()"><i class="fas fa-plus"></i> Add Designation</button>
-  <button class="btn btn--outline"><i class="fas fa-file-export"></i> Export</button>
-</app-page-header>
+<div class="designations-management-page">
 
-<app-data-table
-  [columns]="columns"
-  [data]="designations"
-  [pageSize]="10"
-  [actions]="tableActions"
-  emptyTitle="No designations found"
-  emptyMessage="Create your first designation to get started."
-  emptyIcon="fas fa-id-badge"
-  (onActionClick)="onAction($event)">
-</app-data-table>
-
-<!-- Create / Edit Designation Modal -->
-<div class="modal-backdrop" *ngIf="showForm">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h3><i class="fas fa-id-badge text-blue"></i> {{ isEdit ? 'Edit Designation' : 'Create New Designation' }}</h3>
-      <button class="close-btn" (click)="closeForm()"><i class="fas fa-times"></i></button>
+  <!-- Top Page Header -->
+  <div class="top-nav-bar">
+    <div class="nav-left">
+      <nav class="breadcrumbs">
+        <a routerLink="/admin/dashboard">Dashboard</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current">Designations</span>
+      </nav>
+      <h1 class="page-title">Designation Management</h1>
+      <p class="page-subtitle">Manage job titles, organizational levels, hierarchy bands, and salary compensation ranges</p>
     </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Designation Title <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="form.title" placeholder="e.g. Software Engineer" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>Level <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="form.level" placeholder="e.g. Senior" class="form-control" />
-        </div>
-
-        <div class="form-group full-width">
-          <label>Department</label>
-          <select [(ngModel)]="form.departmentId" class="form-control">
-            <option value="">-- Select Department --</option>
-            <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Min Salary</label>
-          <input type="number" [(ngModel)]="form.minSalary" placeholder="e.g. 45000" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>Max Salary</label>
-          <input type="number" [(ngModel)]="form.maxSalary" placeholder="e.g. 90000" class="form-control" />
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" (click)="closeForm()">Cancel</button>
-      <button class="btn-save" (click)="saveForm()"><i class="fas fa-check"></i> {{ isEdit ? 'Update Designation' : 'Create Designation' }}</button>
+    <div class="header-actions">
+      <button class="btn btn-outline-excel" (click)="exportExcel()">
+        <i class="fas fa-download"></i> Export Excel
+      </button>
+      <a routerLink="/admin/designations/add" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Designation
+      </a>
     </div>
   </div>
+
+  <!-- Metric KPI Cards Row (4 Cards) -->
+  <div class="metrics-grid">
+    
+    <div class="metric-card card-blue">
+      <div class="metric-icon"><i class="fas fa-id-badge"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ totalDesignationsCount }}</span>
+        <span class="metric-lbl">Total Designations</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-purple">
+      <div class="metric-icon"><i class="fas fa-user-tie"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ executiveCount }}</span>
+        <span class="metric-lbl">Senior & Executive</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-emerald">
+      <div class="metric-icon"><i class="fas fa-users"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ totalEmployeesAssigned }}</span>
+        <span class="metric-lbl">Assigned Employees</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-amber">
+      <div class="metric-icon"><i class="fas fa-dollar-sign"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ avgSalaryFormatted }}</span>
+        <span class="metric-lbl">Avg Starting Salary</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Search & Filter Card -->
+  <div class="filter-card">
+    <div class="filter-bar">
+      
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search designation title, department..."
+          class="search-input"
+        />
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedDepartment" class="filter-select">
+          <option value="">All Departments</option>
+          <option *ngFor="let dept of departments" [value]="dept.name">{{ dept.name }}</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Human Resources">Human Resources</option>
+          <option value="Finance">Finance</option>
+          <option value="Design">Design</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedLevel" class="filter-select">
+          <option value="">All Levels</option>
+          <option value="Level 1">Level 1 - Executive</option>
+          <option value="Level 2">Level 2 - Senior</option>
+          <option value="Level 3">Level 3 - Mid Level</option>
+          <option value="Level 4">Level 4 - Entry Level</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedStatus" class="filter-select">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <button class="btn-reset" (click)="resetFilters()">
+        <i class="fas fa-sync-alt"></i> Reset
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Designations Data Table Card -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="designations-table">
+        <thead>
+          <tr>
+            <th class="chk-col">
+              <input type="checkbox" [(ngModel)]="selectAllChecked" class="custom-chk" />
+            </th>
+            <th>DESIGNATION TITLE <i class="fas fa-sort sort-icon"></i></th>
+            <th>DEPARTMENT <i class="fas fa-sort sort-icon"></i></th>
+            <th>LEVEL / BAND <i class="fas fa-sort sort-icon"></i></th>
+            <th>SALARY RANGE (ANNUAL) <i class="fas fa-sort sort-icon"></i></th>
+            <th>EMPLOYEES ASSIGNED <i class="fas fa-sort sort-icon"></i></th>
+            <th>STATUS <i class="fas fa-sort sort-icon"></i></th>
+            <th class="text-center">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let desig of filteredDesignations">
+            <td class="chk-col">
+              <input type="checkbox" class="custom-chk" />
+            </td>
+            <td>
+              <div class="desig-title-cell">
+                <div class="desig-icon-avatar">
+                  <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="title-details">
+                  <span class="desig-title">{{ desig.title }}</span>
+                  <span class="desig-code">DEG-{{ desig.id }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-chip">
+                <span class="dept-dot"></span> {{ desig.departmentName || 'General' }}
+              </span>
+            </td>
+            <td>
+              <span class="level-badge" [ngClass]="{
+                'level-exec': (desig.level || '').includes('Level 1') || (desig.level || '').includes('Executive'),
+                'level-sr': (desig.level || '').includes('Level 2') || (desig.level || '').includes('Senior'),
+                'level-mid': (desig.level || '').includes('Level 3') || (desig.level || '').includes('Mid'),
+                'level-entry': (desig.level || '').includes('Level 4') || (desig.level || '').includes('Entry')
+              }">
+                {{ desig.level || 'Level 3 - Mid Level' }}
+              </span>
+            </td>
+            <td>
+              <div class="salary-range-cell">
+                <span class="salary-range-text">
+                  ${{ (desig.minSalary || 60000) | number }} - ${{ (desig.maxSalary || 95000) | number }}
+                </span>
+                <div class="mini-salary-bar">
+                  <div class="mini-salary-fill"></div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="employee-count-cell">
+                <span class="emp-badge"><i class="fas fa-users"></i> {{ desig.employeeCount || 0 }} Employees</span>
+              </div>
+            </td>
+            <td>
+              <span class="status-pill" [class.inactive]="desig.status === 'Inactive'">
+                <span class="status-dot"></span> {{ desig.status || 'Active' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="action-btn-group">
+                <button class="circle-btn btn-edit" title="Edit Designation" (click)="onEdit(desig)">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="circle-btn btn-delete" title="Deactivate Designation" (click)="onDelete(desig)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredDesignations.length === 0">
+            <td colspan="8" class="empty-table-cell">
+              <i class="fas fa-id-badge empty-icon"></i>
+              <p>No designations found matching your criteria.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>

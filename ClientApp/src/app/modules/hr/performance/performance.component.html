@@ -1,147 +1,330 @@
-<app-page-header title="Performance" subtitle="Track and manage employee performance reviews" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Performance'}]">
-      <button class="btn btn--primary"><i class="fas fa-plus"></i> New Review Cycle</button>
-    </app-page-header>
-    <div class="perf-stats">
-      <div class="p-stat stat-amber">
-        <div class="stat-icon"><i class="fas fa-star"></i></div>
-        <div class="stat-info">
-          <span class="p-val">4.2</span>
-          <span class="p-label">Avg. Rating</span>
-        </div>
+<div class="performance-page">
+  <!-- Top Header Bar -->
+  <div class="page-top-bar">
+    <div class="page-title-section">
+      <div class="breadcrumbs">
+        <a routerLink="/hr/dashboard" class="crumb-link">Dashboard</a> <i class="fas fa-chevron-right breadcrumb-sep"></i> <span class="active-crumb">Performance</span>
       </div>
-      <div class="p-stat stat-blue">
-        <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
-        <div class="stat-info">
-          <span class="p-val">89%</span>
-          <span class="p-label">Reviews Completed</span>
-        </div>
-      </div>
-      <div class="p-stat stat-emerald">
-        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
-        <div class="stat-info">
-          <span class="p-val">36</span>
-          <span class="p-label">Top Performers</span>
-        </div>
-      </div>
-      <div class="p-stat stat-red">
-        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
-        <div class="stat-info">
-          <span class="p-val">8</span>
-          <span class="p-label">Needs Improvement</span>
-        </div>
+      <h1 class="page-title">Performance & Evaluation</h1>
+      <p class="page-subtitle">Manage employee performance reviews, department KPIs, and 360 feedback</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-secondary-action" (click)="openKpiModal()">
+        <i class="fas fa-bullseye"></i> Set New KPI
+      </button>
+      <button class="btn btn-primary-action" (click)="openReviewModal()">
+        <i class="fas fa-plus"></i> Launch Review Cycle
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Metric Cards Bar -->
+  <div class="perf-stats">
+    <div class="p-stat stat-amber">
+      <div class="stat-icon"><i class="fas fa-star"></i></div>
+      <div class="stat-info">
+        <span class="p-val">4.2 / 5</span>
+        <span class="p-label">Avg. Rating</span>
       </div>
     </div>
-    <div class="tabs">
-      <button class="tab" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">Performance Reviews</button>
-      <button class="tab" [class.active]="activeTab === 'goals'" (click)="activeTab = 'goals'">Goals & OKRs</button>
-      <button class="tab" [class.active]="activeTab === 'feedback'" (click)="activeTab = 'feedback'">360 Feedback</button>
+
+    <div class="p-stat stat-blue">
+      <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
+      <div class="stat-info">
+        <span class="p-val">89%</span>
+        <span class="p-label">Reviews Completed</span>
+      </div>
     </div>
-    <div class="table-card" *ngIf="activeTab === 'reviews'">
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr><th>Employee</th><th>Department</th><th>Review Period</th><th>Rating</th><th>Reviewer</th><th>Status</th><th>Actions</th></tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let r of reviews">
-              <td>
-                <div class="emp-cell">
-                  <div class="avatar-sm" [style.background]="r.color">{{ r.name.charAt(0) }}</div>
+
+    <div class="p-stat stat-emerald">
+      <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+      <div class="stat-info">
+        <span class="p-val">36</span>
+        <span class="p-label">Top Performers</span>
+      </div>
+    </div>
+
+    <div class="p-stat stat-red">
+      <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="stat-info">
+        <span class="p-val">8</span>
+        <span class="p-label">Needs Improvement</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar & Segmented Tabs Bar -->
+  <div class="performance-toolbar">
+    <div class="tabs-group">
+      <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
+        <i class="fas fa-user-check"></i> Performance Reviews <span class="tab-badge">{{ reviews.length }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'goals'" (click)="activeTab = 'goals'">
+        <i class="fas fa-bullseye"></i> KPIs & OKRs <span class="tab-badge">{{ kpis.length }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'feedback'" (click)="activeTab = 'feedback'">
+        <i class="fas fa-comments"></i> 360 Feedback <span class="tab-badge">{{ feedbacks.length }}</span>
+      </button>
+    </div>
+
+    <div class="toolbar-controls">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search employee, department, KPI..." />
+      </div>
+
+      <div class="select-box" *ngIf="activeTab === 'reviews'">
+        <select [(ngModel)]="statusFilter">
+          <option value="ALL">All Statuses</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="PIP">PIP</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 1: Performance Reviews Table -->
+  <div class="table-card" *ngIf="activeTab === 'reviews'">
+    <div class="table-wrapper" *ngIf="filteredReviews.length > 0; else noReviews">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Review Period</th>
+            <th>Rating</th>
+            <th>Goals Met</th>
+            <th>Reviewer</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of filteredReviews">
+            <td>
+              <div class="emp-cell">
+                <div class="avatar-sm" [style.background]="r.color || '#6366f1'">{{ (r.name || '?').charAt(0) }}</div>
+                <div class="emp-info">
                   <span class="emp-name">{{ r.name }}</span>
+                  <span class="emp-code">{{ r.employeeId }}</span>
                 </div>
-              </td>
-              <td>{{ r.department }}</td>
-              <td>{{ r.period }}</td>
-              <td>
-                <div class="rating">
-                  <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= r.rating ? '#f59e0b' : '#e2e8f0'"></i>
-                  <span class="rating-num">{{ r.rating }}.0</span>
+              </div>
+            </td>
+            <td>{{ r.department || 'Engineering' }}</td>
+            <td>{{ r.period || r.reviewPeriod }}</td>
+            <td>
+              <div class="rating">
+                <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= (r.numRating || 4) ? '#f59e0b' : '#e2e8f0'"></i>
+                <span class="rating-num">{{ r.rating }}</span>
+              </div>
+            </td>
+            <td><span class="goals-badge">{{ r.goalsMet || '85%' }}</span></td>
+            <td>{{ r.reviewer }}</td>
+            <td><span class="status-badge" [class]="(r.status || 'COMPLETED').toLowerCase()">{{ r.status }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noReviews>
+      <div class="empty-state">
+        <i class="fas fa-user-slash empty-icon"></i>
+        <h3>No Performance Reviews Found</h3>
+        <p>Try adjusting your search criteria or launch a new review cycle.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Tab Content 2: KPIs & OKRs Table -->
+  <div class="table-card" *ngIf="activeTab === 'goals'">
+    <div class="table-wrapper" *ngIf="filteredKpis.length > 0; else noKpis">
+      <table>
+        <thead>
+          <tr>
+            <th>KPI Title</th>
+            <th>Department</th>
+            <th>Target</th>
+            <th>Achievement</th>
+            <th>Progress</th>
+            <th>Weight</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let k of filteredKpis">
+            <td>
+              <div class="kpi-cell">
+                <i class="fas fa-chart-line kpi-icon"></i>
+                <strong>{{ k.title }}</strong>
+              </div>
+            </td>
+            <td><span class="dept-badge">{{ k.department }}</span></td>
+            <td>{{ k.target }}</td>
+            <td>{{ k.currentAchievement }}</td>
+            <td>
+              <div class="goal-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" [style.width]="(k.progress || 80) + '%'" [style.background]="(k.progress || 80) >= 80 ? '#10b981' : (k.progress || 80) >= 50 ? '#f59e0b' : '#6366f1'"></div>
                 </div>
-              </td>
-              <td>{{ r.reviewer }}</td>
-              <td><span class="status-badge" [class]="r.status.toLowerCase().replace(' ','-')">{{ r.status }}</span></td>
-              <td>
-                <button class="btn-icon" title="View"><i class="fas fa-eye"></i></button>
-                <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <span class="progress-text">{{ k.progress || 80 }}%</span>
+              </div>
+            </td>
+            <td>{{ k.weight }}</td>
+            <td><span class="status-badge active">{{ k.status }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noKpis>
+      <div class="empty-state">
+        <i class="fas fa-bullseye empty-icon"></i>
+        <h3>No KPIs Found</h3>
+        <p>Try adjusting your search criteria or set a new department KPI.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Tab Content 3: 360 Feedback Table -->
+  <div class="table-card" *ngIf="activeTab === 'feedback'">
+    <div class="feedback-toolbar">
+      <div class="feedback-filters">
+        <div class="select-box">
+          <label>Filter by Employee</label>
+          <select [(ngModel)]="selectedEmployeeId" (change)="loadFeedbacks()">
+            <option value="">All Employees</option>
+            <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
+          </select>
+        </div>
+        <button class="btn btn--secondary btn-refresh" (click)="loadFeedbacks()"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
-    <div class="table-card" *ngIf="activeTab === 'goals'">
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr><th>Employee</th><th>Goal</th><th>Category</th><th>Progress</th><th>Due Date</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let g of goals">
-              <td>
-                <div class="emp-cell">
-                  <div class="avatar-sm" [style.background]="g.color">{{ g.employee.charAt(0) }}</div>
-                  <span class="emp-name">{{ g.employee }}</span>
-                </div>
-              </td>
-              <td><strong>{{ g.goal }}</strong></td>
-              <td><span class="cat-badge">{{ g.category }}</span></td>
-              <td>
-                <div class="goal-progress">
-                  <div class="progress-bar"><div class="progress-fill" [style.width]="g.progress + '%'" [style.background]="g.progress >= 80 ? '#10b981' : g.progress >= 50 ? '#f59e0b' : '#6366f1'"></div></div>
-                  <span class="progress-text">{{ g.progress }}%</span>
-                </div>
-              </td>
-              <td>{{ g.dueDate }}</td>
-              <td><span class="status-badge" [class]="g.status.toLowerCase()">{{ g.status }}</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+    <div class="table-wrapper" *ngIf="filteredFeedbacks.length > 0; else noFeedbacks">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Feedback From</th>
+            <th>Category</th>
+            <th>Period</th>
+            <th>Rating</th>
+            <th>Comments</th>
+            <th>Date</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of filteredFeedbacks; let i = index">
+            <td>
+              <div class="emp-cell">
+                <div class="avatar-sm" [style.background]="getFeedbackColor(i)">{{ (f.targetEmployeeName || '?').charAt(0) }}</div>
+                <span class="emp-name">{{ f.targetEmployeeName }}</span>
+              </div>
+            </td>
+            <td>{{ f.reviewerName }}</td>
+            <td><span class="cat-badge">{{ f.category }}</span></td>
+            <td>{{ f.reviewPeriod }}</td>
+            <td>
+              <div class="rating">
+                <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= f.rating ? '#f59e0b' : '#e2e8f0'"></i>
+              </div>
+            </td>
+            <td class="comments-cell">{{ f.comments }}</td>
+            <td>{{ formatDate(f.createdAt) }}</td>
+            <td class="text-right">
+              <button class="btn-icon" title="Delete" (click)="deleteFeedback(f.id)"><i class="fas fa-trash" style="color:#ef4444"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="table-card" *ngIf="activeTab === 'feedback'">
-      <div class="feedback-toolbar">
-        <div class="feedback-filters">
-          <div class="select-box">
-            <label>Filter by Employee</label>
-            <select [(ngModel)]="selectedEmployeeId" (change)="onEmployeeFilterChange()">
-              <option value="">All Employees</option>
-              <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
-            </select>
-          </div>
-          <button class="btn btn--secondary btn-refresh" (click)="loadFeedbacks()"><i class="fas fa-sync-alt"></i> Refresh</button>
+
+    <ng-template #noFeedbacks>
+      <div class="empty-state">
+        <i class="fas fa-comments empty-icon"></i>
+        <h3>No Feedback Entries Found</h3>
+        <p>Select an employee or check back later for peer and manager reviews.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- Modal: Launch Review Cycle -->
+<div class="modal-backdrop" *ngIf="showReviewModal" (click)="closeReviewModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-plus-circle"></i> Launch Performance Review Cycle</h3>
+      <button class="close-btn" (click)="closeReviewModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Review Cycle Title *</label>
+        <input type="text" [(ngModel)]="newReviewCycle.title" placeholder="e.g. Q1 2025 Annual Performance Appraisal" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Target Period</label>
+          <select [(ngModel)]="newReviewCycle.period">
+            <option value="Q1 2025">Q1 2025</option>
+            <option value="Q2 2025">Q2 2025</option>
+            <option value="Q3 2025">Q3 2025</option>
+            <option value="Q4 2025">Q4 2025</option>
+            <option value="Annual 2025">Annual 2025</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target Department</label>
+          <select [(ngModel)]="newReviewCycle.department">
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Design">Design</option>
+            <option value="Finance">Finance</option>
+            <option value="Human Resources">Human Resources</option>
+          </select>
         </div>
       </div>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr><th>Employee</th><th>Feedback From</th><th>Category</th><th>Period</th><th>Rating</th><th>Comments</th><th>Date</th><th>Actions</th></tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let f of feedbacks; let i = index">
-              <td>
-                <div class="emp-cell">
-                  <div class="avatar-sm" [style.background]="getFeedbackColor(i)">{{ f.targetEmployeeName.charAt(0) || '?' }}</div>
-                  <span class="emp-name">{{ f.targetEmployeeName }}</span>
-                </div>
-              </td>
-              <td>{{ f.reviewerName }}</td>
-              <td><span class="cat-badge">{{ f.category }}</span></td>
-              <td>{{ f.reviewPeriod }}</td>
-              <td>
-                <div class="rating">
-                  <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= f.rating ? '#f59e0b' : '#e2e8f0'"></i>
-                </div>
-              </td>
-              <td class="comments-cell">{{ f.comments }}</td>
-              <td>{{ formatDate(f.createdAt) }}</td>
-              <td>
-                <button class="btn-icon" title="Delete" (click)="deleteFeedback(f.id)"><i class="fas fa-trash" style="color:#ef4444"></i></button>
-              </td>
-            </tr>
-            <tr *ngIf="feedbacks.length === 0">
-              <td colspan="8" style="text-align:center;color:#94a3b8;padding:32px">No feedback entries found.</td>
-            </tr>
-          </tbody>
-        </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeReviewModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveReviewCycle()"><i class="fas fa-check"></i> Launch Cycle</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Set New KPI -->
+<div class="modal-backdrop" *ngIf="showKpiModal" (click)="closeKpiModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-bullseye"></i> Set New Department KPI</h3>
+      <button class="close-btn" (click)="closeKpiModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>KPI Title *</label>
+        <input type="text" [(ngModel)]="newKpi.title" placeholder="e.g. Code Coverage Rate & Sprint Velocity" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Department</label>
+          <select [(ngModel)]="newKpi.department">
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Design">Design</option>
+            <option value="Finance">Finance</option>
+            <option value="Human Resources">Human Resources</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target Value</label>
+          <input type="text" [(ngModel)]="newKpi.target" placeholder="e.g. 90% or 500 Leads" />
+        </div>
       </div>
     </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeKpiModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveKpi()"><i class="fas fa-check"></i> Save KPI</button>
+    </div>
+  </div>
+</div>

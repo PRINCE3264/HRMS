@@ -1,0 +1,209 @@
+:host {
+  display: block;
+  width: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.employee-form-container {
+  padding: 28px 36px;
+  background: #f8fafc;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* The rest of the styles are the same as admin version */
+
+/* --- 1. HERO BANNER HEADER --- */
+.form-hero-header {
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 40%, #ede9fe 100%);
+  border-radius: 20px;
+  padding: 28px 36px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e0e7ff;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.06);
+}
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-tag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #6366f1;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.hero-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.hero-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px 0;
+}
+
+.breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748b;
+}
+.breadcrumb-trail .home-icon {font-size: 11px; color: #94a3b8;}
+.breadcrumb-trail .crumb-separator {color: #cbd5e1; font-size: 10px;}
+.breadcrumb-trail .crumb-link {color: #64748b; text-decoration: none; font-weight: 500;}
+.breadcrumb-trail .crumb-link:hover {color: #1d70f5;}
+.breadcrumb-trail .crumb-current {font-weight: 700; color: #0f172a;}
+
+/* Right Side Callout Card */
+.hero-callout-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #ffffff;
+}
+
+.callout-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #ebf3fe;
+  color: #1d70f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  position: relative;
+  flex-shrink: 0;
+}
+.callout-icon-box .plus-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1d70f5;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.callout-text-wrap .callout-title {font-size: 14px; font-weight: 800; color: #0f172a; line-height: 1.2;}
+.callout-text-wrap .blue-underline {width: 24px; height: 3px; background: #1d70f5; border-radius: 2px; margin-top: 6px;}
+
+/* --- 2. STEPPER PROGRESS BAR --- */
+.form-card {background: #ffffff; border-radius: 20px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.03); overflow: hidden; margin-bottom: 40px;}
+
+.stepper-container {position: relative; display: flex; align-items: center; justify-content: space-between; padding: 28px 48px; border-bottom: 1px solid #f1f5f9; background: #ffffff;}
+.stepper-line {position: absolute; top: 45px; left: 80px; right: 80px; height: 2px; background: #e2e8f0; z-index: 1;}
+.stepper-line .stepper-line-fill {height: 100%; background: #1d70f5; transition: width 0.3s ease;}
+.stepper-step {display: flex; align-items: center; gap: 12px; position: relative; z-index: 2; cursor: pointer;}
+.stepper-step .step-circle {width: 36px; height: 36px; border-radius: 50%; background: #e2e8f0; color: #64748b; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;}
+.stepper-step .step-label-group {display: flex; flex-direction: column;}
+.stepper-step .step-label-group .step-title-lbl {font-size: 13px; font-weight: 700; color: #64748b;}
+.stepper-step .step-label-group .step-sub-lbl {font-size: 11px; color: #94a3b8; font-weight: 500;}
+.stepper-step.active .step-circle {background: #1d70f5; color: #ffffff; box-shadow: 0 0 0 4px rgba(29,112,245,0.18);}
+.stepper-step.active .step-title-lbl {color: #1d70f5; font-weight: 800;}
+.stepper-step.completed .step-circle {background: #1d70f5; color: #ffffff;}
+.stepper-step.completed .step-title-lbl {color: #0f172a;}
+
+/* --- 3. FORM PANEL CONTENT --- */
+.form-wrapper {display: flex; flex-direction: column;}
+.step-panel {padding: 32px 36px; animation: fadeIn 0.25s ease-out;}
+.panel-header {display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;}
+.header-title-box {display: flex; align-items: center; gap: 14px;}
+.panel-icon-box {width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;}
+.panel-icon-box.blue-bg {background: #ebf3fe; color: #1d70f5;}
+.panel-text h2 {font-size: 18px; font-weight: 800; color: #0f172a; margin: 0;}
+.panel-text p {font-size: 12px; color: #64748b; margin: 2px 0 0 0;}
+.info-marked-pill {background: #eff6ff; color: #1d70f5; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px;}
+.info-marked-pill .required-star {color: #ef4444; font-weight: 800;}
+
+.form-grid {display: grid; grid-template-columns: 1fr 1fr; gap: 20px;}
+.form-group {display: flex; flex-direction: column; gap: 6px;}
+.form-group.full-width {grid-column: 1 / -1;}
+.form-group label {font-size: 12px; font-weight: 700; color: #334155;}
+.form-group label .required {color: #ef4444;}
+.input-icon-wrap {position: relative; display: flex; align-items: center;}
+.input-icon-wrap .field-icon {position: absolute; left: 14px; font-size: 14px; color: #94a3b8; pointer-events: none;}
+.input-icon-wrap .form-input {width: 100%; height: 44px; padding: 0 14px 0 40px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 13px; color: #0f172a; outline: none; background: #ffffff; box-sizing: border-box; transition: all 0.2s ease;}
+.input-icon-wrap .form-input::placeholder {color: #94a3b8;}
+.input-icon-wrap .form-input:focus {border-color: #1d70f5; box-shadow: 0 0 0 3px rgba(29,112,245,0.12);}
+.input-icon-wrap select.form-input {cursor: pointer; appearance: none;}
+.input-icon-wrap .select-arrow {position: absolute; right: 14px; font-size: 10px; color: #94a3b8; pointer-events: none;}
+.input-icon-wrap.is-invalid .form-input {border-color: #ef4444; background: #fef2f2;}
+
+.gender-radio-cards {display: grid; grid-template-columns: 1fr 1fr; gap: 16px;}
+.gender-card {border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; cursor: pointer; background: #ffffff; transition: all 0.2s ease;}
+.gender-card .hidden-radio {display: none;}
+.gender-card .card-radio-circle {width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 14px;}
+.gender-card .card-radio-circle .check-icon {color: #1d70f5; font-size: 18px;}
+.gender-card .card-radio-circle .icon-muted {color: #94a3b8; font-size: 16px;}
+.gender-card .gender-lbl {font-size: 13px; font-weight: 700; color: #334155;}
+.gender-card:hover {border-color: #cbd5e1; background: #f8fafc;}
+.gender-card.selected {border-color: #1d70f5; background: #ebf3fe;}
+.gender-card.selected .gender-lbl {color: #1d70f5;}
+
+.form-section-title {font-size: 14px; font-weight: 800; color: #0f172a; margin: 10px 0 4px 0; display: flex; align-items: center; gap: 8px;}
+.form-section-title i {color: #1d70f5;}
+.error-msg {font-size: 11px; color: #ef4444; font-weight: 600;}
+
+/* --- 4. FOOTER ACTIONS BAR --- */
+.footer-actions-bar {padding: 20px 36px; background: #ffffff; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between;}
+.right-buttons {display: flex; align-items: center; gap: 12px; margin-left: auto;}
+.btn {height: 42px; padding: 0 24px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; text-decoration: none; transition: all 0.2s ease;}
+.btn-cancel {background: #e2e8f0; color: #475569;}
+.btn-cancel:hover {background: #cbd5e1;}
+.btn-back {background: #ffffff; border: 1.5px solid #e2e8f0; color: #475569;}
+.btn-back:hover {background: #f8fafc;}
+.btn-next, .btn-submit {background: #1d70f5; color: #ffffff; box-shadow: 0 4px 14px rgba(29,112,245,0.3);}
+.btn-next:hover, .btn-submit:hover {background: #165ecf;}
+.btn:disabled {opacity: 0.65; cursor: not-allowed;}
+
+/* --- 5. SUCCESS CARD --- */
+.success-card {background: #ffffff; border-radius: 20px; padding: 60px 36px; text-align: center; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.03);}
+.success-card .success-icon {font-size: 56px; color: #22c55e; margin-bottom: 16px;}
+.success-card h2 {font-size: 22px; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;}
+.success-card p {font-size: 13px; color: #64748b; margin: 0 0 24px 0;}
+.success-card .success-actions {display: flex; align-items: center; justify-content: center; gap: 14px;}
+
+@keyframes fadeIn {from {opacity: 0; transform: translateY(6px);} to {opacity: 1; transform: translateY(0);}}
+
+@media (max-width: 768px) {
+  .employee-form-container {padding: 20px 16px;}
+  .form-hero-header {flex-direction: column; align-items: flex-start; gap: 16px;}
+  .stepper-container {flex-direction: column; align-items: flex-start; gap: 16px; padding: 20px;}
+  .stepper-container .stepper-line {display: none;}
+  .form-grid {grid-template-columns: 1fr;}
+  .gender-radio-cards {grid-template-columns: 1fr;}
+}
+
+/* Avatar Upload */
+.avatar-upload-box {display: flex; align-items: center; gap: 16px; margin-top: 4px;}
+.avatar-preview-container {position: relative; width: 90px; height: 90px; border-radius: 50%; overflow: hidden; border: 2px solid #e2e8f0;}
+.avatar-preview-container .avatar-preview {width: 100%; height: 100%; object-fit: cover;}
+.avatar-preview-container .btn-remove-img {position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%; background: rgba(239,68,68,0.9); color: #ffffff; border: none; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center;}
+.upload-controls {display: flex; flex-direction: column; gap: 4px;}
+.btn-upload-file {padding: 10px 16px; border-radius: 10px; border: 1.5px dashed #6366f1; background: #eef2ff; color: #4f46e5; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;}
+.btn-upload-file:hover {background: #e0e7ff;}
+.upload-hint {font-size: 11px; color: #94a3b8;}

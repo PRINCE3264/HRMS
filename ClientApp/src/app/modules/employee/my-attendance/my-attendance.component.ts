@@ -248,17 +248,50 @@ export class EmpAttendanceComponent implements OnInit {
     return d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
   }
 
-  private formatTime(value?: string | null): string {
-    if (!value) return '--';
-    const d = new Date(value);
-    if (isNaN(d.getTime())) return value;
-    return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  private formatTime(value?: any): string {
+    if (!value || value === '—' || value === '--' || value === 'null') return '—';
+    const str = String(value).trim();
+    if (str === '—' || str === '--') return '—';
+    
+    if (str.includes('AM') || str.includes('PM')) return str;
+
+    if (str.includes('T') || str.includes('-')) {
+      const d = new Date(str);
+      if (!isNaN(d.getTime())) {
+        return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      }
+    }
+
+    if (str.includes(':')) {
+      const parts = str.split(':');
+      let hours = parseInt(parts[0], 10);
+      const minutes = parts[1] ? parts[1].slice(0, 2) : '00';
+      if (!isNaN(hours)) {
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const hStr = String(hours).padStart(2, '0');
+        return `${hStr}:${minutes} ${ampm}`;
+      }
+    }
+
+    return str;
   }
 
-  private formatHours(value?: number): string {
-    const total = Math.round((Number(value) || 0) * 60);
-    const h = Math.floor(total / 60);
-    const m = total % 60;
+  private formatHours(value?: any): string {
+    if (value === null || value === undefined || value === '' || value === '—' || value === '--') return '—';
+    
+    const strVal = String(value).replace(/hrs|hr|h|m/gi, '').trim();
+    const num = parseFloat(strVal);
+    if (isNaN(num) || num <= 0) return '0 hrs';
+
+    const totalMinutes = Math.round(num * 60);
+    if (totalMinutes < 1) return '< 1 min';
+    
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    
+    if (h === 0) return `${m} mins`;
+    if (m === 0) return `${h} hrs`;
     return `${h}h ${m}m`;
   }
 

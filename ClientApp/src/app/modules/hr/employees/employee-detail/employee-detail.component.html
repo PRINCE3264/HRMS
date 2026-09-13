@@ -1,0 +1,519 @@
+<div class="employee-detail-container">
+
+  <!-- Top Navigation Header -->
+  <div class="top-nav-bar">
+    <div class="nav-left">
+      <nav class="breadcrumbs">
+        <a routerLink="/hr/dashboard">Dashboard</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <a routerLink="/hr/employees">Employees</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current">{{ getFullName() }}</span>
+      </nav>
+      <h1 class="page-title">Employee Details</h1>
+      <p class="page-subtitle">View and manage employee information</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline" routerLink="/hr/employees">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button class="btn btn-primary" [routerLink]="['/hr/employees', employee.employeeId, 'edit']">
+        <i class="fas fa-edit"></i> Edit
+      </button>
+      <button class="btn btn-deactivate" [class.btn-danger]="isActive" [class.btn-success]="!isActive" (click)="changeStatus()">
+        <i [class]="isActive ? 'fas fa-user-slash' : 'fas fa-user-check'"></i>
+        {{ isActive ? 'Deactivate' : 'Reactivate' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Profile Gradient Banner Card -->
+  <div class="profile-banner-card">
+    <div class="profile-banner-body">
+      <div class="avatar-wrapper">
+        <div class="avatar-circle">
+          <img *ngIf="employee.avatar; else avatarText" [src]="resolveImage(employee.avatar)" [alt]="getFullName()" />
+          <ng-template #avatarText>
+            <span class="initials">{{ getInitials() }}</span>
+          </ng-template>
+          <span class="online-indicator" [class.active]="isActive"></span>
+        </div>
+      </div>
+      <div class="profile-main-details">
+        <div class="name-status-row">
+          <h2 class="emp-fullname">{{ getFullName() }}</h2>
+          <span class="status-pill" [class.active]="isActive">
+            <span class="pill-dot"></span> {{ employee.status }}
+          </span>
+        </div>
+        <p class="emp-subtitle">{{ employee.designation }} &nbsp;|&nbsp; {{ employee.department }}</p>
+        <div class="emp-meta-pills">
+          <span class="meta-pill"><i class="fas fa-id-badge"></i> {{ employee.employeeId }}</span>
+          <span class="meta-pill"><i class="fas fa-envelope"></i> {{ employee.email }}</span>
+          <span class="meta-pill"><i class="fas fa-phone"></i> {{ employee.phone }}</span>
+          <span class="meta-pill"><i class="fas fa-map-marker-alt"></i> {{ employee.branch }}</span>
+          <span class="meta-pill"><i class="fas fa-calendar-alt"></i> Joined {{ employee.joiningDate }}</span>
+        </div>
+      </div>
+      <div class="quote-box" *ngIf="employee.quote">
+        <p class="quote-text">“{{ employee.quote }}”</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Horizontal Tab Nav Bar -->
+  <div class="tab-navigation-card">
+    <div class="tabs-scroll">
+      <button
+        *ngFor="let tab of tabs"
+        class="tab-btn"
+        [class.active]="activeTab === tab.id"
+        (click)="setTab(tab.id)"
+      >
+        <i [class]="tab.icon"></i>
+        <span>{{ tab.label }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area: Left Tab Panel (70%) + Right Summary Cards (30%) -->
+  <div class="main-detail-grid">
+    
+    <!-- LEFT PANEL: Tab Panel Content -->
+    <div class="left-panel">
+      
+      <!-- PERSONAL TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'personal'">
+        <div class="panel-card-header">
+          <i class="fas fa-user header-icon"></i>
+          <h3>Personal Information</h3>
+        </div>
+        <div class="form-display-grid">
+          
+          <div class="field-group">
+            <label>First Name</label>
+            <div class="field-input-box">{{ employee.firstName }}</div>
+          </div>
+
+          <div class="field-group">
+            <label>Last Name</label>
+            <div class="field-input-box">{{ employee.lastName }}</div>
+          </div>
+
+          <div class="field-group">
+            <label>Gender</label>
+            <div class="radio-options-row">
+              <label class="radio-card" [class.selected]="employee.gender === 'Male'">
+                <input type="radio" name="gender" [checked]="employee.gender === 'Male'" disabled />
+                <span class="radio-custom"></span> Male
+              </label>
+              <label class="radio-card" [class.selected]="employee.gender === 'Female'">
+                <input type="radio" name="gender" [checked]="employee.gender === 'Female'" disabled />
+                <span class="radio-custom"></span> Female
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Marital Status</label>
+            <div class="field-input-box select-box">
+              <span>{{ employee.maritalStatus }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Date of Birth</label>
+            <div class="field-input-box icon-box">
+              <span>{{ employee.dateOfBirth }}</span>
+              <i class="far fa-calendar-alt field-icon"></i>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Aadhaar Number</label>
+            <div class="field-input-box icon-box">
+              <span>{{ employee.aadhaarNumber }}</span>
+              <i class="far fa-eye field-icon"></i>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Nationality</label>
+            <div class="field-input-box select-box">
+              <span>{{ employee.nationality }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>PAN Number</label>
+            <div class="field-input-box">{{ employee.panNumber }}</div>
+          </div>
+
+          <div class="field-group">
+            <label>Blood Group</label>
+            <div class="field-input-box select-box">
+              <span>{{ employee.bloodGroup }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Religion</label>
+            <div class="field-input-box select-box">
+              <span>{{ employee.religion }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CONTACT TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'contact'">
+        <div class="panel-card-header">
+          <i class="fas fa-envelope header-icon"></i>
+          <h3>Contact Information</h3>
+        </div>
+        <div class="form-display-grid">
+          <div class="field-group">
+            <label>Email Address</label>
+            <div class="field-input-box">{{ employee.email }}</div>
+          </div>
+          <div class="field-group">
+            <label>Phone Number</label>
+            <div class="field-input-box">{{ employee.phone }}</div>
+          </div>
+          <div class="field-group full-width">
+            <label>Address</label>
+            <div class="field-input-box">{{ employee.address }}</div>
+          </div>
+          <div class="field-group">
+            <label>City</label>
+            <div class="field-input-box">{{ employee.city }}</div>
+          </div>
+          <div class="field-group">
+            <label>State</label>
+            <div class="field-input-box">{{ employee.state }}</div>
+          </div>
+          <div class="field-group">
+            <label>Country</label>
+            <div class="field-input-box">{{ employee.country }}</div>
+          </div>
+          <div class="field-group">
+            <label>Postal Code</label>
+            <div class="field-input-box">{{ employee.postalCode }}</div>
+          </div>
+        </div>
+
+        <div class="panel-card-header section-divider">
+          <i class="fas fa-first-aid header-icon"></i>
+          <h3>Emergency Contact</h3>
+        </div>
+        <div class="form-display-grid">
+          <div class="field-group">
+            <label>Contact Person</label>
+            <div class="field-input-box">{{ employee.emergencyContactName }}</div>
+          </div>
+          <div class="field-group">
+            <label>Phone Number</label>
+            <div class="field-input-box">{{ employee.emergencyContactPhone }}</div>
+          </div>
+          <div class="field-group">
+            <label>Relationship</label>
+            <div class="field-input-box">{{ employee.emergencyContactRelation }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JOB TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'job'">
+        <div class="panel-card-header">
+          <i class="fas fa-briefcase header-icon"></i>
+          <h3>Job Details</h3>
+        </div>
+        <div class="form-display-grid">
+          <div class="field-group">
+            <label>Employee ID</label>
+            <div class="field-input-box">{{ employee.employeeId }}</div>
+          </div>
+          <div class="field-group">
+            <label>Department</label>
+            <div class="field-input-box">{{ employee.department }}</div>
+          </div>
+          <div class="field-group">
+            <label>Designation</label>
+            <div class="field-input-box">{{ employee.designation }}</div>
+          </div>
+          <div class="field-group">
+            <label>Work Location / Branch</label>
+            <div class="field-input-box">{{ employee.branch }}</div>
+          </div>
+          <div class="field-group">
+            <label>Joining Date</label>
+            <div class="field-input-box">{{ employee.joiningDate }}</div>
+          </div>
+          <div class="field-group">
+            <label>Employment Type</label>
+            <div class="field-input-box">{{ employee.employmentType }}</div>
+          </div>
+          <div class="field-group">
+            <label>Reporting Manager</label>
+            <div class="field-input-box">{{ employee.reportingManager }}</div>
+          </div>
+          <div class="field-group">
+            <label>Status</label>
+            <div class="field-input-box">
+              <span class="status-pill" [class.active]="isActive">{{ employee.status }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTS TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'documents'">
+        <div class="panel-card-header flex-between">
+          <div><i class="fas fa-folder header-icon"></i> <h3>Employee Documents</h3></div>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-upload"></i> Upload</button>
+        </div>
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Document Name</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>Uploaded Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of documents">
+                <td><i class="fas fa-file-pdf pdf-icon"></i> <strong>{{ doc.name }}</strong></td>
+                <td>{{ doc.type }}</td>
+                <td>{{ doc.size }}</td>
+                <td>{{ doc.uploadedDate }}</td>
+                <td><button class="btn-icon-act" title="Download"><i class="fas fa-download"></i></button></td>
+              </tr>
+              <tr *ngIf="documents.length === 0">
+                <td colspan="5" class="empty-cell">No documents uploaded yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'attendance'">
+        <div class="panel-card-header">
+          <i class="fas fa-clock header-icon"></i>
+          <h3>Attendance Record</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Clock In</th>
+                <th>Clock Out</th>
+                <th>Hours</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rec of attendance">
+                <td>{{ rec.date }}</td>
+                <td>{{ rec.clockIn }}</td>
+                <td>{{ rec.clockOut }}</td>
+                <td><strong>{{ rec.hours }}</strong></td>
+                <td><span class="status-pill" [class.active]="rec.status === 'Present'">{{ rec.status }}</span></td>
+              </tr>
+              <tr *ngIf="attendance.length === 0">
+                <td colspan="5" class="empty-cell">No recent attendance records.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- LEAVE TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'leave'">
+        <div class="panel-card-header">
+          <i class="fas fa-calendar-alt header-icon"></i>
+          <h3>Leave History</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Leave Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Days</th>
+                <th>Status</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let leave of leaveHistory">
+                <td><strong>{{ leave.type }}</strong></td>
+                <td>{{ leave.from }}</td>
+                <td>{{ leave.to }}</td>
+                <td><strong>{{ leave.days }}</strong></td>
+                <td><span class="status-pill" [class.active]="leave.status === 'Approved'">{{ leave.status }}</span></td>
+                <td>{{ leave.reason }}</td>
+              </tr>
+              <tr *ngIf="leaveHistory.length === 0">
+                <td colspan="6" class="empty-cell">No leave requests recorded.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SALARY TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'salary'">
+        <div class="panel-card-header">
+          <i class="fas fa-wallet header-icon"></i>
+          <h3>Salary Details</h3>
+        </div>
+        <div class="form-display-grid">
+          <div class="field-group">
+            <label>Basic Salary</label>
+            <div class="field-input-box">${{ employee.basicSalary | number }}</div>
+          </div>
+          <div class="field-group">
+            <label>Allowances</label>
+            <div class="field-input-box">${{ employee.allowances | number }}</div>
+          </div>
+          <div class="field-group">
+            <label>Bank Name</label>
+            <div class="field-input-box">{{ employee.bankName }}</div>
+          </div>
+          <div class="field-group">
+            <label>Account Number</label>
+            <div class="field-input-box">{{ employee.accountNumber }}</div>
+          </div>
+          <div class="field-group">
+            <label>IFSC Code</label>
+            <div class="field-input-box">{{ employee.ifscCode }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERFORMANCE TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'performance'">
+        <div class="panel-card-header">
+          <i class="fas fa-chart-line header-icon"></i>
+          <h3>Performance Overview</h3>
+        </div>
+        <div class="form-display-grid">
+          <div class="field-group">
+            <label>Overall Rating</label>
+            <div class="field-input-box"><strong>{{ performance.rating }} / 5.0</strong></div>
+          </div>
+          <div class="field-group">
+            <label>Goal Completion</label>
+            <div class="field-input-box"><strong>{{ performance.goalScore }}%</strong></div>
+          </div>
+          <div class="field-group full-width">
+            <label>Manager Comments</label>
+            <div class="field-input-box">{{ performance.comments }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY TAB -->
+      <div class="panel-card" *ngIf="activeTab === 'activity'">
+        <div class="panel-card-header">
+          <i class="fas fa-history header-icon"></i>
+          <h3>Activity History</h3>
+        </div>
+        <div class="form-display-grid">
+          <div class="field-group full-width">
+            <div class="field-input-box">System activity log initialized for {{ getFullName() }}.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL: Sidebar Summary & Quick Actions Cards (30%) -->
+    <div class="right-panel">
+
+      <!-- Card 1: Employee Summary -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-header">
+          <i class="fas fa-users card-header-icon"></i>
+          <h4>Employee Summary</h4>
+        </div>
+        <div class="summary-list">
+          <div class="summary-item">
+            <span class="summary-label">Employee ID</span>
+            <span class="summary-val font-mono">{{ employee.employeeId }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Department</span>
+            <span class="summary-val">{{ employee.department }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Designation</span>
+            <span class="summary-val">{{ employee.designation }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Reporting Manager</span>
+            <span class="summary-val">{{ employee.reportingManager }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Work Location</span>
+            <span class="summary-val">{{ employee.branch }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Employment Type</span>
+            <span class="summary-val">{{ employee.employmentType }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Date of Joining</span>
+            <span class="summary-val">{{ employee.joiningDate }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Status</span>
+            <span class="summary-val status-val" [class.active]="isActive">
+              <span class="status-dot"></span> {{ employee.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Quick Actions -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-header">
+          <i class="fas fa-bolt card-header-icon"></i>
+          <h4>Quick Actions</h4>
+        </div>
+        <div class="quick-actions-grid">
+          <button class="quick-action-btn" (click)="setTab('documents')">
+            <i class="fas fa-folder icon-blue"></i>
+            <span>View Documents</span>
+          </button>
+          <button class="quick-action-btn" (click)="setTab('attendance')">
+            <i class="fas fa-clock icon-blue"></i>
+            <span>View Attendance</span>
+          </button>
+          <button class="quick-action-btn" (click)="setTab('salary')">
+            <i class="fas fa-wallet icon-blue"></i>
+            <span>View Salary</span>
+          </button>
+          <button class="quick-action-btn" (click)="setTab('performance')">
+            <i class="fas fa-chart-line icon-blue"></i>
+            <span>View Performance</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

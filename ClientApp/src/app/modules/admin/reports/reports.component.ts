@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ReportService, ToastService } from '../../../core/services';
+import { ReportService, ToastService, ExcelExportService } from '../../../core/services';
 
 @Component({
   selector: 'app-admin-reports',
@@ -70,11 +70,11 @@ export class AdminReportsComponent implements OnInit, OnDestroy {
     { label: 'Tax Deductions', value: 23000, color: '#f59e0b' }
   ];
   deptPayrollData = [
-    { dept: 'Engineering', totalCost: '$185,000', avgSalary: '$115,000', employeeCount: 68 },
-    { dept: 'Sales', totalCost: '$110,000', avgSalary: '$85,000', employeeCount: 45 },
-    { dept: 'Marketing', totalCost: '$72,000', avgSalary: '$78,000', employeeCount: 32 },
-    { dept: 'Finance', totalCost: '$64,000', avgSalary: '$92,000', employeeCount: 28 },
-    { dept: 'Human Resources', totalCost: '$49,000', avgSalary: '$74,000', employeeCount: 18 }
+    { dept: 'Engineering', totalCost: '₹185,000', avgSalary: '₹115,000', employeeCount: 68 },
+    { dept: 'Sales', totalCost: '₹110,000', avgSalary: '₹85,000', employeeCount: 45 },
+    { dept: 'Marketing', totalCost: '₹72,000', avgSalary: '₹78,000', employeeCount: 32 },
+    { dept: 'Finance', totalCost: '₹64,000', avgSalary: '₹92,000', employeeCount: 28 },
+    { dept: 'Human Resources', totalCost: '₹49,000', avgSalary: '₹74,000', employeeCount: 18 }
   ];
 
   quickReports = [
@@ -86,7 +86,12 @@ export class AdminReportsComponent implements OnInit, OnDestroy {
     { name: 'Training Completion', description: 'Training program completion rates', icon: 'fas fa-graduation-cap', color: '#06b6d4' },
   ];
 
-  constructor(private route: ActivatedRoute, private reportService: ReportService, private toast: ToastService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private reportService: ReportService,
+    private toast: ToastService,
+    private excelExport: ExcelExportService
+  ) {}
 
   ngOnInit(): void {
     this.querySub = this.route.queryParams.subscribe(params => {
@@ -133,6 +138,43 @@ export class AdminReportsComponent implements OnInit, OnDestroy {
   }
 
   exportReport(): void {
-    console.log('Exporting report for tab:', this.activeTab);
+    if (this.activeTab === 'hr') {
+      this.excelExport.exportToExcel(this.headcountData, 'HR_Headcount_Report');
+    } else if (this.activeTab === 'attendance') {
+      this.excelExport.exportToExcel(this.deptAttendanceData, 'Attendance_Report');
+    } else if (this.activeTab === 'payroll') {
+      this.excelExport.exportToExcel(this.deptPayrollData, 'Payroll_Report');
+    } else {
+      this.excelExport.exportToExcel(this.headcountData, 'HRM_Analytics_Report');
+    }
+    this.toast.success('Excel report downloaded successfully');
+  }
+
+  downloadQuickReport(report: any): void {
+    const reportDataMap: Record<string, any[]> = {
+      'Employee Directory': [
+        { EmployeeID: 'EMP001', Name: 'John Doe', Department: 'Engineering', Position: 'Senior Dev' },
+        { EmployeeID: 'EMP002', Name: 'Jane Smith', Department: 'HR', Position: 'HR Manager' }
+      ],
+      'Attendance Summary': this.deptAttendanceData,
+      'Leave Balance': [
+        { Employee: 'John Doe', CasualLeave: 5, SickLeave: 3, EarnedLeave: 12 },
+        { Employee: 'Jane Smith', CasualLeave: 7, SickLeave: 4, EarnedLeave: 10 }
+      ],
+      'Payroll Register': this.deptPayrollData,
+      'Performance Summary': [
+        { Employee: 'John Doe', Rating: '4.8/5', Status: 'Exceeds Expectations' },
+        { Employee: 'Jane Smith', Rating: '4.5/5', Status: 'Meets Expectations' }
+      ],
+      'Training Completion': [
+        { Program: 'Cybersecurity 101', Enrolled: 120, Completed: 115, PassRate: '95.8%' },
+        { Program: 'Leadership 2026', Enrolled: 25, Completed: 24, PassRate: '96.0%' }
+      ]
+    };
+
+    const exportData = reportDataMap[report.name] || this.headcountData;
+    const filename = report.name.replace(/\s+/g, '_');
+    this.excelExport.exportToExcel(exportData, filename);
+    this.toast.success(`${report.name} exported to Excel!`);
   }
 }

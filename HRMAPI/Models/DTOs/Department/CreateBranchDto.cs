@@ -12,5 +12,6 @@ public class CreateBranchDto
     public string Country { get; set; } = string.Empty;
     public string? Phone { get; set; }
     public string? Email { get; set; }
+    public string? ImageUrl { get; set; }
     public Guid? CompanyId { get; set; }
 }

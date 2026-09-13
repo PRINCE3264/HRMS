@@ -47,6 +47,7 @@
   @media (max-width: 992px) {
     grid-template-columns: repeat(2, 1fr);
   }
+
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
   }
@@ -117,14 +118,17 @@
     background: linear-gradient(135deg, #4461f6 0%, #1e40af 100%);
     box-shadow: 0 4px 16px rgba(68, 97, 246, 0.3);
   }
+
   &.stat-red {
     background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
     box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
   }
+
   &.stat-emerald {
     background: linear-gradient(135deg, #10b981 0%, #047857 100%);
     box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
   }
+
   &.stat-amber {
     background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
     box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);

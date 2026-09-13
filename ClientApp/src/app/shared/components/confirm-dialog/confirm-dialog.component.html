@@ -1,16 +1,16 @@
 <div class="overlay" *ngIf="isOpen" (click)="onCancel()">
-      <div class="dialog" (click)="$event.stopPropagation()">
-        <div class="dialog__icon" [class]="'dialog__icon--' + type">
-          <i [class]="iconClass"></i>
-        </div>
-        <h3 class="dialog__title">{{ title }}</h3>
-        <p class="dialog__message">{{ message }}</p>
-        <div class="dialog__actions">
-          <button class="btn btn--outline" (click)="onCancel()">Cancel</button>
-          <button class="btn" [class]="confirmBtnClass" (click)="onConfirm()" [disabled]="loading">
-            <span *ngIf="loading" class="spinner"></span>
-            {{ confirmText }}
-          </button>
-        </div>
-      </div>
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <div class="dialog__icon" [class]="'dialog__icon--' + type">
+      <i [class]="iconClass"></i>
     </div>
+    <h3 class="dialog__title">{{ title }}</h3>
+    <p class="dialog__message">{{ message }}</p>
+    <div class="dialog__actions">
+      <button class="btn btn--outline" (click)="onCancel()">Cancel</button>
+      <button class="btn" [class]="confirmBtnClass" (click)="onConfirm()" [disabled]="loading">
+        <span *ngIf="loading" class="spinner"></span>
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

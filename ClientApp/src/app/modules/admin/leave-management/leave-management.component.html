@@ -1,45 +1,380 @@
-<app-page-header title="Leave Management" subtitle="Manage employee leave requests, approvals, and allocation balances" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Leave Management'}]">
-  <button class="btn btn--outline"><i class="fas fa-calendar-alt"></i> Leave Calendar</button>
-  <button class="btn btn--primary"><i class="fas fa-plus"></i> New Leave Policy</button>
-</app-page-header>
+<div class="leave-container">
+  <!-- Header Banner -->
+  <div class="header-banner">
+    <div class="header-title-box">
+      <div class="header-icon">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Leave Management & Approval Center</h1>
+        <p class="page-subtitle">Review, approve, or reject employee leave applications and monitor organization leave
+          balances</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-export" (click)="exportToExcel()">
+        <i class="fas fa-file-excel"></i>
+        {{ getSelectedCount() > 0 ? 'Export Selected (' + getSelectedCount() + ')' : 'Export Excel' }}
+      </button>
+      <button class="btn btn-refresh" (click)="loadLeaveRequests()">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i> Refresh
+      </button>
+    </div>
+  </div>
 
-<div class="leave-stats">
-  <div class="leave-stat-card pending">
-    <div class="leave-stat-card__icon"><i class="fas fa-clock"></i></div>
-    <div class="leave-stat-card__info">
-      <span class="leave-stat-card__value">14</span>
-      <span class="leave-stat-card__label">Pending Requests</span>
+  <!-- KPI Metric Cards Grid -->
+  <div class="metrics-grid">
+    <div class="metric-card metric-warning">
+      <div class="metric-icon">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Pending Requests</span>
+        <h3 class="metric-value">{{ metrics.pending }}</h3>
+        <span class="metric-sub text-warning"><i class="fas fa-exclamation-circle"></i> Requires review</span>
+      </div>
+    </div>
+
+    <div class="metric-card metric-success">
+      <div class="metric-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Approved This Month</span>
+        <h3 class="metric-value">{{ metrics.approved }}</h3>
+        <span class="metric-sub text-positive"><i class="fas fa-arrow-up"></i> Approved applications</span>
+      </div>
+    </div>
+
+    <div class="metric-card metric-danger">
+      <div class="metric-icon">
+        <i class="fas fa-times-circle"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Rejected Requests</span>
+        <h3 class="metric-value">{{ metrics.rejected }}</h3>
+        <span class="metric-sub text-danger"><i class="fas fa-ban"></i> Declined applications</span>
+      </div>
+    </div>
+
+    <div class="metric-card metric-purple">
+      <div class="metric-icon">
+        <i class="fas fa-user-clock"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">On Leave Today</span>
+        <h3 class="metric-value">{{ metrics.onLeaveToday }}</h3>
+        <span class="metric-sub text-purple"><i class="fas fa-calendar-day"></i> Currently away</span>
+      </div>
     </div>
   </div>
-  <div class="leave-stat-card approved">
-    <div class="leave-stat-card__icon"><i class="fas fa-check-circle"></i></div>
-    <div class="leave-stat-card__info">
-      <span class="leave-stat-card__value">89</span>
-      <span class="leave-stat-card__label">Approved This Month</span>
+
+  <!-- Filter & Control Panel -->
+  <div class="filter-card">
+    <div class="filter-row">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search by Employee name, ID, department, or reason..."
+          [(ngModel)]="searchTerm" />
+        <button *ngIf="searchTerm" class="clear-search" (click)="searchTerm = ''">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="filter-select-group" *ngIf="activeTab !== 'balance'">
+        <div class="select-wrap">
+          <i class="fas fa-umbrella-beach select-icon"></i>
+          <select class="filter-select" [(ngModel)]="selectedType">
+            <option value="">All Leave Types</option>
+            <option *ngFor="let type of leaveTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="leave-stat-card rejected">
-    <div class="leave-stat-card__icon"><i class="fas fa-times-circle"></i></div>
-    <div class="leave-stat-card__info">
-      <span class="leave-stat-card__value">5</span>
-      <span class="leave-stat-card__label">Rejected This Month</span>
+
+  <!-- Navigation Tabs (Underline Format matching screenshot) -->
+  <div class="tabs-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="switchTab('pending')">
+      <i class="fas fa-clock"></i> Pending Requests
+      <span class="tab-badge">{{ countPending }}</span>
+    </button>
+
+    <button class="tab-btn" [class.active]="activeTab === 'approved'" (click)="switchTab('approved')">
+      <i class="fas fa-check-circle"></i> Approved
+      <span class="tab-badge badge-success-count">{{ countApproved }}</span>
+    </button>
+
+    <button class="tab-btn" [class.active]="activeTab === 'rejected'" (click)="switchTab('rejected')">
+      <i class="fas fa-times-circle"></i> Rejected
+      <span class="tab-badge badge-danger-count">{{ countRejected }}</span>
+    </button>
+
+    <button class="tab-btn" [class.active]="activeTab === 'balance'" (click)="switchTab('balance')">
+      <i class="fas fa-wallet"></i> Leave Balance
+    </button>
+  </div>
+
+  <!-- Selected Row Counter Alert Bar -->
+  <div class="selection-alert-bar" *ngIf="getSelectedCount() > 0 && activeTab !== 'balance'">
+    <div class="selection-info">
+      <i class="fas fa-check-square"></i>
+      <span><strong>{{ getSelectedCount() }}</strong> item(s) selected</span>
+    </div>
+    <div class="selection-actions">
+      <button class="btn-sel btn-sel-export" (click)="exportToExcel()">
+        <i class="fas fa-file-excel"></i> Export Selected to Excel
+      </button>
+      <button class="btn-sel btn-sel-clear" (click)="clearSelection()">
+        <i class="fas fa-times"></i> Clear Selection
+      </button>
     </div>
   </div>
-  <div class="leave-stat-card today">
-    <div class="leave-stat-card__icon"><i class="fas fa-calendar-day"></i></div>
-    <div class="leave-stat-card__info">
-      <span class="leave-stat-card__value">18</span>
-      <span class="leave-stat-card__label">On Leave Today</span>
+
+  <!-- Main Table Card for Requests (Pending, Approved, Rejected) -->
+  <div class="table-card" *ngIf="activeTab !== 'balance'">
+    <div class="table-responsive">
+      <table class="leave-table">
+        <thead>
+          <tr>
+            <th class="checkbox-col">
+              <label class="custom-chk">
+                <input type="checkbox" [checked]="isAllSelected" (change)="toggleSelectAll()" />
+                <span class="chk-box"></span>
+              </label>
+            </th>
+            <th>EMPLOYEE</th>
+            <th>DEPARTMENT</th>
+            <th>LEAVE TYPE</th>
+            <th>DURATION</th>
+            <th>DAYS</th>
+            <th>REASON</th>
+            <th>APPLIED ON</th>
+            <th class="text-center">STATUS</th>
+            <th class="text-right">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredRequests" [class.row-selected]="isRowSelected(item.id)"
+            (click)="viewDetails(item)">
+            <td class="checkbox-col" (click)="$event.stopPropagation()">
+              <label class="custom-chk">
+                <input type="checkbox" [checked]="isRowSelected(item.id)" (change)="toggleSelectRow(item.id, $event)" />
+                <span class="chk-box"></span>
+              </label>
+            </td>
+            <td>
+              <div class="employee-cell">
+                <img [src]="item.avatar || 'assets/images/default-avatar.png'" class="emp-avatar" alt="Avatar" />
+                <div class="emp-meta">
+                  <span class="emp-name">{{ item.employeeName }}</span>
+                  <span class="emp-code">{{ item.employeeId }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-chip">{{ item.department }}</span>
+            </td>
+            <td>
+              <span class="type-badge">{{ item.leaveType }}</span>
+            </td>
+            <td>
+              <div class="date-range-cell">
+                <span class="date-range-text">
+                  <i class="far fa-calendar-alt mr-1"></i> {{ item.fromDate }} &rarr; {{ item.toDate }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <span class="days-pill">{{ item.days }} {{ item.days === 1 ? 'Day' : 'Days' }}</span>
+            </td>
+            <td>
+              <span class="reason-snippet" [title]="item.reason">{{ item.reason }}</span>
+            </td>
+            <td class="text-muted text-sm">
+              {{ item.appliedOn }}
+            </td>
+            <td class="text-center">
+              <span class="status-badge" [ngClass]="getStatusClass(item.status)">
+                {{ item.status }}
+              </span>
+            </td>
+            <td class="text-right" (click)="$event.stopPropagation()">
+              <div class="action-btn-group">
+                <button *ngIf="item.status === 'PENDING'" class="action-btn btn-approve" title="Approve Leave"
+                  (click)="approveLeave(item, $event)">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button *ngIf="item.status === 'PENDING'" class="action-btn btn-reject" title="Reject Leave"
+                  (click)="openRejectModal(item, $event)">
+                  <i class="fas fa-times"></i>
+                </button>
+                <button class="action-btn btn-view" title="View Request Details" (click)="viewDetails(item)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="filteredRequests.length === 0">
+            <td colspan="10">
+              <div class="empty-state">
+                <i class="fas fa-umbrella-beach"></i>
+                <h4>No {{ activeTab }} leave requests found</h4>
+                <p>Try modifying your search query or leave type filter.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: LEAVE BALANCE TABLE -->
+  <div class="table-card" *ngIf="activeTab === 'balance'">
+    <div class="table-responsive">
+      <table class="leave-table">
+        <thead>
+          <tr>
+            <th>EMPLOYEE</th>
+            <th>DEPARTMENT</th>
+            <th class="text-center">ANNUAL LEAVE (TAKEN / TOTAL)</th>
+            <th class="text-center">SICK LEAVE (TAKEN / TOTAL)</th>
+            <th class="text-center">CASUAL LEAVE (TAKEN / TOTAL)</th>
+            <th class="text-center">REMAINING BALANCE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lb of filteredBalances">
+            <td>
+              <div class="employee-cell">
+                <img [src]="lb.avatar || 'assets/images/default-avatar.png'" class="emp-avatar" alt="Avatar" />
+                <div class="emp-meta">
+                  <span class="emp-name">{{ lb.employeeName }}</span>
+                  <span class="emp-code">{{ lb.employeeId }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-chip">{{ lb.department }}</span>
+            </td>
+            <td class="text-center">
+              <span class="balance-pill">{{ lb.annualTaken }} / {{ lb.annualTotal }} Days</span>
+            </td>
+            <td class="text-center">
+              <span class="balance-pill">{{ lb.sickTaken }} / {{ lb.sickTotal }} Days</span>
+            </td>
+            <td class="text-center">
+              <span class="balance-pill">{{ lb.casualTaken }} / {{ lb.casualTotal }} Days</span>
+            </td>
+            <td class="text-center">
+              <span class="remaining-badge">{{ lb.totalRemaining }} Days Available</span>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="filteredBalances.length === 0">
+            <td colspan="6">
+              <div class="empty-state">
+                <i class="fas fa-umbrella-beach"></i>
+                <h4>No leave balances found</h4>
+                <p>Try adjusting your search criteria.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
-<div class="table-card">
-  <app-data-table 
-    [columns]="columns" 
-    [data]="leaveRequests" 
-    [pageSize]="10" 
-    [actions]="tableActions" 
-    (onActionClick)="onAction($event)">
-  </app-data-table>
+<!-- LEAVE DETAILS MODAL -->
+<div class="modal-backdrop" *ngIf="showDetailsModal && selectedRequest" (click)="showDetailsModal = false">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title-box">
+        <img [src]="selectedRequest.avatar || 'assets/images/default-avatar.png'" class="modal-avatar" alt="Avatar" />
+        <div>
+          <h2 class="modal-title">{{ selectedRequest.employeeName }}</h2>
+          <span class="modal-sub">{{ selectedRequest.employeeId }} &bull; {{ selectedRequest.department }}</span>
+        </div>
+      </div>
+      <button class="close-btn" (click)="showDetailsModal = false">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="d-label">Leave Type</span>
+          <span class="d-val type-badge">{{ selectedRequest.leaveType }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="d-label">Status</span>
+          <span class="d-val status-badge" [ngClass]="getStatusClass(selectedRequest.status)">
+            {{ selectedRequest.status }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <span class="d-label">Date Range</span>
+          <span class="d-val fw-600 color-dark">
+            <i class="far fa-calendar-alt text-muted mr-1"></i> {{ selectedRequest.fromDate }} to {{
+            selectedRequest.toDate }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <span class="d-label">Total Duration</span>
+          <span class="d-val days-pill">{{ selectedRequest.days }} Days</span>
+        </div>
+
+        <div class="detail-item full-width">
+          <span class="d-label">Reason Submitted</span>
+          <p class="reason-box">{{ selectedRequest.reason }}</p>
+        </div>
+
+        <div class="detail-item full-width"
+          *ngIf="selectedRequest.status === 'REJECTED' && selectedRequest.rejectionReason">
+          <span class="d-label text-danger">Rejection Remarks</span>
+          <p class="rejection-box">{{ selectedRequest.rejectionReason }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button *ngIf="selectedRequest.status === 'PENDING'" class="btn btn-approve-lg"
+        (click)="approveLeave(selectedRequest)">
+        <i class="fas fa-check"></i> Approve Application
+      </button>
+      <button *ngIf="selectedRequest.status === 'PENDING'" class="btn btn-reject-lg"
+        (click)="openRejectModal(selectedRequest); showDetailsModal = false">
+        <i class="fas fa-times"></i> Reject Application
+      </button>
+      <button class="btn btn-close-lg" (click)="showDetailsModal = false">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- REJECT REASON MODAL -->
+<div class="modal-backdrop" *ngIf="showRejectModal" (click)="showRejectModal = false">
+  <div class="modal-card sm-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title text-danger"><i class="fas fa-times-circle mr-1"></i> Reject Leave Request</h3>
+      <button class="close-btn" (click)="showRejectModal = false"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-sub mb-3">Please specify the reason for rejecting {{ rejectingRecord?.employeeName }}'s leave
+        request:</p>
+      <textarea class="form-textarea" rows="3" placeholder="Enter rejection remarks..."
+        [(ngModel)]="rejectReasonInput"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-close-lg" (click)="showRejectModal = false">Cancel</button>
+      <button class="btn btn-reject-lg" (click)="confirmReject()">Confirm Rejection</button>
+    </div>
+  </div>
 </div>

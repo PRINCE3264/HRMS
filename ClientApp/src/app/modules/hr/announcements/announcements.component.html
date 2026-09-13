@@ -1,35 +1,142 @@
-<app-page-header title="Announcements" subtitle="Company-wide announcements and updates" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Announcements'}]">
-      <button class="btn btn--primary"><i class="fas fa-plus"></i> New Announcement</button>
-    </app-page-header>
-    <div class="announce-list">
-      <div class="announce-card" *ngFor="let a of announcements">
-        <div class="announce-priority" [class]="a.priority.toLowerCase()"></div>
-        <div class="announce-body">
-          <div class="announce-header">
-            <div class="announce-icon" [style.background]="a.iconBg">
-              <i [class]="a.icon" [style.color]="a.iconColor"></i>
-            </div>
-            <div class="announce-meta">
-              <h3>{{ a.title }}</h3>
-              <span class="announce-info">
-                <i class="fas fa-user"></i> {{ a.author }} &middot;
-                <i class="fas fa-calendar"></i> {{ a.date }} &middot;
-                <i class="fas fa-tag"></i> {{ a.category }}
-              </span>
-            </div>
-            <span class="announce-priority-badge" [class]="a.priority.toLowerCase()">{{ a.priority }}</span>
-          </div>
-          <p class="announce-content">{{ a.content }}</p>
-          <div class="announce-footer">
-            <div class="announce-audience">
-              <i class="fas fa-users"></i> {{ a.audience }}
-            </div>
-            <div class="announce-stats">
-              <span><i class="fas fa-eye"></i> {{ a.views }} views</span>
-              <span><i class="fas fa-heart"></i> {{ a.likes }}</span>
-              <span><i class="fas fa-comment"></i> {{ a.comments }}</span>
-            </div>
-          </div>
+<app-page-header title="Announcements" subtitle="Company-wide announcements, policy updates, and team notices" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Announcements'}]">
+  <button class="btn btn--primary" (click)="openModal()"><i class="fas fa-plus"></i> New Announcement</button>
+</app-page-header>
+
+<!-- Metrics Overview Cards (Executive Light Cards) -->
+<div class="announce-stats">
+  <div class="a-stat metric-blue">
+    <div class="a-icon"><i class="fas fa-bullhorn"></i></div>
+    <div class="a-info">
+      <span class="a-label">Total Notices</span>
+      <span class="a-val">{{ announcements.length }}</span>
+      <span class="a-sub"><i class="fas fa-broadcast-tower"></i> Company Broadcasts</span>
+    </div>
+  </div>
+
+  <div class="a-stat metric-emerald">
+    <div class="a-icon"><i class="fas fa-thumbtack"></i></div>
+    <div class="a-info">
+      <span class="a-label">Pinned Notices</span>
+      <span class="a-val">{{ pinnedCount }}</span>
+      <span class="a-sub"><i class="fas fa-star"></i> Highlighted on Top</span>
+    </div>
+  </div>
+
+  <div class="a-stat metric-violet">
+    <div class="a-icon"><i class="fas fa-exclamation-circle"></i></div>
+    <div class="a-info">
+      <span class="a-label">Important Updates</span>
+      <span class="a-val">{{ importantCount }}</span>
+      <span class="a-sub"><i class="fas fa-shield-alt"></i> Action Required</span>
+    </div>
+  </div>
+
+  <div class="a-stat metric-amber">
+    <div class="a-icon"><i class="fas fa-eye"></i></div>
+    <div class="a-info">
+      <span class="a-label">Employee Reach</span>
+      <span class="a-val">96.4%</span>
+      <span class="a-sub"><i class="fas fa-check-circle"></i> Active Read Receipts</span>
+    </div>
+  </div>
+</div>
+
+<!-- Filters Toolbar -->
+<div class="announce-filters">
+  <button class="filter-btn" [class.active]="selectedFilter === 'All'" (click)="selectedFilter = 'All'">All</button>
+  <button class="filter-btn" [class.active]="selectedFilter === 'Important'" (click)="selectedFilter = 'Important'">Important</button>
+  <button class="filter-btn" [class.active]="selectedFilter === 'General'" (click)="selectedFilter = 'General'">General</button>
+  <button class="filter-btn" [class.active]="selectedFilter === 'HR'" (click)="selectedFilter = 'HR'">HR</button>
+  <button class="filter-btn" [class.active]="selectedFilter === 'Events'" (click)="selectedFilter = 'Events'">Events</button>
+</div>
+
+<!-- Announcement Cards List -->
+<div class="announce-list" *ngIf="filteredAnnouncements.length > 0; else emptyAnnouncements">
+  <div class="announce-item" *ngFor="let item of filteredAnnouncements" [class.pinned]="item.pinned">
+    <div class="announce-item__pinned" *ngIf="item.pinned">
+      <i class="fas fa-thumbtack"></i> Pinned Announcement
+    </div>
+    <div class="announce-item__header">
+      <div class="announce-item__icon" [style.background]="item.color">
+        <i [class]="item.icon"></i>
+      </div>
+      <div class="announce-item__meta">
+        <h3>{{ item.title }}</h3>
+        <div class="announce-item__info">
+          <span><i class="fas fa-user-circle"></i> {{ item.author }}</span>
+          <span><i class="fas fa-calendar-alt"></i> {{ item.date }}</span>
+          <span class="announce-tag" [style.background]="item.tagColor">{{ item.tag }}</span>
         </div>
       </div>
     </div>
+    <p class="announce-item__body">{{ item.content }}</p>
+    <div class="announce-item__footer">
+      <div class="announce-item__stats">
+        <span><i class="fas fa-eye"></i> {{ item.views }} Views</span>
+        <span><i class="fas fa-comments"></i> {{ item.comments }} Comments</span>
+      </div>
+      <div class="announce-item__actions">
+        <button class="action-btn action-btn--danger" title="Delete Announcement" (click)="deleteAnnouncement(item.id)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyAnnouncements>
+  <div class="empty-card">
+    <i class="fas fa-bullhorn empty-icon"></i>
+    <h3>No Announcements Found</h3>
+    <p>There are no published notices in this category.</p>
+  </div>
+</ng-template>
+
+<!-- Modal: New Announcement -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-bullhorn"></i> Publish New Announcement</h3>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Announcement Title *</label>
+        <input type="text" [(ngModel)]="newAnnouncement.title" placeholder="e.g. Q3 Town Hall & Performance Reviews" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select [(ngModel)]="newAnnouncement.category">
+            <option value="General">General</option>
+            <option value="HR">HR</option>
+            <option value="Events">Events</option>
+            <option value="Important">Important</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Priority Level</label>
+          <select [(ngModel)]="newAnnouncement.priority">
+            <option value="High">High (Red Icon)</option>
+            <option value="Medium">Medium (Purple Icon)</option>
+            <option value="Low">Low (Green Icon)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Announcement Content *</label>
+        <textarea rows="3" [(ngModel)]="newAnnouncement.content" placeholder="Type announcement details here..."></textarea>
+      </div>
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="newAnnouncement.isPinned" />
+          <span>Pin this announcement to top of feed</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveAnnouncement()"><i class="fas fa-paper-plane"></i> Publish Notice</button>
+    </div>
+  </div>
+</div>

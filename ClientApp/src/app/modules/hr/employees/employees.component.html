@@ -1,115 +1,189 @@
-<app-page-header title="Employees" subtitle="Manage all employee records, profiles, and HR information"
-  [breadcrumbs]="[{label:'Dashboard',link:'/hr/dashboard'},{label:'Employees'}]">
-  <button class="btn btn--outline"><i class="fas fa-download"></i> Export</button>
-  <button class="btn btn--primary"><i class="fas fa-user-plus"></i> Add Employee</button>
-</app-page-header>
+<div class="employee-management-page">
 
-<!-- Metric Summary Cards -->
-<div class="emp-metrics">
-  <div class="emp-metric-card metric-blue">
-    <div class="metric-icon"><i class="fas fa-users"></i></div>
-    <div class="metric-body">
-      <span class="metric-val">{{ employees.length }}</span>
-      <span class="metric-lbl">Total Employees</span>
+  <!-- Top Page Header -->
+  <div class="top-nav-bar">
+    <div class="nav-left">
+      <nav class="breadcrumbs">
+        <a routerLink="/hr/dashboard">Dashboard</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current">Employees</span>
+      </nav>
+      <h1 class="page-title">Employee Management</h1>
+      <p class="page-subtitle">Manage all employees, view and update their information</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline-excel" (click)="exportExcel()">
+        <i class="fas fa-download"></i> Export Excel
+      </button>
+      <button class="btn btn-primary" routerLink="/hr/employees/add">
+        <i class="fas fa-plus"></i> Add Employee
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric KPI Cards Row (4 Cards) -->
+  <div class="metrics-grid">
+    
+    <div class="metric-card card-blue">
+      <div class="metric-icon"><i class="fas fa-users"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ totalEmployeesCount }}</span>
+        <span class="metric-lbl">Total Employees</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-emerald">
+      <div class="metric-icon"><i class="fas fa-user-check"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ activeEmployeesCount }}</span>
+        <span class="metric-lbl">Active Employees</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-rose">
+      <div class="metric-icon"><i class="fas fa-user-times"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ inactiveEmployeesCount }}</span>
+        <span class="metric-lbl">Inactive Employees</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-purple">
+      <div class="metric-icon"><i class="fas fa-building"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ departmentsCount }}</span>
+        <span class="metric-lbl">Departments</span>
+      </div>
     </div>
 
   </div>
-  <div class="emp-metric-card metric-emerald">
-    <div class="metric-icon"><i class="fas fa-user-check"></i></div>
-    <div class="metric-body">
-      <span class="metric-val">{{ activeCount }}</span>
-      <span class="metric-lbl">Active</span>
+
+  <!-- Search & Filter Bar -->
+  <div class="filter-card">
+    <div class="filter-bar">
+      
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search by name, email, ID..."
+          class="search-input"
+        />
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedDepartment" class="filter-select">
+          <option value="">All Departments</option>
+          <option *ngFor="let dept of departmentsList" [value]="dept">{{ dept }}</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedDesignation" class="filter-select">
+          <option value="">All Designations</option>
+          <option *ngFor="let desig of designationsList" [value]="desig">{{ desig }}</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedStatus" class="filter-select">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <button class="btn-reset" (click)="resetFilters()">
+        <i class="fas fa-sync-alt"></i> Reset
+      </button>
+
     </div>
   </div>
-  <div class="emp-metric-card metric-amber">
-    <div class="metric-icon"><i class="fas fa-user-clock"></i></div>
-    <div class="metric-body">
-      <span class="metric-val">{{ onLeaveCount }}</span>
-      <span class="metric-lbl">On Leave</span>
+
+  <!-- Data Table Card -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="employee-table">
+        <thead>
+          <tr>
+            <th class="chk-col">
+              <input type="checkbox" [(ngModel)]="selectAllChecked" (change)="toggleSelectAll()" class="custom-chk" />
+            </th>
+            <th>ID <i class="fas fa-sort sort-icon"></i></th>
+            <th>EMPLOYEE <i class="fas fa-sort sort-icon"></i></th>
+            <th>EMAIL <i class="fas fa-sort sort-icon"></i></th>
+            <th>DEPARTMENT <i class="fas fa-sort sort-icon"></i></th>
+            <th>DESIGNATION <i class="fas fa-sort sort-icon"></i></th>
+            <th>JOINING DATE <i class="fas fa-sort sort-icon"></i></th>
+            <th>STATUS <i class="fas fa-sort sort-icon"></i></th>
+            <th class="text-center">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let emp of filteredEmployees">
+            <td class="chk-col">
+              <input type="checkbox" [(ngModel)]="emp.selected" class="custom-chk" />
+            </td>
+            <td>
+              <span class="emp-id-text">{{ emp.employeeId }}</span>
+            </td>
+            <td>
+              <div class="emp-user-cell">
+                <div class="avatar-circle">
+                  <img *ngIf="emp.avatar" [src]="emp.avatar" [alt]="emp.name" />
+                  <span *ngIf="!emp.avatar" class="avatar-initials">{{ emp.name.charAt(0) }}</span>
+                </div>
+                <div class="user-details">
+                  <span class="user-name">{{ emp.name }}</span>
+                  <span class="user-sub-email">{{ emp.email }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="email-text">{{ emp.email }}</span>
+            </td>
+            <td>
+              <span class="dept-text">{{ emp.department }}</span>
+            </td>
+            <td>
+              <span class="desig-text">{{ emp.designation }}</span>
+            </td>
+            <td>
+              <span class="date-text">{{ emp.joiningDate }}</span>
+            </td>
+            <td>
+              <span class="status-pill" [class.inactive]="emp.status === 'Inactive'">
+                <span class="status-dot"></span> {{ emp.status }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="action-btn-group">
+                <button class="circle-btn btn-view" title="View Details" (click)="onView(emp)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="circle-btn btn-edit" title="Edit Employee" (click)="onEdit(emp)">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="circle-btn btn-delete" title="Delete Employee" (click)="onDelete(emp)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredEmployees.length === 0">
+            <td colspan="9" class="empty-table-cell">
+              <i class="fas fa-search empty-icon"></i>
+              <p>No employees found matching your filters.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  <div class="emp-metric-card metric-red">
-    <div class="metric-icon"><i class="fas fa-user-times"></i></div>
-    <div class="metric-body">
-      <span class="metric-val">{{ inactiveCount }}</span>
-      <span class="metric-lbl">Inactive</span>
-    </div>
-  </div>
-</div>
 
-<!-- Syncfusion Grid -->
-<div class="emp-grid-wrapper">
-  <ejs-grid #grid [dataSource]="employees" [toolbar]="toolbar" [allowPaging]="true" [pageSettings]="pageSettings"
-    [allowSorting]="true" [allowFiltering]="true" [filterSettings]="filterSettings" [allowExcelExport]="true"
-    [allowPdfExport]="true" [showColumnChooser]="true" [allowResizing]="true" [allowReordering]="true"
-    (toolbarClick)="toolbarClick($event)" gridLines="Horizontal" height="auto">
-
-    <e-columns>
-
-      <!-- Employee ID -->
-      <e-column field="employeeId" headerText="Emp ID" width="110" [isPrimaryKey]="true">
-        <ng-template #template let-data>
-          <span class="emp-id">{{ data.employeeId }}</span>
-        </ng-template>
-      </e-column>
-
-      <!-- Name + Avatar -->
-      <e-column field="name" headerText="Employee" width="220">
-        <ng-template #template let-data>
-          <div class="emp-name-cell">
-            <div class="emp-avatar" [style.background]="getAvatarColor(data.department)">{{ data.avatar }}</div>
-            <div>
-              <div class="emp-name">{{ data.name }}</div>
-              <div class="emp-email">{{ data.email }}</div>
-            </div>
-          </div>
-        </ng-template>
-      </e-column>
-
-      <!-- Department -->
-      <e-column field="department" headerText="Department" width="140">
-        <ng-template #template let-data>
-          <span class="dept-chip" [style.background]="getAvatarColor(data.department) + '18'"
-            [style.color]="getAvatarColor(data.department)">
-            {{ data.department }}
-          </span>
-        </ng-template>
-      </e-column>
-
-      <!-- Designation -->
-      <e-column field="designation" headerText="Designation" width="180"></e-column>
-
-      <!-- Phone -->
-      <e-column field="phone" headerText="Phone" width="150"></e-column>
-
-      <!-- Joining Date -->
-      <e-column field="joiningDate" headerText="Joined" width="120" type="date" format="dd MMM yyyy"></e-column>
-
-      <!-- Salary -->
-      <e-column field="salary" headerText="Salary" width="120" format="C0" textAlign="Right">
-        <ng-template #template let-data>
-          <span class="salary-val">$ {{ data.salary | number }}</span>
-        </ng-template>
-      </e-column>
-
-      <!-- Status -->
-      <e-column field="status" headerText="Status" width="120">
-        <ng-template #template let-data>
-          <span class="status-badge" [ngClass]="getStatusClass(data.status)">{{ data.status }}</span>
-        </ng-template>
-      </e-column>
-
-      <!-- Actions -->
-      <e-column headerText="Actions" width="120" [allowSorting]="false" [allowFiltering]="false">
-        <ng-template #template let-data>
-          <div class="action-btns">
-            <button class="act-btn act-view" title="View"><i class="fas fa-eye"></i></button>
-            <button class="act-btn act-edit" title="Edit"><i class="fas fa-edit"></i></button>
-            <button class="act-btn act-del" title="Delete"><i class="fas fa-trash"></i></button>
-          </div>
-        </ng-template>
-      </e-column>
-
-    </e-columns>
-  </ejs-grid>
 </div>

@@ -1,14 +1,16 @@
 <div class="kpi-container">
-  <!-- Page Header -->
+  <!-- Page Header Bar -->
   <div class="kpi-header-bar">
     <div class="header-titles">
-      <div class="title-with-back">
-        <div>
-          <h1 class="page-title">Team KPIs & Performance</h1>
-          <p class="subtitle">Monitor team deliverables, productivity, and quarterly goal achievement</p>
-        </div>
+      <div class="breadcrumbs">
+        <a routerLink="/tl/dashboard" class="crumb-link">Dashboard</a>
+        <i class="fas fa-chevron-right breadcrumb-sep"></i>
+        <span class="active-crumb">Team KPIs & Performance</span>
       </div>
+      <h1 class="page-title">Team KPIs & Performance</h1>
+      <p class="subtitle">Monitor team deliverables, sprint velocity, quarterly goals, and member ratings</p>
     </div>
+
     <div class="header-actions">
       <div class="period-select-wrapper">
         <i class="far fa-calendar-alt select-icon"></i>
@@ -18,42 +20,48 @@
           <option value="Q1 2026">Q1 2026</option>
         </select>
       </div>
-      <div class="action-icon-group">
-        <button class="btn-action-icon btn-pdf" title="Export PDF"><i class="fas fa-file-pdf"></i></button>
-        <button class="btn-action-icon btn-excel" title="Export Excel"><i class="fas fa-file-excel"></i></button>
-        <button class="btn-action-icon btn-print" title="Print KPI Report"><i class="fas fa-print"></i></button>
-      </div>
+
+      <button class="btn btn-outline-excel" (click)="exportExcel()" title="Export Excel">
+        <i class="fas fa-file-excel"></i> Export Excel
+      </button>
+
+      <button class="btn btn-primary-action" (click)="openKpiModal()">
+        <i class="fas fa-plus-circle"></i> Set Team KPI
+      </button>
     </div>
   </div>
 
-  <!-- Summary Health Banner Row -->
+  <!-- Executive Health Summary Cards Row -->
   <div class="health-summary-row">
+    <!-- Card 1: Health Score -->
     <div class="summary-card card-health">
       <div class="card-icon-box bg-blue-light">
         <i class="fas fa-chart-line"></i>
       </div>
       <div class="card-info">
-        <span class="card-lbl">Overall Team Health</span>
+        <span class="card-lbl">Overall Team Health Score</span>
         <div class="card-val-row">
           <span class="card-val text-blue">{{ overallHealthScore }}%</span>
-          <span class="val-tag tag-success">+4.2% vs last month</span>
+          <span class="val-tag tag-success"><i class="fas fa-arrow-up"></i> +4.2% vs last month</span>
         </div>
       </div>
     </div>
 
+    <!-- Card 2: KPIs Exceeded -->
     <div class="summary-card card-exceeded">
       <div class="card-icon-box bg-green-light">
         <i class="fas fa-award"></i>
       </div>
       <div class="card-info">
-        <span class="card-lbl">KPIs Exceeded</span>
+        <span class="card-lbl">KPIs Met / Exceeded</span>
         <div class="card-val-row">
           <span class="card-val text-green">{{ exceededCount }} / {{ kpis.length }}</span>
-          <span class="val-tag tag-green">Target Met</span>
+          <span class="val-tag tag-green"><i class="fas fa-check-circle"></i> Target Met</span>
         </div>
       </div>
     </div>
 
+    <!-- Card 3: KPIs At Risk -->
     <div class="summary-card card-at-risk">
       <div class="card-icon-box bg-amber-light">
         <i class="fas fa-exclamation-triangle"></i>
@@ -62,26 +70,61 @@
         <span class="card-lbl">KPIs Needing Attention</span>
         <div class="card-val-row">
           <span class="card-val text-amber">{{ atRiskCount }}</span>
-          <span class="val-tag tag-amber">Review Needed</span>
+          <span class="val-tag tag-amber"><i class="fas fa-shield-alt"></i> {{ atRiskCount === 0 ? 'All Clear' : 'Review Needed' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Avg Team Rating -->
+    <div class="summary-card card-rating">
+      <div class="card-icon-box bg-purple-light">
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="card-info">
+        <span class="card-lbl">Avg. Member Rating</span>
+        <div class="card-val-row">
+          <span class="card-val text-purple">{{ avgTeamRating }} / 5.0</span>
+          <span class="val-tag tag-purple"><i class="fas fa-crown"></i> High Performer</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- KPI Cards Grid -->
-  <div class="section-title-row">
-    <h2 class="section-heading">Key Metric Overview</h2>
+  <!-- Filter & Search Toolbar -->
+  <div class="kpi-filter-toolbar">
+    <div class="search-box-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" class="search-input" [(ngModel)]="searchTerm" placeholder="Search KPI metrics or team members..." />
+    </div>
+
+    <div class="category-pills">
+      <button class="cat-pill" [class.active]="selectedCategory === 'ALL'" (click)="selectedCategory = 'ALL'">
+        All Categories
+      </button>
+      <button class="cat-pill" [class.active]="selectedCategory === 'DELIVERY'" (click)="selectedCategory = 'DELIVERY'">
+        Delivery
+      </button>
+      <button class="cat-pill" [class.active]="selectedCategory === 'EFFICIENCY'" (click)="selectedCategory = 'EFFICIENCY'">
+        Efficiency
+      </button>
+      <button class="cat-pill" [class.active]="selectedCategory === 'QUALITY'" (click)="selectedCategory = 'QUALITY'">
+        Quality
+      </button>
+    </div>
+  </div>
+
+  <!-- Key Metric Overview Grid (Card UI) -->
+  <div class="section-header">
+    <h2 class="section-heading"><i class="fas fa-bullseye"></i> Key Metric Cards</h2>
+    <span class="metric-count-pill">{{ filteredKpis.length }} Metrics Active</span>
   </div>
 
   <div class="kpi-grid">
-    <div class="kpi-card" *ngFor="let kpi of kpis">
+    <div class="kpi-card" *ngFor="let kpi of filteredKpis">
       <div class="card-top">
+        <span class="category-badge">{{ kpi.category }}</span>
         <div class="kpi-icon" [style.background]="kpi.iconBg" [style.color]="kpi.iconColor">
           <i [class]="kpi.icon"></i>
-        </div>
-        <div class="kpi-trend" [class.up]="kpi.trend > 0" [class.down]="kpi.trend < 0">
-          <i [class]="kpi.trend > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
-          {{ kpi.trend > 0 ? '+' : '' }}{{ kpi.trend }}%
         </div>
       </div>
 
@@ -90,12 +133,16 @@
         <div class="kpi-value-row">
           <span class="current-val">{{ kpi.current }}</span>
           <span class="target-val">/ {{ kpi.target }}{{ kpi.unit }}</span>
+          <span class="kpi-trend" [class.up]="kpi.trend > 0" [class.down]="kpi.trend < 0">
+            <i [class]="kpi.trend > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+            {{ kpi.trend > 0 ? '+' : '' }}{{ kpi.trend }}%
+          </span>
         </div>
       </div>
 
       <div class="kpi-footer">
         <div class="progress-info">
-          <span class="progress-lbl">Achievement</span>
+          <span class="progress-lbl">Goal Progress</span>
           <span class="progress-pct" [style.color]="getProgressColor(getProgressPercent(kpi))">
             {{ getProgressPercent(kpi) }}%
           </span>
@@ -109,12 +156,12 @@
 
   <!-- Performance Trends & Member Breakdown Grid -->
   <div class="kpi-detail-grid">
-    <!-- Monthly Trends Table -->
+    <!-- Quarterly Trends Card -->
     <div class="content-card">
       <div class="card-header-bar">
         <div>
-          <h3 class="card-title">Quarterly Trend Analysis</h3>
-          <p class="card-sub">Month-over-month performance progression</p>
+          <h3 class="card-title"><i class="fas fa-chart-bar text-blue"></i> Quarterly Trend Analysis</h3>
+          <p class="card-sub">Month-over-month progression across team targets</p>
         </div>
       </div>
       <div class="table-responsive">
@@ -153,16 +200,16 @@
       </div>
     </div>
 
-    <!-- Member KPI Contribution -->
+    <!-- Member KPI Contribution Card -->
     <div class="content-card">
       <div class="card-header-bar">
         <div>
-          <h3 class="card-title">Individual KPI Scores</h3>
-          <p class="card-sub">Assigned member metric breakdown</p>
+          <h3 class="card-title"><i class="fas fa-users text-purple"></i> Team Member KPI Performance</h3>
+          <p class="card-sub">Individual completion rates and quality ratings</p>
         </div>
       </div>
       <div class="members-kpi-list">
-        <div class="member-kpi-item" *ngFor="let member of memberKpis">
+        <div class="member-kpi-item" *ngFor="let member of filteredMemberKpis">
           <div class="member-info-col">
             <div class="avatar-circle">
               {{ getInitial(member.name) }}
@@ -172,6 +219,7 @@
               <span class="m-role">{{ member.role }}</span>
             </div>
           </div>
+
           <div class="member-stats-col">
             <div class="m-stat">
               <span class="stat-lbl">Completion</span>
@@ -186,6 +234,65 @@
             </span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Set New Team KPI Modal Dialog -->
+  <div class="modal-backdrop" *ngIf="showModal" (click)="closeKpiModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="modal-icon-badge"><i class="fas fa-bullseye"></i></div>
+          <div>
+            <h3>Set New Team KPI Target</h3>
+            <p>Define deliverable metrics and targets for your team</p>
+          </div>
+        </div>
+        <button class="btn-close" (click)="closeKpiModal()"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">KPI Title / Metric Name</label>
+          <input type="text" class="form-control" [(ngModel)]="newKpi.label" placeholder="e.g. Code Review Speed or Sprint Completion Rate" />
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Target Value</label>
+            <input type="number" class="form-control" [(ngModel)]="newKpi.target" placeholder="100" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Current Value</label>
+            <input type="number" class="form-control" [(ngModel)]="newKpi.current" placeholder="85" />
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <select class="form-control" [(ngModel)]="newKpi.unit">
+              <option value="%">% (Percentage)</option>
+              <option value="hrs">hrs (Hours)</option>
+              <option value="tasks">tasks (Count)</option>
+              <option value="pts">pts (Points)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-control" [(ngModel)]="newKpi.category">
+              <option value="DELIVERY">Delivery</option>
+              <option value="EFFICIENCY">Efficiency</option>
+              <option value="QUALITY">Quality</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeKpiModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveKpi()"><i class="fas fa-check"></i> Save KPI</button>
       </div>
     </div>
   </div>

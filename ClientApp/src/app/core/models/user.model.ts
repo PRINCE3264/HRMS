@@ -16,6 +16,8 @@ export interface User {
   designation?: string;
   branch?: string;
   employeeId?: string;
+  phone?: string;
+  phoneNumber?: string;
   permissions: Permission[];
   token?: string;
 }

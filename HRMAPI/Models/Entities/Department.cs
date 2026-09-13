@@ -17,6 +17,9 @@ public class Department
     [MaxLength(500)]
     public string? Description { get; set; }
 
+    [MaxLength(500)]
+    public string? ImageUrl { get; set; }
+
     public Guid? HeadId { get; set; }
 
     public bool IsActive { get; set; } = true;

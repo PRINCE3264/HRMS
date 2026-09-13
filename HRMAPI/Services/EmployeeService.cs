@@ -103,6 +103,7 @@ public class EmployeeService : IEmployeeService
             Gender = ParseEnumNullable<Enums.Gender>(dto.Gender),
             MaritalStatus = ParseEnumNullable<Enums.MaritalStatus>(dto.MaritalStatus),
             Nationality = dto.Nationality,
+            Avatar = dto.Avatar,
             DepartmentId = dto.DepartmentId,
             DesignationId = dto.DesignationId,
             BranchId = dto.BranchId,

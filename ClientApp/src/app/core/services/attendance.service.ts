@@ -56,6 +56,57 @@ export class AttendanceService extends BaseApiService {
       .pipe(map(res => this.unwrap<any>(res)));
   }
 
+  private defaultShiftsList = [
+    {
+      id: '1',
+      name: 'Morning Shift',
+      code: 'SH-01',
+      startTime: '07:00 AM',
+      endTime: '04:00 PM',
+      breakDurationMinutes: 60,
+      lateGracePeriodMinutes: 15,
+      workingDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+      assignedEmployees: 86,
+      status: 'ACTIVE',
+      themeClass: 'theme-morning',
+      icon: 'fas fa-sun',
+      color: '#f59e0b',
+      description: 'Morning operational shift operating from 07:00 AM to 04:00 PM'
+    },
+    {
+      id: '2',
+      name: 'General Shift',
+      code: 'SH-02',
+      startTime: '09:00 AM',
+      endTime: '06:00 PM',
+      breakDurationMinutes: 60,
+      lateGracePeriodMinutes: 15,
+      workingDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+      assignedEmployees: 167,
+      status: 'ACTIVE',
+      themeClass: 'theme-general',
+      icon: 'fas fa-building',
+      color: '#4f46e5',
+      description: 'Standard corporate shift operating from 09:00 AM to 06:00 PM'
+    }
+  ];
+
+  getLocalShifts(): any[] {
+    const stored = localStorage.getItem('hrm_shifts');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    localStorage.setItem('hrm_shifts', JSON.stringify(this.defaultShiftsList));
+    return [...this.defaultShiftsList];
+  }
+
+  saveLocalShifts(shifts: any[]): void {
+    localStorage.setItem('hrm_shifts', JSON.stringify(shifts));
+  }
+
   getShifts(): Observable<Shift[]> {
     return this.http.get<any>(`${this.apiBase}/shifts`)
       .pipe(map(res => this.unwrap<Shift[]>(res)));

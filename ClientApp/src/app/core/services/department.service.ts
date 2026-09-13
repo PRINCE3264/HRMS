@@ -32,6 +32,13 @@ export class DepartmentService extends BaseApiService {
       .pipe(map(res => true));
   }
 
+  uploadImage(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<any>(`${this.apiBase}/departments/upload-image`, formData)
+      .pipe(map(res => this.unwrap<{ imageUrl: string }>(res)));
+  }
+
   getDesignations(): Observable<Designation[]> {
     return this.http.get<any>(`${this.apiBase}/designations`)
       .pipe(map(res => this.unwrap<Designation[]>(res)));
@@ -72,13 +79,30 @@ export class DepartmentService extends BaseApiService {
       .pipe(map(res => true));
   }
 
+  uploadBranchImage(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<any>(`${this.apiBase}/branches/upload-image`, formData)
+      .pipe(map(res => this.unwrap<{ imageUrl: string }>(res)));
+  }
+
   getTeams(): Observable<Team[]> {
     return this.http.get<any>(`${this.apiBase}/teams`)
       .pipe(map(res => this.unwrap<Team[]>(res)));
   }
 
+  getTeamById(id: string): Observable<Team> {
+    return this.http.get<any>(`${this.apiBase}/teams/${id}`)
+      .pipe(map(res => this.unwrap<Team>(res)));
+  }
+
   createTeam(data: Partial<Team>): Observable<Team> {
     return this.http.post<any>(`${this.apiBase}/teams`, data)
+      .pipe(map(res => this.unwrap<Team>(res)));
+  }
+
+  updateTeam(id: string, data: Partial<Team>): Observable<Team> {
+    return this.http.put<any>(`${this.apiBase}/teams/${id}`, data)
       .pipe(map(res => this.unwrap<Team>(res)));
   }
 

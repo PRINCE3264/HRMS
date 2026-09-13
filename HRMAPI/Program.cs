@@ -15,6 +15,11 @@ using HRMAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ============ Ensure wwwroot exists (static file uploads) ============
+var webRoot = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
+Directory.CreateDirectory(webRoot);
+builder.WebHost.UseWebRoot(webRoot);
+
 // ============ Serilog ============
 var logsPath = Path.Combine(builder.Environment.ContentRootPath, "Logs");
 Log.Logger = new LoggerConfiguration()

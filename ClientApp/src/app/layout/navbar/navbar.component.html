@@ -1,87 +1,69 @@
 <header class="navbar">
-      <div class="navbar__left">
-        <button class="navbar__menu-btn" (click)="toggleMobile()">
-          <i class="fas fa-bars"></i>
-        </button>
-        <button class="navbar__collapse-btn desktop-only" (click)="toggleSidebar()">
-          <i class="fas" [class.fa-indent]="collapsed" [class.fa-outdent]="!collapsed"></i>
-        </button>
-        <div class="navbar__search desktop-only">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search employees, departments..." [(ngModel)]="searchTerm">
+  <div class="navbar__left">
+    <button class="navbar__menu-btn" (click)="toggleMobile()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <button class="navbar__collapse-btn desktop-only" (click)="toggleSidebar()">
+      <i class="fas" [class.fa-indent]="collapsed" [class.fa-outdent]="!collapsed"></i>
+    </button>
+    <div class="navbar__search desktop-only">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search employees, departments..." [(ngModel)]="searchTerm">
+    </div>
+  </div>
+
+  <div class="navbar__right">
+    <button class="navbar__icon-btn" title="Notifications" (click)="showNotifications = !showNotifications">
+      <i class="fas fa-bell"></i>
+      <span class="navbar__badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+    </button>
+
+    <div class="navbar__notifications-dropdown" *ngIf="showNotifications">
+      <div class="dropdown-header">
+        <h4>Notifications</h4>
+        <button (click)="markAllRead()">Mark all read</button>
+      </div>
+      <div class="dropdown-body">
+        <div class="notification-item" *ngFor="let n of notifications" [class.unread]="!n.isRead"
+          (click)="onNotificationClick(n)">
+          <i class="notification-icon" [class]="getNotificationIcon(n.type)"></i>
+          <div class="notification-content">
+            <p>{{ n.message }}</p>
+            <span>{{ n.createdAt }}</span>
+          </div>
+        </div>
+        <div class="notification-empty" *ngIf="!notifications.length">
+          <i class="fas fa-bell-slash"></i>
+          <p>No notifications</p>
         </div>
       </div>
+    </div>
 
-      <div class="navbar__right">
-        <!-- Interactive Demo Role Switcher -->
-        <div class="navbar__role-switch" (click)="showRoleSelector = !showRoleSelector">
-          <span class="role-switch__badge" [attr.data-role]="user?.role">
-            <i class="fas fa-user-shield"></i> {{ user?.role }}
-          </span>
-          <i class="fas fa-chevron-down role-switch__icon"></i>
-          
-          <div class="navbar__role-dropdown" *ngIf="showRoleSelector">
-            <div class="role-dropdown__header">Switch Active Role (RBAC Demo)</div>
-            <button *ngFor="let r of availableRoles" 
-                    class="role-dropdown__item" 
-                    [class.active]="user?.role === r"
-                    (click)="switchRole(r); $event.stopPropagation()">
-              <span class="role-pill" [attr.data-role]="r">{{ r }}</span>
-              <i class="fas fa-check" *ngIf="user?.role === r"></i>
-            </button>
-          </div>
-        </div>
-
-        <button class="navbar__icon-btn" title="Notifications" (click)="showNotifications = !showNotifications">
-          <i class="fas fa-bell"></i>
-          <span class="navbar__badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
-        </button>
-
-        <div class="navbar__notifications-dropdown" *ngIf="showNotifications">
-          <div class="dropdown-header">
-            <h4>Notifications</h4>
-            <button (click)="markAllRead()">Mark all read</button>
-          </div>
-          <div class="dropdown-body">
-            <div class="notification-item" *ngFor="let n of notifications" [class.unread]="!n.isRead" (click)="onNotificationClick(n)">
-              <i class="notification-icon" [class]="getNotificationIcon(n.type)"></i>
-              <div class="notification-content">
-                <p>{{ n.message }}</p>
-                <span>{{ n.createdAt }}</span>
-              </div>
-            </div>
-            <div class="notification-empty" *ngIf="!notifications.length">
-              <i class="fas fa-bell-slash"></i>
-              <p>No notifications</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="navbar__profile" (click)="showProfileMenu = !showProfileMenu">
-          <div class="navbar__avatar">
-            <img *ngIf="user?.avatar; else initialsAvatar" [src]="user?.avatar" alt="Avatar" class="avatar-img" />
-            <ng-template #initialsAvatar>
-              <span>{{ user?.firstName?.charAt(0) }}{{ user?.lastName?.charAt(0) }}</span>
-            </ng-template>
-          </div>
-          <div class="navbar__user-info desktop-only">
-            <span class="navbar__user-name">{{ user?.firstName }} {{ user?.lastName }}</span>
-            <span class="navbar__user-role">{{ user?.role }}</span>
-          </div>
-          <i class="fas fa-chevron-down desktop-only"></i>
-
-          <div class="navbar__dropdown" *ngIf="showProfileMenu">
-            <a class="dropdown-item" routerLink="/my-profile" (click)="showProfileMenu = false">
-              <i class="fas fa-user"></i> My Profile
-            </a>
-            <a class="dropdown-item" routerLink="/settings" (click)="showProfileMenu = false">
-              <i class="fas fa-cog"></i> Settings
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item dropdown-item--danger" (click)="logout()">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-          </div>
-        </div>
+    <div class="navbar__profile" (click)="showProfileMenu = !showProfileMenu">
+      <div class="navbar__avatar">
+        <img *ngIf="user?.avatar; else initialsAvatar" [src]="user?.avatar" alt="Avatar" class="avatar-img" />
+        <ng-template #initialsAvatar>
+          <span>{{ user?.firstName?.charAt(0) }}{{ user?.lastName?.charAt(0) }}</span>
+        </ng-template>
       </div>
-    </header>
+      <div class="navbar__user-info desktop-only">
+        <span class="navbar__user-name">{{ user?.firstName }} {{ user?.lastName }}</span>
+        <span class="navbar__user-role">{{ user?.role }}</span>
+      </div>
+      <i class="fas fa-chevron-down desktop-only"></i>
+
+      <div class="navbar__dropdown" *ngIf="showProfileMenu">
+        <a class="dropdown-item" routerLink="/my-profile" (click)="showProfileMenu = false">
+          <i class="fas fa-user"></i> My Profile
+        </a>
+        <a class="dropdown-item" routerLink="/settings" (click)="showProfileMenu = false">
+          <i class="fas fa-cog"></i> Settings
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item dropdown-item--danger" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</header>

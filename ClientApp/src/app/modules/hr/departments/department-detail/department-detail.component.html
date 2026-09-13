@@ -1,0 +1,181 @@
+<app-page-header
+  [title]="department ? department.name : 'Department Details'"
+  subtitle="View department leadership, team breakdown, and assigned employees"
+  [breadcrumbs]="[{label:'Dashboard',link:'/hr/dashboard'},{label:'Departments',link:'/hr/departments'},{label: department ? department.name : 'Detail'}]">
+  <div class="header-actions-group">
+    <a routerLink="/hr/departments" class="btn btn--outline">
+      <i class="fas fa-arrow-left"></i> Back to Departments
+    </a>
+    <a *ngIf="department" [routerLink]="['/hr/departments', department.id, 'edit']" class="btn btn--primary">
+      <i class="fas fa-edit"></i> Edit Department
+    </a>
+  </div>
+</app-page-header>
+
+<div *ngIf="loading" class="loading-state">
+  <i class="fas fa-spinner fa-spin"></i> Loading department details...
+</div>
+
+<div *ngIf="!loading && department" class="dept-detail-container">
+  <!-- Hero Banner Card -->
+  <div class="dept-hero-card">
+    <div class="hero-cover-wrap">
+      <img [src]="getDepartmentCover()" alt="Cover" class="hero-cover-img" />
+      <div class="hero-overlay-gradient"></div>
+
+      <span class="dept-status-badge" [class.inactive]="department.status !== 'Active'">
+        <span class="dot"></span> {{ department.status || 'Active' }}
+      </span>
+    </div>
+
+    <div class="hero-content-info">
+      <div class="dept-icon-floating" [style.background]="getDepartmentTheme().bg" [style.color]="getDepartmentTheme().color">
+        <i [class]="getDepartmentTheme().icon"></i>
+      </div>
+
+      <div class="hero-text">
+        <div class="title-code-row">
+          <h2 class="dept-title">{{ department.name }}</h2>
+          <span class="code-pill" [style.background]="getDepartmentTheme().pillBg" [style.color]="getDepartmentTheme().pillColor">
+            {{ department.code }}
+          </span>
+        </div>
+        <p class="dept-desc-text">{{ department.description || 'No detailed overview provided for this department.' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Stats Row -->
+  <div class="metrics-summary-row">
+    <div class="metric-stat-card">
+      <div class="stat-icon blue-bg">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ department.employeeCount || deptEmployees.length }}</span>
+        <span class="stat-lbl">Total Employees</span>
+      </div>
+    </div>
+
+    <div class="metric-stat-card">
+      <div class="stat-icon purple-bg">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ getHeadName() }}</span>
+        <span class="stat-lbl">Head of Department</span>
+      </div>
+    </div>
+
+    <div class="metric-stat-card">
+      <div class="stat-icon green-bg">
+        <i class="fas fa-sitemap"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ activeTeams.length }}</span>
+        <span class="stat-lbl">Active Teams</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid Content -->
+  <div class="detail-content-grid">
+    <!-- Left Column: Department Employees -->
+    <div class="content-card">
+      <div class="card-title-header">
+        <h3><i class="fas fa-user-friends text-blue"></i> Department Employees ({{ deptEmployees.length }})</h3>
+      </div>
+
+      <div class="emp-table-wrapper" *ngIf="deptEmployees.length > 0; else noEmployees">
+        <table class="emp-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Code</th>
+              <th>Designation</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let emp of deptEmployees">
+              <td>
+                <div class="emp-user-cell">
+                  <div class="emp-avatar-circle">{{ emp.fullName.charAt(0) }}</div>
+                  <div class="emp-user-info">
+                    <span class="emp-name">{{ emp.fullName }}</span>
+                    <span class="emp-email">{{ emp.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="code-badge">{{ emp.employeeCode }}</span></td>
+              <td>{{ emp.designation || 'Not specified' }}</td>
+              <td><span class="role-badge">{{ emp.role || 'Employee' }}</span></td>
+              <td>
+                <span class="status-pill-small" [class.active]="emp.active">
+                  {{ emp.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td class="text-right">
+                <a [routerLink]="['/hr/employees', emp.id]" class="link-action">View <i class="fas fa-chevron-right"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noEmployees>
+        <div class="empty-list-box">
+          <i class="fas fa-users-slash"></i>
+          <p>No employees currently assigned to {{ department.name }}.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Right Column: Active Teams Breakdown & Options -->
+    <div class="side-column">
+      <!-- Teams Card -->
+      <div class="content-card mb-4">
+        <div class="card-title-header">
+          <h3><i class="fas fa-layer-group text-purple"></i> Department Teams ({{ activeTeams.length }})</h3>
+        </div>
+
+        <div class="teams-list-box" *ngIf="activeTeams.length > 0; else noTeams">
+          <div class="team-item-card" *ngFor="let team of activeTeams">
+            <div class="team-icon-box">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="team-info">
+              <span class="team-title">{{ team.name }}</span>
+              <span class="team-lead">Lead: {{ team.teamLeadName || 'Unassigned' }}</span>
+            </div>
+            <span class="team-members-pill">{{ team.memberCount || 0 }} members</span>
+          </div>
+        </div>
+
+        <ng-template #noTeams>
+          <div class="empty-list-box small">
+            <i class="fas fa-sitemap"></i>
+            <p>No teams created for this department yet.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Actions Card -->
+      <div class="content-card">
+        <div class="card-title-header">
+          <h3><i class="fas fa-cog text-blue"></i> Quick Actions</h3>
+        </div>
+        <div class="actions-stack">
+          <a [routerLink]="['/hr/departments', department.id, 'edit']" class="action-bar-btn">
+            <i class="far fa-edit text-blue"></i> Edit Department Details
+          </a>
+          <button class="action-bar-btn text-danger" (click)="deactivateDepartment()">
+            <i class="far fa-trash-alt"></i> Deactivate Department
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

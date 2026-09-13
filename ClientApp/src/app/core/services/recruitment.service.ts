@@ -37,6 +37,11 @@ export class RecruitmentService extends BaseApiService {
       .pipe(map(res => this.unwrap<Candidate[]>(res)));
   }
 
+  getCandidate(id: string): Observable<Candidate> {
+    return this.http.get<any>(`${this.apiBase}/recruitment/candidates/${id}`)
+      .pipe(map(res => this.unwrap<Candidate>(res)));
+  }
+
   createCandidate(data: Partial<Candidate>): Observable<Candidate> {
     return this.http.post<any>(`${this.apiBase}/recruitment/candidates`, data)
       .pipe(map(res => this.unwrap<Candidate>(res)));

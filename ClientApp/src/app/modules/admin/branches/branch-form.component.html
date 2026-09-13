@@ -1,0 +1,140 @@
+<app-page-header
+  [title]="isEdit ? 'Edit Branch' : 'Create Branch'"
+  [subtitle]="isEdit ? 'Update office branch location and contact details' : 'Add a new office branch location'"
+  [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Branches',link:'/admin/branches'},{label: isEdit ? 'Edit' : 'Create'}]">
+  <a routerLink="/admin/branches" class="btn btn--outline">
+    <i class="fas fa-arrow-left"></i> Back to Branches
+  </a>
+</app-page-header>
+
+<div class="form-container-card">
+  <div *ngIf="loading" class="loading-spinner-box">
+    <i class="fas fa-spinner fa-spin"></i> Loading branch details...
+  </div>
+
+  <form *ngIf="!loading" (ngSubmit)="onSubmit()" class="branch-main-form">
+    <div class="form-header-title">
+      <h3><i class="fas fa-building text-blue"></i> Branch Office Details</h3>
+    </div>
+
+    <div class="form-grid-layout">
+      <!-- Branch Name -->
+      <div class="form-group">
+        <label class="form-label">Branch Name <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="fas fa-building input-icon"></i>
+          <input type="text" [(ngModel)]="form.name" name="name" required placeholder="e.g. Head Office" class="form-input" />
+        </div>
+      </div>
+
+      <!-- Branch Code -->
+      <div class="form-group">
+        <label class="form-label">Branch Code <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="fas fa-hashtag input-icon"></i>
+          <input type="text" [(ngModel)]="form.code" name="code" required placeholder="e.g. HO / PNQ" class="form-input" />
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="form-group full-width">
+        <label class="form-label">Street Address</label>
+        <textarea [(ngModel)]="form.address" name="address" rows="2" placeholder="e.g. Tech Hub, Hinjewadi Phase 1" class="form-textarea"></textarea>
+      </div>
+
+      <!-- City -->
+      <div class="form-group">
+        <label class="form-label">City <span class="required">*</span></label>
+        <div class="input-wrapper">
+          <i class="fas fa-city input-icon"></i>
+          <input type="text" [(ngModel)]="form.city" name="city" required placeholder="e.g. Pune" class="form-input" />
+        </div>
+      </div>
+
+      <!-- State -->
+      <div class="form-group">
+        <label class="form-label">State / Province</label>
+        <div class="input-wrapper">
+          <i class="fas fa-map-marked-alt input-icon"></i>
+          <input type="text" [(ngModel)]="form.state" name="state" placeholder="e.g. Maharashtra" class="form-input" />
+        </div>
+      </div>
+
+      <!-- Country -->
+      <div class="form-group">
+        <label class="form-label">Country</label>
+        <div class="input-wrapper">
+          <i class="fas fa-globe input-icon"></i>
+          <input type="text" [(ngModel)]="form.country" name="country" placeholder="e.g. India" class="form-input" />
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <div class="input-wrapper">
+          <i class="fas fa-phone input-icon"></i>
+          <input type="text" [(ngModel)]="form.phone" name="phone" placeholder="e.g. +91-20-8765-4321" class="form-input" />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">Contact Email</label>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" [(ngModel)]="form.email" name="email" placeholder="e.g. pune@hrmspro.com" class="form-input" />
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <div class="input-wrapper">
+          <i class="fas fa-toggle-on input-icon"></i>
+          <select [(ngModel)]="form.status" name="status" class="form-select">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Image Upload & URL -->
+      <div class="form-group full-width">
+        <label class="form-label">Branch Building Photo</label>
+        <div class="image-upload-box">
+          <div class="image-preview-container" *ngIf="form.imageUrl">
+            <img [src]="resolveImage(form.imageUrl)" alt="Branch Cover" class="cover-preview" />
+            <button type="button" class="btn-remove-img" (click)="removeImage()"><i class="fas fa-times"></i></button>
+          </div>
+
+          <div class="upload-controls">
+            <button type="button" class="btn-upload-file" (click)="fileInput.click()">
+              <i class="fas fa-cloud-upload-alt"></i> Upload Building Photo
+            </button>
+            <input #fileInput type="file" accept="image/*" hidden (change)="onImageSelected($event)" />
+            <span class="upload-hint">Or paste an image URL below</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label class="form-label">Image URL (Optional)</label>
+        <div class="input-wrapper">
+          <i class="fas fa-link input-icon"></i>
+          <input type="url" [(ngModel)]="form.imageUrl" name="imageUrl" placeholder="https://images.unsplash.com/..." class="form-input" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions-footer">
+      <a routerLink="/admin/branches" class="btn-cancel">Cancel</a>
+      <button type="submit" class="btn-submit" [disabled]="saving">
+        <span *ngIf="saving" class="spinner"></span>
+        <i *ngIf="!saving" class="fas fa-check"></i>
+        <span>{{ saving ? 'Saving...' : (isEdit ? 'Update Branch' : 'Create Branch') }}</span>
+      </button>
+    </div>
+  </form>
+</div>

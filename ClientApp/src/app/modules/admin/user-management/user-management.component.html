@@ -1,35 +1,42 @@
 <app-page-header title="User Management" subtitle="Manage system users, access roles, security settings, and permissions" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'User Management'}]">
-  <button class="btn btn--primary" (click)="openUserModal()"><i class="fas fa-user-plus"></i> Add New User</button>
+  <button class="btn btn--primary" [routerLink]="['/admin/users/add']"><i class="fas fa-user-plus"></i> Add New User</button>
 </app-page-header>
 
-<!-- Metrics Overview Cards -->
+<!-- Metrics Overview Cards (Executive Light Cards) -->
 <div class="user-stats">
   <div class="u-stat metric-blue">
     <div class="u-icon"><i class="fas fa-users-cog"></i></div>
     <div class="u-info">
-      <span class="u-val">{{ users.length }}</span>
       <span class="u-label">Total Users</span>
+      <span class="u-val">{{ users.length }}</span>
+      <span class="u-sub"><i class="fas fa-id-badge"></i> Across System Roles</span>
     </div>
   </div>
+
   <div class="u-stat metric-emerald">
     <div class="u-icon"><i class="fas fa-user-check"></i></div>
     <div class="u-info">
-      <span class="u-val">{{ activeUserCount }}</span>
       <span class="u-label">Active Users</span>
+      <span class="u-val">{{ activeUserCount }}</span>
+      <span class="u-sub"><i class="fas fa-shield-alt"></i> Verified Access</span>
     </div>
   </div>
+
   <div class="u-stat metric-amber">
     <div class="u-icon"><i class="fas fa-user-shield"></i></div>
     <div class="u-info">
-      <span class="u-val">{{ adminCount }}</span>
       <span class="u-label">System Admins</span>
+      <span class="u-val">{{ adminCount }}</span>
+      <span class="u-sub"><i class="fas fa-key"></i> Privileged Accounts</span>
     </div>
   </div>
+
   <div class="u-stat metric-rose">
     <div class="u-icon"><i class="fas fa-user-slash"></i></div>
     <div class="u-info">
-      <span class="u-val">{{ inactiveUserCount }}</span>
       <span class="u-label">Inactive Users</span>
+      <span class="u-val">{{ inactiveUserCount }}</span>
+      <span class="u-sub"><i class="fas fa-ban"></i> Disabled / Suspended</span>
     </div>
   </div>
 </div>

@@ -1,119 +1,335 @@
-<app-page-header title="Salary Structures" subtitle="Manage employee salary components, deductions and net pay" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Payroll'},{label:'Salary Structures'}]">
-  <button class="btn btn--primary" (click)="openCreate()"><i class="fas fa-plus"></i> New Structure</button>
-</app-page-header>
-
-<div *ngIf="showForm" class="filter-card salary-form">
-  <h3 class="form-title"><i class="fas fa-calculator"></i> {{ editing ? 'Edit' : 'Define' }} Salary Structure</h3>
-  <div class="form-grid">
-    <div class="form-field form-field--wide">
-      <label>Employee *</label>
-      <select class="filter-input" [(ngModel)]="form.employeeId" [disabled]="!!editing">
-        <option value="">Select Employee</option>
-        <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
-      </select>
+<div class="salary-container">
+  <!-- Executive Light Header Banner -->
+  <div class="salary-banner">
+    <div class="salary-banner__content">
+      <div class="salary-banner__breadcrumbs">
+        <a routerLink="/admin/dashboard" class="bc-link"><i class="fas fa-home"></i> Dashboard</a>
+        <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+        <a (click)="goToPayroll()" class="bc-link bc-pointer">Payroll</a>
+        <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+        <span class="bc-current">Salary Structures</span>
+      </div>
+      <h1 class="salary-banner__title">Salary Structures & Pay Grades</h1>
+      <p class="salary-banner__subtitle">Define compensation templates, allowances, statutory deductions, tax brackets, and effective pay grades.</p>
     </div>
-    <div class="form-field">
-      <label>Basic Salary *</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.basicSalary" placeholder="0.00" />
-    </div>
-    <div class="form-field">
-      <label>HRA</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.hra" placeholder="0.00" />
-    </div>
-    <div class="form-field">
-      <label>Conveyance</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.conveyance" placeholder="0.00" />
-    </div>
-    <div class="form-field">
-      <label>Medical Allowance</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.medicalAllowance" placeholder="0.00" />
-    </div>
-    <div class="form-field">
-      <label>Special Allowance</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.specialAllowance" placeholder="0.00" />
-    </div>
-    <div class="form-field">
-      <label>PF %</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.pfPercent" placeholder="12" />
-    </div>
-    <div class="form-field">
-      <label>ESI %</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.esiPercent" placeholder="0" />
-    </div>
-    <div class="form-field">
-      <label>TDS %</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.tdsPercent" placeholder="0" />
-    </div>
-    <div class="form-field">
-      <label>Professional Tax</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.professionalTax" placeholder="0.00" />
-    </div>
-    <div class="form-field">
-      <label>Effective From</label>
-      <input type="date" class="filter-input" [(ngModel)]="form.effectiveFrom" />
-    </div>
-    <div class="form-field">
-      <label>Effective To</label>
-      <input type="date" class="filter-input" [(ngModel)]="form.effectiveTo" />
+    <div class="salary-banner__actions">
+      <button class="btn btn--secondary" (click)="goToPayroll()">
+        <i class="fas fa-arrow-left"></i> Back to Payroll
+      </button>
+      <button class="btn btn--outline-dark" (click)="exportSelectedToExcel()">
+        <i class="fas fa-file-excel"></i> Export Excel
+      </button>
+      <button class="btn btn--primary" (click)="openCreate()">
+        <i class="fas fa-plus-circle"></i> New Structure
+      </button>
     </div>
   </div>
-  <div class="totals-bar">
-    <span>Gross: <strong>{{ computeTotals().gross | currency }}</strong></span>
-    <span>Deductions: <strong>{{ computeTotals().deductions | currency }}</strong></span>
-    <span>Net Pay: <strong class="net">{{ computeTotals().net | currency }}</strong></span>
-  </div>
-  <div class="form-actions">
-    <button class="btn btn--outline" (click)="showForm = false">Cancel</button>
-    <button class="btn btn--primary" (click)="saveStructure()"><i class="fas fa-check"></i> Save Structure</button>
-  </div>
-</div>
 
-<div class="filter-card">
-  <div class="filter-bar">
-    <div class="filter-group">
-      <i class="fas fa-search filter-icon"></i>
-      <input type="text" class="filter-input" [(ngModel)]="search" (keyup.enter)="loadStructures()" placeholder="Search by employee..." />
+  <!-- KPI Metrics -->
+  <div class="salary-metrics">
+    <div class="metric-card total">
+      <div class="metric-card__icon"><i class="fas fa-sliders-h"></i></div>
+      <div class="metric-card__info">
+        <span class="metric-card__label">Configured Structures</span>
+        <span class="metric-card__value">{{ totalStructuresCount }}</span>
+        <span class="metric-card__sub"><i class="fas fa-check-circle"></i> {{ activeCount }} Active Pay Bands</span>
+      </div>
     </div>
-    <button class="btn btn--primary" (click)="loadStructures()"><i class="fas fa-filter"></i> Search</button>
-  </div>
-</div>
 
-<div class="table-card">
-  <app-data-table
-    [columns]="columns"
-    [data]="structures"
-    [pageSize]="pageSize"
-    [actions]="tableActions"
-    (onActionClick)="onAction($event)">
-  </app-data-table>
-</div>
-
-<!-- Breakdown Drawer -->
-<div class="drawer-overlay" *ngIf="breakdown" (click)="closeBreakdown()">
-  <div class="breakdown-drawer" (click)="$event.stopPropagation()">
-    <div class="drawer-header">
-      <h3><i class="fas fa-chart-pie"></i> Salary Breakdown</h3>
-      <button class="drawer-close" (click)="closeBreakdown()"><i class="fas fa-times"></i></button>
+    <div class="metric-card basic">
+      <div class="metric-card__icon"><i class="fas fa-money-bill-wave"></i></div>
+      <div class="metric-card__info">
+        <span class="metric-card__label">Avg. Basic Salary</span>
+        <span class="metric-card__value">{{ avgBasicSalary | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+        <span class="metric-card__sub">Across All Departments</span>
+      </div>
     </div>
-    <div class="breakdown-body">
-      <div class="breakdown-group" *ngIf="breakdown.earnings?.length">
-        <h4>Earnings</h4>
-        <div class="breakdown-row" *ngFor="let item of breakdown.earnings">
-          <span>{{ item.name }}</span>
-          <span>{{ item.amount | currency }}</span>
+
+    <div class="metric-card gross">
+      <div class="metric-card__icon"><i class="fas fa-chart-line"></i></div>
+      <div class="metric-card__info">
+        <span class="metric-card__label">Avg. Gross Earnings</span>
+        <span class="metric-card__value">{{ avgGrossSalary | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+        <span class="metric-card__sub">Including Allowances</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+      <div class="table-toolbar__search">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text" 
+          placeholder="Search employee, ID, department..." 
+          [(ngModel)]="search" 
+          (input)="onSearchChange()"
+          class="search-input"
+        />
+      </div>
+
+      <div class="table-toolbar__filters">
+        <div class="filter-group">
+          <label><i class="fas fa-building"></i> Dept:</label>
+          <select [(ngModel)]="selectedDepartment" (change)="applyFilter()" class="filter-select">
+            <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label><i class="fas fa-toggle-on"></i> Status:</label>
+          <select [(ngModel)]="selectedStatus" (change)="applyFilter()" class="filter-select">
+            <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+          </select>
         </div>
       </div>
-      <div class="breakdown-group" *ngIf="breakdown.deductions?.length">
-        <h4>Deductions</h4>
-        <div class="breakdown-row" *ngFor="let item of breakdown.deductions">
-          <span>{{ item.name }}</span>
-          <span>{{ item.amount | currency }}</span>
-        </div>
+    </div>
+
+    <!-- Selection Banner -->
+    <div class="selection-banner" *ngIf="getSelectedCount() > 0">
+      <div class="selection-banner__info">
+        <i class="fas fa-check-square"></i>
+        <span><strong>{{ getSelectedCount() }}</strong> salary structures selected</span>
       </div>
-      <div class="breakdown-total" *ngIf="breakdown.netPay !== undefined">
-        <span>Net Pay</span>
-        <strong>{{ breakdown.netPay | currency }}</strong>
+      <div class="selection-banner__actions">
+        <button class="btn btn--sm btn--excel" (click)="exportSelectedToExcel()">
+          <i class="fas fa-file-excel"></i> Export Selected to Excel
+        </button>
+        <button class="btn btn--sm btn--ghost" (click)="clearSelection()">
+          Clear Selection
+        </button>
       </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th class="col-checkbox">
+              <input 
+                type="checkbox" 
+                [checked]="isAllSelected" 
+                (change)="toggleSelectAll()"
+                class="custom-checkbox"
+              />
+            </th>
+            <th>Code</th>
+            <th>Employee</th>
+            <th>Department</th>
+            <th class="text-right">Basic Salary</th>
+            <th class="text-right">Gross Earnings</th>
+            <th class="text-right">Deductions</th>
+            <th class="text-right">Net Pay</th>
+            <th>Effective From</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filteredStructures" [class.selected-row]="s.selected">
+            <td class="col-checkbox">
+              <input 
+                type="checkbox" 
+                [checked]="s.selected" 
+                (change)="toggleRowSelection(s)"
+                class="custom-checkbox"
+              />
+            </td>
+            <td><span class="code-badge">{{ s.employeeCode || s.employeeId }}</span></td>
+            <td>
+              <div class="user-cell">
+                <img [src]="s.avatar || 'assets/images/default-avatar.png'" alt="Avatar" class="user-avatar" />
+                <div class="user-info">
+                  <span class="user-name">{{ s.employeeName }}</span>
+                  <span class="user-sub">{{ s.designation }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-badge">{{ s.department }}</span>
+            </td>
+            <td class="text-right font-medium">{{ s.basicSalary | currency:'INR':'symbol-narrow':'1.0-0' }}</td>
+            <td class="text-right text-success">+{{ s.totalEarnings | currency:'INR':'symbol-narrow':'1.0-0' }}</td>
+            <td class="text-right text-danger">-{{ s.totalDeductions | currency:'INR':'symbol-narrow':'1.0-0' }}</td>
+            <td class="text-right font-bold text-primary">{{ s.netPay | currency:'INR':'symbol-narrow':'1.0-0' }}</td>
+            <td><span class="date-text">{{ s.effectiveFrom }}</span></td>
+            <td>
+              <span class="status-pill" [ngClass]="'status--' + (s.status || 'Active').toLowerCase()">
+                <i class="fas" [ngClass]="(s.status || 'Active') === 'Active' ? 'fa-check-circle' : 'fa-pause-circle'"></i>
+                {{ s.status || 'Active' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="action-buttons">
+                <button class="action-btn action-btn--edit" title="Edit Structure" (click)="openEdit(s)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn action-btn--view" title="Salary Breakdown" (click)="openBreakdown(s)">
+                  <i class="fas fa-chart-pie"></i>
+                </button>
+                <button class="action-btn action-btn--toggle" [title]="s.status === 'Active' ? 'Deactivate' : 'Activate'" (click)="toggleDeactivate(s)">
+                  <i class="fas" [ngClass]="s.status === 'Active' ? 'fa-ban' : 'fa-check'"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredStructures.length === 0">
+            <td colspan="11" class="empty-cell">
+              <div class="empty-state">
+                <i class="fas fa-sliders-h empty-icon"></i>
+                <h3>No Salary Structures Found</h3>
+                <p>Try adjusting your search query or filter options.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+
+<!-- DEFINE / EDIT MODAL OVERLAY -->
+<div class="modal-backdrop" *ngIf="showForm">
+  <div class="modal-card form-modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-calculator"></i> {{ editing ? 'Edit' : 'Define' }} Salary Structure</h3>
+      <button class="close-btn" (click)="showForm = false">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group col-span-2">
+          <label>Employee *</label>
+          <select class="form-control" [(ngModel)]="form.employeeId" [disabled]="!!editing">
+            <option value="">Select Employee</option>
+            <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }} ({{ e.id }})</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Basic Salary (₹) *</label>
+          <input type="number" class="form-control" [(ngModel)]="form.basicSalary" placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label>House Rent Allowance (HRA) (₹)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.hra" placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label>Conveyance Allowance (₹)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.conveyance" placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label>Medical Allowance (₹)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.medicalAllowance" placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label>Special Allowance (₹)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.specialAllowance" placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label>PF Deduction (%)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.pfPercent" placeholder="12" />
+        </div>
+
+        <div class="form-group">
+          <label>ESI Deduction (%)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.esiPercent" placeholder="1.75" />
+        </div>
+
+        <div class="form-group">
+          <label>TDS Tax (%)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.tdsPercent" placeholder="10" />
+        </div>
+
+        <div class="form-group">
+          <label>Professional Tax (₹)</label>
+          <input type="number" class="form-control" [(ngModel)]="form.professionalTax" placeholder="150" />
+        </div>
+
+        <div class="form-group">
+          <label>Effective From</label>
+          <input type="date" class="form-control" [(ngModel)]="form.effectiveFrom" />
+        </div>
+      </div>
+
+      <!-- Live Totals Summary -->
+      <div class="live-totals-card">
+        <div class="total-item text-success">
+          <span>Gross Earnings:</span>
+          <strong>{{ computeTotals().gross | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <div class="total-item text-danger">
+          <span>Est. Deductions:</span>
+          <strong>-{{ computeTotals().deductions | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <div class="total-item text-primary highlight">
+          <span>Net Payable Amount:</span>
+          <strong class="text-lg">{{ computeTotals().net | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--outline" (click)="showForm = false">Cancel</button>
+      <button class="btn btn--primary" (click)="saveStructure()">
+        <i class="fas fa-check"></i> Save Structure
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- BREAKDOWN DRAWER MODAL -->
+<div class="modal-backdrop" *ngIf="breakdown" (click)="closeBreakdown()">
+  <div class="modal-card breakdown-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="header-titles">
+        <h3><i class="fas fa-chart-pie"></i> Salary Breakdown</h3>
+        <span>{{ breakdown.employeeName }} ({{ breakdown.employeeCode }})</span>
+      </div>
+      <button class="close-btn" (click)="closeBreakdown()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="breakdown-columns">
+        <!-- Earnings -->
+        <div class="bd-column">
+          <h4 class="bd-title text-success"><i class="fas fa-plus-circle"></i> Earnings List</h4>
+          <div class="bd-item" *ngFor="let e of breakdown.earnings">
+            <span>{{ e.name }}</span>
+            <strong class="text-success">{{ e.amount | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+          </div>
+          <div class="bd-total-row">
+            <span>Total Gross</span>
+            <strong class="text-success">{{ breakdown.totalEarnings | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+          </div>
+        </div>
+
+        <!-- Deductions -->
+        <div class="bd-column">
+          <h4 class="bd-title text-danger"><i class="fas fa-minus-circle"></i> Deductions List</h4>
+          <div class="bd-item" *ngFor="let d of breakdown.deductions">
+            <span>{{ d.name }}</span>
+            <strong class="text-danger">{{ d.amount | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+          </div>
+          <div class="bd-total-row">
+            <span>Total Deductions</span>
+            <strong class="text-danger">{{ breakdown.totalDeductions | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="net-summary-box">
+        <span>ESTIMATED MONTHLY NET PAYABLE</span>
+        <strong>{{ breakdown.netPay | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--primary" (click)="closeBreakdown()">Close Breakdown</button>
+    </div>
+  </div>
+</div>

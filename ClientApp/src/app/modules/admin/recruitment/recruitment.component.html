@@ -1,113 +1,149 @@
-<app-page-header title="Recruitment & Hiring" subtitle="Manage job openings and candidate pipeline" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Recruitment'}]">
-  <div class="header-actions">
-    <button class="btn btn--primary" (click)="openJobModal()"><i class="fas fa-plus"></i> Post New Opening</button>
-    <button class="btn btn--secondary" (click)="openCandidateModal()"><i class="fas fa-user-plus"></i> Add Candidate</button>
-  </div>
-</app-page-header>
+<div class="recruitment-page">
+  <!-- Top Header Bar -->
+  <div class="page-top-bar">
+    <div class="page-title-section">
+      <div class="breadcrumbs">
+        <span>Dashboard</span> <i class="fas fa-chevron-right breadcrumb-sep"></i> <span class="active-crumb">Recruitment</span>
+      </div>
+      <h1 class="page-title">Recruitment & Hiring</h1>
+      <p class="page-subtitle">Manage open positions, job applications, and candidate pipeline</p>
+    </div>
 
-<!-- Metrics Overview Bar -->
-<div class="recruit-stats">
-  <div class="r-stat metric-blue">
-    <div class="r-icon"><i class="fas fa-briefcase"></i></div>
-    <div class="r-info">
-      <span class="r-val">{{ jobOpenings.length }}</span>
-      <span class="r-label">Total Job Openings</span>
+    <div class="header-actions">
+      <button class="btn btn-secondary-action" (click)="openCandidateModal()">
+        <i class="fas fa-user-plus"></i> Add Candidate
+      </button>
+      <button class="btn btn-primary-action" (click)="openJobModal()">
+        <i class="fas fa-plus"></i> Post New Opening
+      </button>
     </div>
-  </div>
-  <div class="r-stat metric-indigo">
-    <div class="r-icon"><i class="fas fa-users"></i></div>
-    <div class="r-info">
-      <span class="r-val">{{ candidates.length }}</span>
-      <span class="r-label">Total Applicants</span>
-    </div>
-  </div>
-  <div class="r-stat metric-emerald">
-    <div class="r-icon"><i class="fas fa-calendar-check"></i></div>
-    <div class="r-info">
-      <span class="r-val">3</span>
-      <span class="r-label">Interviews Scheduled</span>
-    </div>
-  </div>
-  <div class="r-stat metric-amber">
-    <div class="r-icon"><i class="fas fa-user-check"></i></div>
-    <div class="r-info">
-      <span class="r-val">1</span>
-      <span class="r-label">Offers Extended</span>
-    </div>
-  </div>
-</div>
-
-<!-- Navigation Tabs & Search/Filter Controls -->
-<div class="recruitment-toolbar">
-  <div class="tabs">
-    <button class="tab" [class.active]="activeTab === 'openings'" (click)="activeTab = 'openings'">
-      <i class="fas fa-briefcase"></i> Job Openings <span class="tab-count">{{ jobOpenings.length }}</span>
-    </button>
-    <button class="tab" [class.active]="activeTab === 'candidates'" (click)="activeTab = 'candidates'">
-      <i class="fas fa-users"></i> Candidates <span class="tab-count">{{ candidates.length }}</span>
-    </button>
   </div>
 
-  <div class="filter-controls">
-    <div class="search-box" *ngIf="activeTab === 'openings' || activeTab === 'candidates'">
-      <i class="fas fa-search search-icon"></i>
-      <input type="text" [(ngModel)]="searchTerm" placeholder="Search {{ activeTab === 'openings' ? 'openings' : 'candidates' }}..." />
+  <!-- 4 Top Metric Cards Bar -->
+  <div class="metric-cards-bar">
+    <div class="stat-card stat-blue" (click)="activeTab = 'openings'">
+      <div class="stat-icon-box">
+        <i class="fas fa-briefcase"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">{{ jobOpenings.length }}</span>
+        <span class="stat-label">Total Job Openings</span>
+      </div>
     </div>
-    <div class="select-box" *ngIf="activeTab === 'openings'">
-      <select [(ngModel)]="statusFilter">
-        <option value="ALL">All Status</option>
-        <option value="ACTIVE">Active</option>
-        <option value="PAUSED">Paused</option>
-        <option value="CLOSED">Closed</option>
-      </select>
+
+    <div class="stat-card stat-green" (click)="activeTab = 'candidates'">
+      <div class="stat-icon-box">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">{{ candidates.length }}</span>
+        <span class="stat-label">Total Applicants</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-orange">
+      <div class="stat-icon-box">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">5</span>
+        <span class="stat-label">Interviews Scheduled</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-purple">
+      <div class="stat-icon-box">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">2</span>
+        <span class="stat-label">Offers Extended</span>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Tab Content: Job Openings -->
-<div *ngIf="activeTab === 'openings'">
-  <div class="openings-grid" *ngIf="filteredJobOpenings.length > 0; else noOpenings">
-    <div class="opening-card" *ngFor="let job of filteredJobOpenings">
-      <div class="opening-card__header">
-        <div>
-          <h3>{{ job.title }}</h3>
-          <span class="dept-badge"><i class="fas fa-building"></i> {{ job.department }}</span>
+  <!-- Toolbar & Segmented Tabs Bar -->
+  <div class="recruitment-toolbar">
+    <div class="tabs-group">
+      <button class="tab-btn" [class.active]="activeTab === 'openings'" (click)="activeTab = 'openings'">
+        <i class="fas fa-briefcase"></i> Job Openings <span class="tab-badge">{{ jobOpenings.length }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'candidates'" (click)="activeTab = 'candidates'">
+        <i class="fas fa-users"></i> Candidates <span class="tab-badge">{{ candidates.length }}</span>
+      </button>
+    </div>
+
+    <div class="toolbar-controls">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search openings, candidates, skills..." />
+      </div>
+
+      <div class="select-box" *ngIf="activeTab === 'openings'">
+        <select [(ngModel)]="statusFilter">
+          <option value="ALL">All Statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="PAUSED">Paused</option>
+          <option value="CLOSED">Closed</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content 1: Job Openings Grid -->
+  <div *ngIf="activeTab === 'openings'">
+    <div class="openings-grid" *ngIf="filteredJobOpenings.length > 0; else noOpenings">
+      <div class="opening-card" *ngFor="let job of filteredJobOpenings">
+        <div class="opening-card__header">
+          <div>
+            <h3 class="job-title">{{ job.title }}</h3>
+            <span class="dept-badge"><i class="fas fa-building"></i> {{ job.department }}</span>
+          </div>
+          <app-status-badge [status]="job.status"></app-status-badge>
         </div>
-        <app-status-badge [status]="job.status"></app-status-badge>
-      </div>
 
-      <div class="opening-card__meta">
-        <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
-        <span><i class="fas fa-briefcase"></i> {{ job.type }}</span>
-      </div>
+        <div class="opening-card__meta">
+          <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+          <span><i class="fas fa-briefcase"></i> {{ job.type }}</span>
+        </div>
 
-      <div class="opening-card__salary">{{ job.salaryRange }}</div>
+        <div class="opening-card__salary"><i class="fas fa-rupee-sign"></i> {{ job.salaryRange }}</div>
 
-      <div class="opening-card__footer">
-        <span class="opening-card__posted"><i class="far fa-clock"></i> Posted {{ job.postedDate }}</span>
-        <span class="opening-card__applicants"><i class="fas fa-users"></i> {{ job.applicants }} Applicants</span>
+        <div class="opening-card__footer">
+          <span class="posted-date"><i class="far fa-clock"></i> Posted {{ job.postedDate }}</span>
+          <span class="applicants-count"><i class="fas fa-users"></i> {{ job.applicants }} Applicants</span>
+        </div>
       </div>
     </div>
+
+    <ng-template #noOpenings>
+      <div class="empty-state">
+        <i class="fas fa-folder-open empty-icon"></i>
+        <h3>No Job Openings Found</h3>
+        <p>Try adjusting your search criteria or post a new job opening.</p>
+      </div>
+    </ng-template>
   </div>
-  <ng-template #noOpenings>
-    <div class="empty-state">
-      <i class="fas fa-folder-open empty-icon"></i>
-      <h3>No Job Openings Found</h3>
-      <p>Try adjusting your search criteria or post a new job opening.</p>
-    </div>
-  </ng-template>
-</div>
 
-<!-- Tab Content: Candidates -->
-<div *ngIf="activeTab === 'candidates'">
-  <div class="table-card">
-    <app-data-table 
-      [columns]="candidateColumns" 
-      [data]="filteredCandidates" 
-      [pageSize]="10" 
-      [actions]="candidateActions" 
-      (onActionClick)="onAction($event)">
-    </app-data-table>
+  <!-- Tab Content 2: Candidates Table -->
+  <div *ngIf="activeTab === 'candidates'">
+    <div class="table-card" *ngIf="filteredCandidates.length > 0; else noCandidates">
+      <app-data-table 
+        [columns]="candidateColumns" 
+        [data]="filteredCandidates" 
+        [pageSize]="10" 
+        [actions]="candidateActions" 
+        (onActionClick)="onAction($event)">
+      </app-data-table>
+    </div>
+
+    <ng-template #noCandidates>
+      <div class="empty-state">
+        <i class="fas fa-user-slash empty-icon"></i>
+        <h3>No Candidates Found</h3>
+        <p>Try adjusting your search criteria or add a new candidate.</p>
+      </div>
+    </ng-template>
   </div>
 </div>
 
@@ -121,7 +157,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label>Job Title *</label>
-        <input type="text" [(ngModel)]="newJob.title" placeholder="e.g. Senior Software Engineer" />
+        <input type="text" [(ngModel)]="newJob.title" placeholder="e.g. Senior Full Stack Developer" />
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -136,7 +172,7 @@
         </div>
         <div class="form-group">
           <label>Location</label>
-          <input type="text" [(ngModel)]="newJob.location" placeholder="e.g. Remote / New York" />
+          <input type="text" [(ngModel)]="newJob.location" placeholder="e.g. Remote / Mumbai / Bangalore" />
         </div>
       </div>
       <div class="form-row">
@@ -150,8 +186,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Salary Range</label>
-          <input type="text" [(ngModel)]="newJob.salaryRange" placeholder="e.g. $90,000 - $120,000/yr" />
+          <label>Salary Range (INR ₹)</label>
+          <input type="text" [(ngModel)]="newJob.salaryRange" placeholder="e.g. ₹12,00,000 - ₹18,00,000/yr" />
         </div>
       </div>
     </div>
@@ -172,27 +208,27 @@
     <div class="modal-body">
       <div class="form-group">
         <label>Full Name *</label>
-        <input type="text" [(ngModel)]="newCandidate.name" placeholder="e.g. John Doe" />
+        <input type="text" [(ngModel)]="newCandidate.name" placeholder="e.g. Aarav Sharma" />
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" [(ngModel)]="newCandidate.email" placeholder="john@example.com" />
+          <input type="email" [(ngModel)]="newCandidate.email" placeholder="aarav@example.com" />
         </div>
         <div class="form-group">
           <label>Phone Number</label>
-          <input type="text" [(ngModel)]="newCandidate.phone" placeholder="+1 (555) 000-0000" />
+          <input type="text" [(ngModel)]="newCandidate.phone" placeholder="+91 98765 43210" />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>Position Applied For</label>
           <select [(ngModel)]="newCandidate.position">
-            <option value="Senior Frontend Developer">Senior Frontend Developer</option>
-            <option value="DevOps Engineer">DevOps Engineer</option>
+            <option value="Senior Full Stack Developer">Senior Full Stack Developer</option>
+            <option value="UI/UX Product Designer">UI/UX Product Designer</option>
+            <option value="DevOps & Cloud Engineer">DevOps & Cloud Engineer</option>
             <option value="Marketing Manager">Marketing Manager</option>
             <option value="Data Analyst">Data Analyst</option>
-            <option value="UI/UX Designer">UI/UX Designer</option>
           </select>
         </div>
         <div class="form-group">

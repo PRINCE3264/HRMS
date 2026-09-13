@@ -1,60 +1,289 @@
-<app-page-header title="Attendance Corrections" subtitle="Review and approve employee attendance correction requests" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Attendance'},{label:'Corrections'}]">
-  <button class="btn btn--primary" (click)="showForm = !showForm"><i class="fas fa-calendar-plus"></i> Manual Correction</button>
-</app-page-header>
+<div class="corrections-page">
 
-<div *ngIf="showForm" class="filter-card correction-form">
-  <h3 class="form-title"><i class="fas fa-pen-alt"></i> Add Manual Attendance Correction</h3>
-  <div class="form-grid">
-    <div class="filter-group">
-      <i class="fas fa-user filter-icon"></i>
-      <select class="filter-select" [(ngModel)]="form.employeeId">
-        <option value="">Select Employee</option>
-        <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
-      </select>
+  <!-- Top Page Header -->
+  <div class="top-nav-bar">
+    <div class="nav-left">
+      <nav class="breadcrumbs">
+        <a routerLink="/admin/dashboard">Dashboard</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <a routerLink="/admin/attendance">Attendance</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current">Corrections</span>
+      </nav>
+      <h1 class="page-title">Attendance Corrections</h1>
+      <p class="page-subtitle">Review and approve employee attendance correction requests</p>
     </div>
-    <div class="filter-group">
-      <i class="far fa-calendar-alt filter-icon"></i>
-      <input type="date" class="filter-input" [(ngModel)]="form.date" />
-    </div>
-    <div class="filter-group">
-      <i class="fas fa-sign-in-alt filter-icon"></i>
-      <input type="time" class="filter-input" [(ngModel)]="form.checkIn" placeholder="Check in" />
-    </div>
-    <div class="filter-group">
-      <i class="fas fa-sign-out-alt filter-icon"></i>
-      <input type="time" class="filter-input" [(ngModel)]="form.checkOut" placeholder="Check out" />
-    </div>
-    <div class="filter-group filter-group--wide">
-      <i class="fas fa-comment filter-icon"></i>
-      <input type="text" class="filter-input" [(ngModel)]="form.reason" placeholder="Reason for correction" />
+    <div class="header-actions">
+      <button class="btn btn-outline-excel" (click)="exportExcel()">
+        <i class="fas fa-file-excel"></i>
+        {{ getSelectedCount() > 0 ? 'Export Selected (' + getSelectedCount() + ')' : 'Export Excel' }}
+      </button>
+      <button class="btn btn-primary" (click)="showForm = true">
+        <i class="fas fa-calendar-plus"></i> Manual Correction
+      </button>
     </div>
   </div>
-  <div class="form-actions">
-    <button class="btn btn--outline" (click)="showForm = false">Cancel</button>
-    <button class="btn btn--primary" (click)="submitCorrection()"><i class="fas fa-check"></i> Submit Correction</button>
-  </div>
-</div>
 
-<div class="filter-card">
-  <div class="filter-bar">
-    <div class="filter-group">
-      <i class="fas fa-filter filter-icon"></i>
-      <select class="filter-select" [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
-        <option value="">All Statuses</option>
-        <option value="PENDING">Pending</option>
-        <option value="APPROVED">Approved</option>
-        <option value="REJECTED">Rejected</option>
-      </select>
+  <!-- Metric KPI Cards Row -->
+  <div class="metrics-grid">
+    
+    <div class="metric-card card-amber">
+      <div class="metric-icon"><i class="fas fa-clock"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ pendingCount }}</span>
+        <span class="metric-lbl">Pending Approvals</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-emerald">
+      <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ approvedCount }}</span>
+        <span class="metric-lbl">Approved Requests</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-rose">
+      <div class="metric-icon"><i class="fas fa-times-circle"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ rejectedCount }}</span>
+        <span class="metric-lbl">Rejected Requests</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-indigo">
+      <div class="metric-icon"><i class="fas fa-list-alt"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ corrections.length }}</span>
+        <span class="metric-lbl">Total Submissions</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Search & Filter Card -->
+  <div class="filter-card">
+    <div class="filter-bar">
+      
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search by employee name, ID, or reason..."
+          class="search-input"
+        />
+        <button *ngIf="searchTerm" class="clear-btn" (click)="searchTerm = ''">&times;</button>
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedStatus" class="filter-select">
+          <option value="">All Statuses</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedDepartment" class="filter-select">
+          <option value="">All Departments</option>
+          <option *ngFor="let d of departmentsList" [value]="d">{{ d }}</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <button class="btn-reset" (click)="resetFilters()">
+        <i class="fas fa-sync-alt"></i> Reset
+      </button>
+
     </div>
   </div>
-</div>
 
-<div class="table-card">
-  <app-data-table
-    [columns]="columns"
-    [data]="corrections"
-    [pageSize]="pageSize"
-    [actions]="tableActions"
-    (onActionClick)="onAction($event)">
-  </app-data-table>
+  <!-- Selected Row Counter Alert Bar -->
+  <div class="selection-alert-bar" *ngIf="getSelectedCount() > 0">
+    <div class="selection-info">
+      <i class="fas fa-check-square"></i>
+      <span><strong>{{ getSelectedCount() }}</strong> correction record(s) selected</span>
+    </div>
+    <div class="selection-actions">
+      <button class="btn-sel btn-sel-export" (click)="exportExcel()">
+        <i class="fas fa-file-excel"></i> Export Selected to Excel
+      </button>
+      <button class="btn-sel btn-sel-clear" (click)="clearSelection()">
+        <i class="fas fa-times"></i> Clear Selection
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Table Card -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="corrections-table">
+        <thead>
+          <tr>
+            <th class="checkbox-col">
+              <label class="custom-chk">
+                <input
+                  type="checkbox"
+                  [checked]="isAllSelected"
+                  (change)="toggleSelectAll()"
+                />
+                <span class="chk-box"></span>
+              </label>
+            </th>
+            <th>EMPLOYEE</th>
+            <th>DEPARTMENT</th>
+            <th>DATE</th>
+            <th>ORIGINAL PUNCH</th>
+            <th>CORRECTED PUNCH</th>
+            <th>REASON / REMARKS</th>
+            <th class="text-center">STATUS</th>
+            <th class="text-center">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rec of filteredCorrections" [class.row-selected]="isRowSelected(rec.id)">
+            <td class="checkbox-col" (click)="$event.stopPropagation()">
+              <label class="custom-chk">
+                <input
+                  type="checkbox"
+                  [checked]="isRowSelected(rec.id)"
+                  (change)="toggleSelectRow(rec.id, $event)"
+                />
+                <span class="chk-box"></span>
+              </label>
+            </td>
+            <td>
+              <div class="emp-user-cell">
+                <div class="avatar-circle">
+                  <img *ngIf="rec.avatar" [src]="rec.avatar" [alt]="rec.name" />
+                  <span *ngIf="!rec.avatar" class="avatar-initials">{{ rec.name.charAt(0) }}</span>
+                </div>
+                <div class="user-details">
+                  <span class="user-name">{{ rec.name }}</span>
+                  <span class="user-sub-id">{{ rec.employeeId }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-chip">{{ rec.department }}</span>
+            </td>
+            <td>
+              <span class="date-text"><i class="far fa-calendar-alt mr-1 text-muted"></i> {{ rec.date }}</span>
+            </td>
+            <td>
+              <div class="punch-box original-punch">
+                <span class="punch-time"><i class="fas fa-sign-in-alt in-icon"></i> {{ rec.originalCheckIn }}</span>
+                <span class="punch-time"><i class="fas fa-sign-out-alt out-icon"></i> {{ rec.originalCheckOut }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="punch-box corrected-punch">
+                <span class="punch-time corrected"><i class="fas fa-sign-in-alt in-icon"></i> {{ rec.correctedCheckIn }}</span>
+                <span class="punch-time corrected"><i class="fas fa-sign-out-alt out-icon"></i> {{ rec.correctedCheckOut }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="reason-cell">
+                <span class="reason-text">{{ rec.reason }}</span>
+                <span *ngIf="rec.rejectionReason" class="rejection-note text-danger">
+                  <i class="fas fa-info-circle"></i> Rejected: {{ rec.rejectionReason }}
+                </span>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="status-pill" [ngClass]="{
+                'status-pending': rec.status === 'PENDING',
+                'status-approved': rec.status === 'APPROVED',
+                'status-rejected': rec.status === 'REJECTED'
+              }">
+                <span class="status-dot"></span> {{ rec.status }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="action-btn-group" *ngIf="rec.status === 'PENDING'">
+                <button class="circle-btn btn-approve" title="Approve Request" (click)="approveCorrection(rec)">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="circle-btn btn-reject" title="Reject Request" (click)="rejectCorrection(rec)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div class="action-done" *ngIf="rec.status !== 'PENDING'">
+                <span class="reviewed-tag" [class.approved]="rec.status === 'APPROVED'">
+                  <i [class]="rec.status === 'APPROVED' ? 'fas fa-check-double' : 'fas fa-ban'"></i>
+                  {{ rec.status === 'APPROVED' ? 'Approved' : 'Rejected' }}
+                </span>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredCorrections.length === 0">
+            <td colspan="9" class="empty-table-cell">
+              <i class="fas fa-calendar-times empty-icon"></i>
+              <p>No attendance correction requests found matching your filters.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Manual Correction Modal -->
+  <div class="modal-backdrop" *ngIf="showForm" (click)="showForm = false">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-edit icon-indigo"></i> Submit Attendance Correction Request</h3>
+        <button class="close-btn" (click)="showForm = false">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Select Employee *</label>
+          <select [(ngModel)]="form.employeeId" class="form-control">
+            <option *ngFor="let emp of employees" [value]="emp.id || emp.employeeId">
+              {{ emp.name }} ({{ emp.employeeId || emp.code }})
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date of Correction *</label>
+          <input type="date" [(ngModel)]="form.date" class="form-control" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Original Check In</label>
+            <input type="text" [(ngModel)]="form.originalCheckIn" placeholder="09:45 AM" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Original Check Out</label>
+            <input type="text" [(ngModel)]="form.originalCheckOut" placeholder="06:00 PM" class="form-control" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Corrected Check In *</label>
+            <input type="time" [(ngModel)]="form.correctedCheckIn" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Corrected Check Out *</label>
+            <input type="time" [(ngModel)]="form.correctedCheckOut" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Reason / Justification *</label>
+          <textarea [(ngModel)]="form.reason" rows="2" placeholder="Explain why the punch needs to be corrected..." class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="showForm = false">Cancel</button>
+        <button class="btn btn-primary" (click)="submitCorrection()" [disabled]="saving">
+          <i class="fas fa-check"></i> Submit Request
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>

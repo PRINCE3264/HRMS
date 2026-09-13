@@ -15,3 +15,4 @@ export * from './roles.model';
 export * from './project.model';
 export * from './management.model';
 export * from './system.model';
+export * from './navigation.model';

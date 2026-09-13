@@ -1,199 +1,334 @@
-<div class="emp-dashboard-container">
-  <!-- 1. Header Profile Welcome Bar -->
-  <div class="profile-header-bar">
-    <div class="profile-avatar">
-      <div class="avatar-img-box">
-        <i class="fas fa-user-circle"></i>
+<div class="emp-dashboard">
+  <!-- 1. Header Banner -->
+  <div class="dashboard-header">
+    <div class="user-greeting">
+      <img [src]="currentUser?.avatar || 'https://i.pravatar.cc/150?img=11'" alt="Avatar" class="header-avatar" />
+      <div class="greeting-text">
+        <h2>Good Morning, {{ currentUser?.firstName || 'Rahul' }}!</h2>
+        <p>Have a productive day at work.</p>
       </div>
     </div>
-    <div class="profile-info">
-      <span class="welcome-text">Welcome back,</span>
-      <h2 class="user-full-name">
-        {{ currentUser?.firstName || 'PRINCE' }} {{ currentUser?.lastName || 'VIDYARTHI' }}
-      </h2>
-      <p class="user-meta-line">
-        {{ currentUser?.employeeId || 'EMP-1059' }} • {{ currentUser?.department || 'Engineering & Technology' }} • {{ currentUser?.designation || 'Backend & Cloud Infrastructure' }}
-      </p>
-    </div>
-  </div>
 
-  <!-- 2. Real-Time Clock Banner (Blue Card) -->
-  <div class="clock-banner-card">
-    <div class="clock-icon-badge">
-      <i class="fas fa-clock"></i>
-    </div>
-    <div class="clock-details">
-      <div class="clock-time-row">
-        <span class="time-digits">{{ currentTimeString || '10:39:44' }}</span>
-        <span class="ampm-badge">{{ currentAmpm }}</span>
-      </div>
-      <div class="clock-date-row">
+    <div class="header-right-group">
+      <div class="date-pill">
         <i class="far fa-calendar-alt"></i>
-        <span>{{ currentDateString || 'Thursday, 10 September 2026' }}</span>
+        <span>{{ currentDateFormatted || 'Sat, 13 Sep 2026' }}</span>
       </div>
-    </div>
-    <div class="clock-bg-watermark">
-      <i class="far fa-clock"></i>
-    </div>
-  </div>
-
-  <!-- 3. Shift & Clock-In Status Card -->
-  <div class="shift-status-card">
-    <div class="shift-info-row">
-      <div class="shift-icon-box">
-        <i class="fas fa-hand-pointer"></i>
-      </div>
-      <div class="shift-text">
-        <h3 class="shift-title">{{ isClockedIn ? 'Shift In Progress' : 'Shift Not Started' }}</h3>
-        <p class="shift-sub">{{ isClockedIn ? 'Your shift is currently active. Don\'t forget to clock out when finished.' : 'Ready to start your workday? Capture selfie inside office perimeter.' }}</p>
-      </div>
-    </div>
-    <button type="button" class="btn-clock-in" [class.clocked-in]="isClockedIn" (click)="toggleClockIn()">
-      <i class="fas fa-camera"></i>
-      <span>{{ isClockedIn ? 'CLOCK OUT (SELFIE VERIFICATION)' : 'CLOCK IN (CAMERA SELFIE)' }}</span>
-    </button>
-  </div>
-
-  <!-- 4. Attendance Score Banner (Blue Card) -->
-  <div class="attendance-score-card">
-    <div class="score-header">
-      <i class="fas fa-trophy trophy-icon"></i>
-      <span>Attendance Score</span>
-    </div>
-    <div class="score-metrics-grid">
-      <div class="metric-col">
-        <div class="metric-val">
-          <span class="emoji">🔥</span> {{ attendanceScore.streak }}
+      <div class="quote-card">
+        <div class="quote-content">
+          <p>{{ motivationalQuote }}</p>
         </div>
-        <div class="metric-lbl">Streak</div>
-      </div>
-      <div class="metric-divider"></div>
-      <div class="metric-col">
-        <div class="metric-val">
-          <span class="emoji">📅</span> {{ attendanceScore.percentage }}
+        <div class="quote-graphic">
+          <i class="fas fa-mountain"></i>
         </div>
-        <div class="metric-lbl">Attendance</div>
-      </div>
-      <div class="metric-divider"></div>
-      <div class="metric-col">
-        <div class="metric-val">
-          <span class="emoji">⭐</span> {{ attendanceScore.points }}
-        </div>
-        <div class="metric-lbl">Points</div>
       </div>
     </div>
   </div>
 
-  <!-- 5. Quick Actions Row -->
-  <div class="quick-actions-row">
-    <a routerLink="/apply-leave" class="btn-quick-outline">
-      <i class="fas fa-umbrella"></i>
-      <span>Apply Leave</span>
-    </a>
-    <button type="button" class="btn-quick-outline">
-      <i class="far fa-calendar-check"></i>
-      <span>Regularize</span>
-    </button>
-  </div>
-
-  <!-- 6. Daily Project Work Report Card -->
-  <div class="work-report-card">
-    <div class="report-header">
-      <div class="report-icon-box">
-        <i class="fas fa-clipboard-list"></i>
-      </div>
-      <div class="report-text">
-        <div class="report-title-row">
-          <h3 class="report-title">Daily Project Work Report</h3>
-          <span class="assigned-tag">Assigned: Etaprise</span>
+  <!-- 2. Stat Cards Row (4 cards) -->
+  <div class="stat-cards-row">
+    <!-- Card 1: Present Today -->
+    <div class="stat-card green-card">
+      <div class="stat-icon green-icon"><i class="far fa-calendar-check"></i></div>
+      <div class="stat-body">
+        <span class="stat-lbl">Present Today</span>
+        <div class="stat-val-row">
+          <span class="stat-val">{{ checkInTime }}</span>
         </div>
-        <p class="report-sub">Log your completed tasks, hours spent, and attach screenshot or video verification for manager review.</p>
+        <span class="stat-sub">Check-in Time</span>
       </div>
+      <button class="arrow-btn" (click)="toggleClockIn()" title="Clock In/Out"><i class="fas fa-chevron-right"></i></button>
     </div>
-    <button type="button" class="btn-submit-report">
-      <i class="fas fa-file-signature"></i>
-      <span>SUBMIT TODAY'S WORK REPORT</span>
-    </button>
+
+    <!-- Card 2: Leave Balance -->
+    <div class="stat-card blue-card">
+      <div class="stat-icon blue-icon"><i class="fas fa-plane-departure"></i></div>
+      <div class="stat-body">
+        <span class="stat-lbl">Leave Balance</span>
+        <div class="stat-val-row">
+          <span class="stat-val">{{ leaveBalanceDays }}</span>
+        </div>
+        <span class="stat-sub">Days</span>
+      </div>
+      <a routerLink="/apply-leave" class="arrow-btn" title="Apply Leave"><i class="fas fa-chevron-right"></i></a>
+    </div>
+
+    <!-- Card 3: My Tasks -->
+    <div class="stat-card purple-card">
+      <div class="stat-icon purple-icon"><i class="fas fa-list-ul"></i></div>
+      <div class="stat-body">
+        <span class="stat-lbl">My Tasks</span>
+        <div class="stat-val-row">
+          <span class="stat-val">{{ pendingTasksCount }}</span>
+        </div>
+        <span class="stat-sub">Pending</span>
+      </div>
+      <a routerLink="/my-tasks" class="arrow-btn" title="View Tasks"><i class="fas fa-chevron-right"></i></a>
+    </div>
+
+    <!-- Card 4: Announcements -->
+    <div class="stat-card orange-card">
+      <div class="stat-icon orange-icon"><i class="fas fa-bullhorn"></i></div>
+      <div class="stat-body">
+        <span class="stat-lbl">Announcements</span>
+        <div class="stat-val-row">
+          <span class="stat-val">{{ newAnnouncementsCount }}</span>
+        </div>
+        <span class="stat-sub">New</span>
+      </div>
+      <a routerLink="/announcements" class="arrow-btn" title="View Announcements"><i class="fas fa-chevron-right"></i></a>
+    </div>
   </div>
 
-  <!-- 7. 30-Day Attendance Overview -->
-  <div class="overview-section">
-    <div class="overview-section-header">
-      <h3>30-Day Attendance Overview</h3>
-      <a routerLink="/my-attendance" class="link-my-attendance">My Attendance &gt;</a>
-    </div>
-
-    <div class="overview-grid">
-      <!-- Card 1: Present Days -->
-      <div class="overview-card">
-        <div class="card-top-row">
-          <div class="badge-icon badge-green">
-            <i class="fas fa-check"></i>
+  <!-- 3. Main Dashboard Body Grid (3 Columns) -->
+  <div class="dashboard-body-grid">
+    <!-- COLUMN 1 -->
+    <div class="dash-col">
+      <!-- Widget 1: My Attendance (This Week) -->
+      <div class="dash-card">
+        <div class="card-header">
+          <h3>My Attendance <small>(This Week)</small></h3>
+          <a routerLink="/my-attendance" class="view-link">View Attendance</a>
+        </div>
+        <div class="card-body">
+          <div class="attendance-bar-chart">
+            <div class="chart-y-axis">
+              <span>12h</span>
+              <span>8h</span>
+              <span>4h</span>
+              <span>0h</span>
+            </div>
+            <div class="chart-bars-container">
+              <div class="bar-column" *ngFor="let item of weeklyAttendance">
+                <div class="bar-wrapper">
+                  <div class="bar-fill" [class]="item.status" [style.height.%]="item.height" [title]="item.day + ': ' + item.status"></div>
+                </div>
+                <span class="day-lbl">{{ item.day }}</span>
+                <span class="date-lbl">{{ item.date }}</span>
+              </div>
+            </div>
           </div>
-          <span class="top-tag green-tag">of {{ overviewStats.totalDays }} days</span>
+          <div class="chart-legend-bottom">
+            <span class="legend-item"><span class="dot green"></span> Present</span>
+            <span class="legend-item"><span class="dot red"></span> Half Day</span>
+            <span class="legend-item"><span class="dot gray"></span> Absent</span>
+          </div>
         </div>
-        <div class="card-value">{{ overviewStats.presentDays }}</div>
-        <div class="card-label">Present Days</div>
       </div>
 
-      <!-- Card 2: Attendance Rate -->
-      <div class="overview-card">
-        <div class="card-top-row">
-          <div class="badge-icon badge-blue">
-            <i class="fas fa-clock"></i>
-          </div>
-          <span class="top-tag blue-tag">{{ overviewStats.loggedHours }}</span>
+      <!-- Widget 2: My Tasks -->
+      <div class="dash-card">
+        <div class="card-header">
+          <h3>My Tasks</h3>
+          <a routerLink="/my-tasks" class="view-link">View All</a>
         </div>
-        <div class="card-value">{{ overviewStats.attendanceRate }}</div>
-        <div class="card-label">Attendance Rate</div>
+        <div class="card-body p-0">
+          <div class="tasks-list">
+            <div class="task-item" *ngFor="let t of myTasks" [class.done]="t.completed">
+              <input type="checkbox" class="task-checkbox" [checked]="t.completed" (change)="toggleTask(t)" />
+              <span class="task-title">{{ t.title }}</span>
+              <span class="priority-pill" [class]="t.priorityClass">{{ t.priority }}</span>
+              <span class="due-tag">{{ t.dueDate }}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Card 3: Absent / Leaves -->
-      <div class="overview-card">
-        <div class="card-top-row">
-          <div class="badge-icon badge-red">
-            <i class="fas fa-calendar-times"></i>
-          </div>
-          <span class="top-tag red-tag">days off</span>
+      <!-- Widget 3: Recent Announcements -->
+      <div class="dash-card">
+        <div class="card-header">
+          <h3>Recent Announcements</h3>
+          <a routerLink="/announcements" class="view-link">View All</a>
         </div>
-        <div class="card-value">{{ overviewStats.absentLeaves }}</div>
-        <div class="card-label">Absent / Leaves</div>
-      </div>
-
-      <!-- Card 4: Late Clock-Ins -->
-      <div class="overview-card">
-        <div class="card-top-row">
-          <div class="badge-icon badge-orange">
-            <i class="fas fa-stopwatch"></i>
+        <div class="card-body p-0">
+          <div class="announcement-list">
+            <div class="announcement-item" *ngFor="let a of recentAnnouncements">
+              <div class="icon-box" [class]="a.badgeClass">
+                <i [class]="a.department === 'HR' ? 'fas fa-building' : 'fas fa-desktop'"></i>
+                <span>{{ a.department }}</span>
+              </div>
+              <div class="announcement-info">
+                <h4>{{ a.title }}</h4>
+                <p>{{ a.meta }}</p>
+              </div>
+              <i class="fas fa-chevron-right item-arrow"></i>
+            </div>
           </div>
-          <span class="top-tag orange-tag">after grace period</span>
         </div>
-        <div class="card-value">{{ overviewStats.lateClockIns }}</div>
-        <div class="card-label">Late Clock-Ins</div>
       </div>
     </div>
-  </div>
 
-  <!-- 8. Recent Activity Log -->
-  <div class="activity-log-section">
-    <h3 class="log-section-title">Recent Activity Log</h3>
-    <div class="log-list">
-      <div class="log-item-card" *ngFor="let item of activityLogs">
-        <div class="log-user-avatar">
-          <div class="avatar-initials">PV</div>
+    <!-- COLUMN 2 -->
+    <div class="dash-col">
+      <!-- Widget 4: My Leave Summary -->
+      <div class="dash-card">
+        <div class="card-header">
+          <h3>My Leave Summary</h3>
+          <a routerLink="/apply-leave" class="view-link">View Leave</a>
         </div>
-        <div class="log-details">
-          <h4 class="log-date">{{ item.date }}</h4>
-          <p class="log-meta">
-            In: {{ item.inTime }} • Out: {{ item.outTime }} • Net: {{ item.netHours }}
-          </p>
-          <span class="status-pill" [class]="'pill-' + item.badgeType">
-            <i class="fas fa-check-circle"></i> {{ item.statusBadge }}
-          </span>
+        <div class="card-body leave-summary-body">
+          <div class="leave-ring-box">
+            <svg viewBox="0 0 36 36" class="donut-svg">
+              <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f1f5f9" stroke-width="3.5" />
+              <path class="ring-fill-green" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#10b981" stroke-width="3.5" stroke-dasharray="80, 100" />
+            </svg>
+            <div class="ring-center">
+              <span class="days-num">{{ leaveSummary.remaining }}</span>
+              <span class="days-lbl">Days Left</span>
+            </div>
+          </div>
+          <div class="leave-legend-side">
+            <div class="legend-row">
+              <span class="circle-dot gray"></span>
+              <span class="lbl">Total Leaves</span>
+              <span class="val">{{ leaveSummary.total }}</span>
+            </div>
+            <div class="legend-row">
+              <span class="circle-dot blue"></span>
+              <span class="lbl">Used</span>
+              <span class="val">{{ leaveSummary.used }}</span>
+            </div>
+            <div class="legend-row">
+              <span class="circle-dot green"></span>
+              <span class="lbl">Remaining</span>
+              <span class="val">{{ leaveSummary.remaining }}</span>
+            </div>
+          </div>
         </div>
-        <div class="log-ontime-status">
-          <span>{{ item.onTimeStatus }}</span>
-          <span class="dot-green"></span>
+      </div>
+
+      <!-- Widget 5: Upcoming Holidays -->
+      <div class="dash-card">
+        <div class="card-header">
+          <h3>Upcoming Holidays</h3>
+          <a routerLink="/holidays" class="view-link">View All</a>
+        </div>
+        <div class="card-body p-0">
+          <div class="holiday-list">
+            <div class="holiday-item" *ngFor="let h of upcomingHolidays">
+              <div class="date-badge" [class]="h.colorClass">
+                <span class="d-num">{{ h.day }}</span>
+                <span class="d-month">{{ h.month }}</span>
+              </div>
+              <div class="holiday-info">
+                <h4>{{ h.title }}</h4>
+                <span class="holiday-type">{{ h.type }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget 6: My Team -->
+      <div class="dash-card">
+        <div class="card-header">
+          <h3>My Team</h3>
+          <a routerLink="/my-team" class="view-link">View Team</a>
+        </div>
+        <div class="card-body p-0">
+          <div class="team-list">
+            <div class="team-item" *ngFor="let m of myTeamMembers">
+              <img [src]="m.avatar" [alt]="m.name" class="team-avatar" />
+              <div class="team-info">
+                <h4>{{ m.name }}</h4>
+                <p>{{ m.role }}</p>
+              </div>
+              <button class="btn-msg" title="Send Message"><i class="far fa-envelope"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMN 3 -->
+    <div class="dash-col">
+      <!-- Widget 7: My Profile -->
+      <div class="dash-card profile-card">
+        <div class="card-header">
+          <h3>My Profile</h3>
+          <a routerLink="/my-profile" class="view-link">View Profile</a>
+        </div>
+        <div class="card-body profile-body">
+          <div class="profile-avatar-row">
+            <img [src]="currentUser?.avatar || 'https://i.pravatar.cc/150?img=11'" alt="Profile Photo" class="profile-pic" />
+            <div class="profile-main-names">
+              <h4>{{ currentUser?.firstName || 'Rahul' }} {{ currentUser?.lastName || 'Sharma' }}</h4>
+              <span class="emp-code">{{ currentUser?.employeeId || 'EMP0012' }}</span>
+            </div>
+          </div>
+
+          <div class="profile-details-list">
+            <div class="detail-row">
+              <i class="fas fa-user-tag text-icon"></i>
+              <div class="d-info">
+                <span class="val">{{ currentUser?.designation || 'Frontend Developer' }}</span>
+                <span class="sub">{{ currentUser?.department || 'Development' }}</span>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <i class="fas fa-building text-icon"></i>
+              <div class="d-info">
+                <span class="val">Envision Beyond</span>
+                <span class="sub">Head Office</span>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <i class="far fa-envelope text-icon"></i>
+              <div class="d-info">
+                <span class="val truncate">{{ currentUser?.email || 'rahul.sharma@envisionbeyond.com' }}</span>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <i class="fas fa-phone-alt text-icon"></i>
+              <div class="d-info">
+                <span class="val">{{ currentUser?.phoneNumber || '+91 98765 43210' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget 8: Quick Actions -->
+      <div class="dash-card">
+        <div class="card-header">
+          <h3>Quick Actions</h3>
+        </div>
+        <div class="card-body">
+          <div class="quick-grid-2x2">
+            <a routerLink="/apply-leave" class="q-btn green-q">
+              <div class="q-icon"><i class="fas fa-plane-departure"></i></div>
+              <span>Apply Leave</span>
+            </a>
+
+            <a routerLink="/my-payroll" class="q-btn blue-q">
+              <div class="q-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+              <span>View Payslip</span>
+            </a>
+
+            <a routerLink="/my-requests" class="q-btn purple-q">
+              <div class="q-icon"><i class="fas fa-certificate"></i></div>
+              <span>Request Certificate</span>
+            </a>
+
+            <a routerLink="/helpdesk" class="q-btn orange-q">
+              <div class="q-icon"><i class="fas fa-headset"></i></div>
+              <span>Raise Helpdesk</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget 9: Inspiration Banner Card -->
+      <div class="inspiration-banner-card">
+        <div class="banner-content">
+          <h4>Let's build a better workplace together</h4>
+          <p>Your work matters!</p>
+        </div>
+        <div class="banner-illustration">
+          <i class="fas fa-laptop-code"></i>
         </div>
       </div>
     </div>

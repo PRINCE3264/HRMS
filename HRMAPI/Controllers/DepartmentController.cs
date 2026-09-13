@@ -10,10 +10,12 @@ namespace HRMAPI.Controllers;
 public class DepartmentController : BaseController
 {
     private readonly IDepartmentService _departmentService;
+    private readonly IWebHostEnvironment _env;
 
-    public DepartmentController(IDepartmentService departmentService)
+    public DepartmentController(IDepartmentService departmentService, IWebHostEnvironment env)
     {
         _departmentService = departmentService;
+        _env = env;
     }
 
     [HttpGet]
@@ -30,6 +32,34 @@ public class DepartmentController : BaseController
     [Authorize(Roles = "ADMIN,HR")]
     public async Task<ActionResult<ApiResponse<DepartmentDto>>> Create([FromBody] CreateDepartmentDto dto) =>
         Ok(ApiResponse<DepartmentDto>.Ok(await _departmentService.CreateDepartmentAsync(dto), "Department created."));
+
+    [HttpPost("upload-image")]
+    [Authorize(Roles = "ADMIN,HR")]
+    [DisableRequestSizeLimit]
+    public async Task<ActionResult<ApiResponse<object>>> UploadImage([FromForm] IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(ApiResponse<object>.Fail("No file selected."));
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest(ApiResponse<object>.Fail("Image size must be under 5 MB."));
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".bmp" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(ext))
+            return BadRequest(ApiResponse<object>.Fail("Only image files are allowed."));
+
+        var uploadsDir = Path.Combine(_env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot"), "uploads", "departments");
+        Directory.CreateDirectory(uploadsDir);
+        var storedName = $"{Guid.NewGuid():N}{ext}";
+        var fullPath = Path.Combine(uploadsDir, storedName);
+        await using (var stream = System.IO.File.Create(fullPath))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var fileUrl = $"uploads/departments/{storedName}";
+        return Ok(ApiResponse<object>.Ok(new { imageUrl = $"/{fileUrl}" }, "Image uploaded."));
+    }
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "ADMIN,HR")]

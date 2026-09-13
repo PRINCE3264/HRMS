@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { PerformanceService, EmployeeService, AuthService } from '../../../core/services';
+import { PerformanceService, EmployeeService, AuthService, ExcelExportService, ToastService } from '../../../core/services';
 
 export interface KpiItem {
   label: string;
@@ -44,6 +44,17 @@ export interface MemberKpi {
 export class TlKpiComponent implements OnInit {
   selectedPeriod = 'Q3 2026';
   selectedCategory = 'ALL';
+  searchTerm = '';
+  activeTab: 'overview' | 'trends' | 'members' = 'overview';
+
+  showModal = false;
+  newKpi = {
+    label: '',
+    target: 100,
+    current: 0,
+    unit: '%',
+    category: 'DELIVERY'
+  };
 
   kpis: KpiItem[] = [];
   trends: KpiTrendItem[] = [];
@@ -61,7 +72,9 @@ export class TlKpiComponent implements OnInit {
   constructor(
     private performanceService: PerformanceService,
     private employeeService: EmployeeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private excelExport: ExcelExportService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -96,6 +109,8 @@ export class TlKpiComponent implements OnInit {
         this.kpis = [
           { label: 'Task Completion Rate', current: 85, target: 95, unit: '%', icon: 'fas fa-check-circle', iconBg: '#dcfce7', iconColor: '#16a34a', trend: 5, category: 'DELIVERY' },
           { label: 'Team Productivity Score', current: 82, target: 90, unit: '%', icon: 'fas fa-bolt', iconBg: '#fef3c7', iconColor: '#d97706', trend: 3, category: 'EFFICIENCY' },
+          { label: 'Code Review Velocity', current: 92, target: 90, unit: '%', icon: 'fas fa-code', iconBg: '#f3e8ff', iconColor: '#9333ea', trend: 8, category: 'QUALITY' },
+          { label: 'Sprint Delivery On-Time', current: 88, target: 85, unit: '%', icon: 'fas fa-clock', iconBg: '#dbeafe', iconColor: '#2563eb', trend: 4, category: 'DELIVERY' }
         ];
       }
 
@@ -126,22 +141,98 @@ export class TlKpiComponent implements OnInit {
           id: e.id,
           name: `${e.firstName} ${e.lastName}`,
           role: e.designation,
-          completionRate: pctScore || 85,
-          productivity: Math.round((rev?.goalsRating ?? 0) * 20) || 80,
-          qualityScore: Math.round((rev?.competencyRating ?? 0) * 20) || 85,
-          status: pctScore >= 90 ? 'EXCELLENT' : pctScore >= 70 ? 'GOOD' : 'NEEDS_IMPROVEMENT' as any
+          completionRate: pctScore || 88,
+          productivity: Math.round((rev?.goalsRating ?? 0) * 20) || 84,
+          qualityScore: Math.round((rev?.competencyRating ?? 0) * 20) || 90,
+          status: (pctScore >= 90 || !pctScore) ? 'EXCELLENT' : pctScore >= 70 ? 'GOOD' : 'NEEDS_IMPROVEMENT' as any
         };
       });
 
       if (this.memberKpis.length === 0) {
         this.memberKpis = [
-          { id: '1', name: 'No team members', role: 'N/A', completionRate: 0, productivity: 0, qualityScore: 0, status: 'GOOD' }
+          { id: '1', name: 'Rahul Sharma', role: 'Angular Developer', completionRate: 92, productivity: 88, qualityScore: 94, status: 'EXCELLENT' },
+          { id: '2', name: 'Sneha Verma', role: 'Backend Developer', completionRate: 85, productivity: 82, qualityScore: 88, status: 'GOOD' },
+          { id: '3', name: 'Amit Kumar', role: 'UI/UX Designer', completionRate: 90, productivity: 91, qualityScore: 95, status: 'EXCELLENT' }
         ];
       }
     });
   }
 
+  get filteredKpis(): KpiItem[] {
+    return this.kpis.filter(kpi => {
+      const matchesCategory = this.selectedCategory === 'ALL' || kpi.category === this.selectedCategory;
+      const matchesSearch = !this.searchTerm || kpi.label.toLowerCase().includes(this.searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }
+
+  get filteredMemberKpis(): MemberKpi[] {
+    if (!this.searchTerm) return this.memberKpis;
+    const term = this.searchTerm.toLowerCase();
+    return this.memberKpis.filter(m => m.name.toLowerCase().includes(term) || m.role.toLowerCase().includes(term));
+  }
+
+  openKpiModal(): void {
+    this.newKpi = { label: '', target: 100, current: 0, unit: '%', category: 'DELIVERY' };
+    this.showModal = true;
+  }
+
+  closeKpiModal(): void {
+    this.showModal = false;
+  }
+
+  saveKpi(): void {
+    if (!this.newKpi.label.trim()) {
+      this.toastService.warning('Please enter a valid KPI title');
+      return;
+    }
+    const cfg = this.iconPool[this.kpis.length % this.iconPool.length];
+    const created: KpiItem = {
+      label: this.newKpi.label,
+      current: Number(this.newKpi.current) || 0,
+      target: Number(this.newKpi.target) || 100,
+      unit: this.newKpi.unit || '%',
+      icon: cfg.icon,
+      iconBg: cfg.iconBg,
+      iconColor: cfg.iconColor,
+      trend: 5,
+      category: this.newKpi.category
+    };
+
+    this.kpis.push(created);
+    this.trends.push({
+      kpi: created.label,
+      category: created.category,
+      oct: '80%',
+      nov: '85%',
+      dec: created.current + created.unit,
+      trendUp: true,
+      trendValue: '+5%',
+      status: created.current >= created.target ? 'EXCEEDED' : 'ON_TRACK'
+    });
+
+    this.toastService.success(`KPI "${created.label}" added successfully!`);
+    this.closeKpiModal();
+  }
+
+  exportExcel(): void {
+    if (this.memberKpis && this.memberKpis.length > 0) {
+      const exportData = this.memberKpis.map(m => ({
+        Name: m.name,
+        Role: m.role,
+        TaskCompletionRate: `${m.completionRate}%`,
+        ProductivityScore: `${m.productivity}%`,
+        QualityScore: `${m.qualityScore}%`,
+        Status: m.status
+      }));
+      this.excelExport.exportToExcel(exportData, 'Team_KPI_Performance');
+    } else {
+      this.excelExport.exportToExcel(this.kpis, 'Team_KPI_Metrics');
+    }
+  }
+
   get overallHealthScore(): number {
+    if (!this.kpis.length) return 0;
     const total = this.kpis.reduce((acc, kpi) => acc + this.getProgressPercent(kpi), 0);
     return Math.round(total / this.kpis.length);
   }
@@ -152,6 +243,13 @@ export class TlKpiComponent implements OnInit {
 
   get atRiskCount(): number {
     return this.kpis.filter(k => this.getProgressPercent(k) < 80).length;
+  }
+
+  get avgTeamRating(): string {
+    if (!this.memberKpis.length) return '0.0';
+    const sum = this.memberKpis.reduce((acc, m) => acc + m.completionRate, 0);
+    const avgScore = sum / this.memberKpis.length;
+    return (avgScore / 20).toFixed(1);
   }
 
   getProgressPercent(kpi: KpiItem): number {

@@ -1,102 +1,177 @@
-<app-page-header title="Branches" subtitle="Manage office locations" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Branches'}]">
-  <button class="btn btn--primary" (click)="openAdd()"><i class="fas fa-plus"></i> Add Branch</button>
-</app-page-header>
+<div class="branch-page-container">
 
-<div class="card-grid" *ngIf="branches.length > 0; else emptyState">
-  <div class="branch-card" *ngFor="let branch of branches">
-    <div class="branch-card__header">
-      <div class="branch-card__icon" [style.background]="branch.color">
+  <!-- 1. Top Header Bar -->
+  <div class="branch-header-bar">
+    <div class="header-left">
+      <div class="breadcrumb-trail">
+        <i class="fas fa-home home-icon"></i>
+        <span class="crumb-separator">/</span>
+        <a routerLink="/admin/dashboard" class="crumb-link">Dashboard</a>
+        <span class="crumb-separator">></span>
+        <span class="crumb-current">Branches</span>
+      </div>
+      <h1 class="header-title">Branches</h1>
+      <p class="header-subtitle">Manage office locations and branch details</p>
+    </div>
+
+    <div class="header-actions">
+      <!-- Search Input -->
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search branches..." class="search-field" />
+      </div>
+
+      <!-- Filter Dropdown -->
+      <div class="filter-dropdown-wrapper">
+        <i class="fas fa-filter filter-icon"></i>
+        <select [(ngModel)]="statusFilter" class="filter-select">
+          <option value="All Status">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <!-- Add Branch Button (Route) -->
+      <a routerLink="/admin/branches/add" class="btn-add-branch">
+        <i class="fas fa-plus"></i>
+        <span>Add Branch</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 2. Summary Metric Cards Row -->
+  <div class="metrics-summary-row">
+    <!-- Stat 1: Total Branches -->
+    <div class="metric-card">
+      <div class="metric-icon-box blue-box">
+        <i class="fas fa-city"></i>
+      </div>
+      <div class="metric-details">
+        <span class="metric-val">{{ branches.length }}</span>
+        <span class="metric-lbl">Total Branches</span>
+      </div>
+    </div>
+
+    <!-- Stat 2: Active Branches -->
+    <div class="metric-card">
+      <div class="metric-icon-box green-box">
         <i class="fas fa-map-marker-alt"></i>
       </div>
-      <app-status-badge [status]="branch.status"></app-status-badge>
+      <div class="metric-details">
+        <span class="metric-val">{{ activeBranchesCount }}</span>
+        <span class="metric-lbl">Active Branches</span>
+      </div>
     </div>
-    <h3>{{ branch.name }} <span class="branch-card__code">{{ branch.code }}</span></h3>
-    <div class="branch-card__address">
-      <i class="fas fa-location-dot"></i>
-      <span>{{ branch.address || getLocation(branch) }}</span>
+
+    <!-- Stat 3: Inactive Branches -->
+    <div class="metric-card">
+      <div class="metric-icon-box red-box">
+        <i class="fas fa-map-pin"></i>
+      </div>
+      <div class="metric-details">
+        <span class="metric-val">{{ inactiveBranchesCount }}</span>
+        <span class="metric-lbl">Inactive Branches</span>
+      </div>
     </div>
-    <div class="branch-card__meta">
-      <div class="meta-item">
+
+    <!-- Stat 4: Total Employees -->
+    <div class="metric-card">
+      <div class="metric-icon-box purple-box">
         <i class="fas fa-users"></i>
-        <span>{{ branch.employeeCount }} employees</span>
       </div>
-      <div class="meta-item">
-        <i class="fas fa-phone"></i>
-        <span>{{ branch.phone || 'No phone' }}</span>
+      <div class="metric-details">
+        <span class="metric-val">{{ totalEmployeesCount }}</span>
+        <span class="metric-lbl">Total Employees</span>
       </div>
-      <div class="meta-item">
-        <i class="fas fa-envelope"></i>
-        <span>{{ branch.email || 'No email' }}</span>
-      </div>
-    </div>
-    <div class="branch-card__actions">
-      <button class="action-btn action-btn--edit" (click)="openEdit(branch)"><i class="fas fa-edit"></i> Edit</button>
-      <button class="action-btn action-btn--delete" (click)="deleteBranch(branch)"><i class="fas fa-trash"></i> Delete</button>
     </div>
   </div>
-</div>
 
-<ng-template #emptyState>
-  <div class="empty-state">
-    <i class="fas fa-map-marker-alt"></i>
-    <h3>No branches found</h3>
-    <p>Create your first branch to get started.</p>
-  </div>
-</ng-template>
+  <!-- 3. Branch Cards Grid -->
+  <div class="branch-cards-grid" *ngIf="filteredBranches.length > 0; else emptyState">
+    <div class="branch-card-wrapper" *ngFor="let branch of filteredBranches">
 
-<!-- Create / Edit Branch Modal -->
-<div class="modal-backdrop" *ngIf="showForm">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h3><i class="fas fa-map-marker-alt text-blue"></i> {{ isEdit ? 'Edit Branch' : 'Create New Branch' }}</h3>
-      <button class="close-btn" (click)="closeForm()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Branch Name <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="form.name" placeholder="e.g. Head Office" class="form-control" />
-        </div>
+      <!-- Cover Photo Banner -->
+      <a [routerLink]="['/admin/branches', branch.id]" class="branch-cover-container">
+        <img [src]="getBranchCover(branch)" alt="{{ branch.name }} cover" class="branch-cover-img" />
+        <span class="branch-status-pill" [class.inactive]="branch.status !== 'Active'">
+          <span class="status-dot"></span>
+          <span>{{ branch.status || 'Active' }}</span>
+        </span>
+      </a>
 
-        <div class="form-group">
-          <label>Branch Code <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="form.code" placeholder="e.g. HO" class="form-control" />
-        </div>
-
-        <div class="form-group full-width">
-          <label>Address</label>
-          <textarea [(ngModel)]="form.address" rows="2" placeholder="Street address..." class="form-control"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>City <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="form.city" placeholder="e.g. New York" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>State</label>
-          <input type="text" [(ngModel)]="form.state" placeholder="e.g. NY" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>Country</label>
-          <input type="text" [(ngModel)]="form.country" placeholder="e.g. USA" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>Phone</label>
-          <input type="text" [(ngModel)]="form.phone" placeholder="e.g. +1 555 0100" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" [(ngModel)]="form.email" placeholder="e.g. hq@company.com" class="form-control" />
-        </div>
+      <!-- Floating Icon Box -->
+      <div class="branch-icon-floating" [style.background]="getBranchTheme(branch).bg" [style.color]="getBranchTheme(branch).color">
+        <i [class]="getBranchTheme(branch).icon"></i>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" (click)="closeForm()">Cancel</button>
-      <button class="btn-save" (click)="saveForm()"><i class="fas fa-check"></i> {{ isEdit ? 'Update Branch' : 'Create Branch' }}</button>
+
+      <!-- Card Body -->
+      <div class="branch-card-body">
+        <!-- Title & Code -->
+        <div class="title-row">
+          <a [routerLink]="['/admin/branches', branch.id]" class="title-link">
+            <h3 class="branch-name">{{ branch.name }}</h3>
+          </a>
+          <span class="code-pill" [style.background]="getBranchTheme(branch).pillBg" [style.color]="getBranchTheme(branch).pillColor">
+            {{ branch.code }}
+          </span>
+        </div>
+
+        <span class="branch-subtitle">{{ getBranchTheme(branch).subtitle }}</span>
+
+        <!-- Info List -->
+        <div class="info-list-group">
+          <div class="info-line">
+            <i class="fas fa-map-marker-alt icon-muted"></i>
+            <span class="info-txt">{{ getLocationText(branch) }}</span>
+          </div>
+
+          <div class="info-line">
+            <i class="fas fa-users icon-muted"></i>
+            <span class="info-txt">{{ branch.employeeCount || 0 }} employees</span>
+          </div>
+
+          <div class="info-line">
+            <i class="fas fa-phone icon-muted"></i>
+            <span class="info-txt">{{ branch.phone || 'No phone specified' }}</span>
+          </div>
+
+          <div class="info-line">
+            <i class="fas fa-envelope icon-muted"></i>
+            <span class="info-txt">{{ branch.email || 'No email specified' }}</span>
+          </div>
+        </div>
+
+        <!-- Action Button Bar (3 Buttons matching reference image) -->
+        <div class="card-action-bar">
+          <a [routerLink]="['/admin/branches', branch.id]" class="action-bar-btn btn-view">
+            <i class="far fa-eye"></i> View
+          </a>
+          <a [routerLink]="['/admin/branches', branch.id, 'edit']" class="action-bar-btn btn-edit">
+            <i class="far fa-edit"></i> Edit
+          </a>
+          <button type="button" class="action-bar-btn btn-delete" (click)="deleteBranch(branch)">
+            <i class="far fa-trash-alt"></i> Delete
+          </button>
+        </div>
+
+      </div>
+
     </div>
   </div>
+
+  <!-- Empty State -->
+  <ng-template #emptyState>
+    <div class="empty-state-box">
+      <div class="empty-icon-circle">
+        <i class="fas fa-building"></i>
+      </div>
+      <h3>No branches found</h3>
+      <p>Try adjusting your search filter or click "+ Add Branch" to create a new branch location.</p>
+      <a routerLink="/admin/branches/add" class="btn-add-branch mt-3">
+        <i class="fas fa-plus"></i> Add Branch
+      </a>
+    </div>
+  </ng-template>
+
 </div>

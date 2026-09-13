@@ -1,236 +1,288 @@
-<div class="hr-dashboard">
-
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="page-title">
-      <div class="title-icon"><i class="fas fa-tachometer-alt"></i></div>
-      <div>
-        <h1>HR Dashboard</h1>
-        <p>Human Resources overview — real-time insights</p>
-      </div>
-    </div>
-    <div class="header-actions">
-      <button class="btn-action btn-secondary"><i class="fas fa-download"></i> Export Report</button>
-      <button class="btn-action btn-primary"><i class="fas fa-plus"></i> Add Employee</button>
-    </div>
-  </div>
-
-  <!-- KPI Metric Cards -->
-  <div class="metrics-grid">
-    <div class="metric-card metric-primary">
-      <div class="metric-icon"><i class="fas fa-users"></i></div>
-      <div class="metric-body">
-        <span class="metric-label">Total Employees</span>
-        <span class="metric-value">{{ stats.totalEmployees }}</span>
-        <span class="metric-trend trend-up"><i class="fas fa-arrow-up"></i> +6 this month</span>
-      </div>
-      <div class="metric-sparkline">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="none">
-          <polyline points="0,28 10,22 20,18 30,14 40,10 50,6 60,4" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
+<div class="hr-dashboard-container">
+  <!-- Top Welcome Banner -->
+  <div class="welcome-banner">
+    <div class="banner-left">
+      <span class="greeting-text">{{ greetingText }}</span>
+      <h1 class="user-title">Welcome Back, {{ userName }}</h1>
+      <p class="banner-subtitle">Here's what's happening in your organization today.</p>
     </div>
 
-    <div class="metric-card metric-success">
-      <div class="metric-icon"><i class="fas fa-user-check"></i></div>
-      <div class="metric-body">
-        <span class="metric-label">Present Today</span>
-        <span class="metric-value">{{ stats.presentToday }}</span>
-        <span class="metric-trend trend-up"><i class="fas fa-arrow-up"></i> {{ stats.totalEmployees > 0 ? ((stats.presentToday / stats.totalEmployees * 100) | number:'1.0-0') : 0 }}% attendance</span>
+    <div class="banner-date-pill">
+      <div class="calendar-icon-box">
+        <i class="far fa-calendar-alt"></i>
       </div>
-      <div class="metric-sparkline">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="none">
-          <polyline points="0,25 10,20 20,22 30,16 40,12 50,8 60,5" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="metric-card metric-danger">
-      <div class="metric-icon"><i class="fas fa-user-times"></i></div>
-      <div class="metric-body">
-        <span class="metric-label">Absent Today</span>
-        <span class="metric-value">{{ stats.absentToday }}</span>
-        <span class="metric-trend trend-down"><i class="fas fa-arrow-down"></i> -3 vs yesterday</span>
-      </div>
-      <div class="metric-sparkline">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="none">
-          <polyline points="0,5 10,10 20,8 30,14 40,18 50,16 60,22" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="metric-card metric-warning">
-      <div class="metric-icon"><i class="fas fa-calendar-alt"></i></div>
-      <div class="metric-body">
-        <span class="metric-label">Pending Leaves</span>
-        <span class="metric-value">{{ stats.pendingLeaves }}</span>
-        <span class="metric-trend trend-neutral"><i class="fas fa-clock"></i> Requires action</span>
-      </div>
-      <div class="metric-sparkline">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="none">
-          <polyline points="0,20 10,18 20,22 30,16 40,18 50,14 60,12" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="metric-card metric-purple">
-      <div class="metric-icon"><i class="fas fa-user-plus"></i></div>
-      <div class="metric-body">
-        <span class="metric-label">New Joiners</span>
-        <span class="metric-value">{{ stats.newJoiners }}</span>
-        <span class="metric-trend trend-up"><i class="fas fa-arrow-up"></i> This month</span>
-      </div>
-      <div class="metric-sparkline">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="none">
-          <polyline points="0,28 10,24 20,20 30,15 40,12 50,8 60,4" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="metric-card metric-info">
-      <div class="metric-icon"><i class="fas fa-briefcase"></i></div>
-      <div class="metric-body">
-        <span class="metric-label">Open Positions</span>
-        <span class="metric-value">{{ stats.pendingRequests }}</span>
-        <span class="metric-trend trend-neutral"><i class="fas fa-search"></i> Recruiting</span>
-      </div>
-      <div class="metric-sparkline">
-        <svg viewBox="0 0 60 30" preserveAspectRatio="none">
-          <polyline points="0,15 10,12 20,14 30,10 40,12 50,8 60,10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+      <div class="date-details">
+        <span class="day-date-str">{{ currentDayStr }}, {{ currentDateStr }}</span>
+        <span class="date-tagline">Have a productive day!</span>
       </div>
     </div>
   </div>
 
-  <!-- Quick Actions -->
-  <div class="quick-actions">
-    <button class="quick-btn"><i class="fas fa-user-plus"></i><span>Add Employee</span></button>
-    <button class="quick-btn"><i class="fas fa-calendar-plus"></i><span>Approve Leave</span></button>
-    <button class="quick-btn"><i class="fas fa-file-export"></i><span>Run Payroll</span></button>
-    <button class="quick-btn"><i class="fas fa-bullhorn"></i><span>Announcement</span></button>
-    <button class="quick-btn"><i class="fas fa-chart-bar"></i><span>Reports</span></button>
-    <button class="quick-btn"><i class="fas fa-cog"></i><span>Settings</span></button>
+  <!-- 6 Top Stat Cards Row -->
+  <div class="stats-row">
+    <!-- Card 1: Total Employees -->
+    <div class="stat-card">
+      <div class="card-top">
+        <div class="stat-icon-box icon-blue">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value-group">
+          <span class="stat-number">{{ stats.totalEmployees }}</span>
+          <span class="stat-label">Total Employees</span>
+        </div>
+      </div>
+      <div class="card-trend trend-up">
+        <i class="fas fa-arrow-up"></i> <span>12%</span> vs last month
+      </div>
+    </div>
+
+    <!-- Card 2: Active Employees -->
+    <div class="stat-card">
+      <div class="card-top">
+        <div class="stat-icon-box icon-green">
+          <i class="fas fa-user-check"></i>
+        </div>
+        <div class="stat-value-group">
+          <span class="stat-number">{{ stats.activeEmployees }}</span>
+          <span class="stat-label">Active Employees</span>
+        </div>
+      </div>
+      <div class="card-trend trend-up">
+        <i class="fas fa-arrow-up"></i> <span>8%</span> vs last month
+      </div>
+    </div>
+
+    <!-- Card 3: Departments -->
+    <div class="stat-card">
+      <div class="card-top">
+        <div class="stat-icon-box icon-purple">
+          <i class="fas fa-building"></i>
+        </div>
+        <div class="stat-value-group">
+          <span class="stat-number">{{ stats.departments }}</span>
+          <span class="stat-label">Departments</span>
+        </div>
+      </div>
+      <div class="card-trend trend-neutral">
+        0% vs last month
+      </div>
+    </div>
+
+    <!-- Card 4: Branches / Teams -->
+    <div class="stat-card">
+      <div class="card-top">
+        <div class="stat-icon-box icon-orange">
+          <i class="fas fa-users-cog"></i>
+        </div>
+        <div class="stat-value-group">
+          <span class="stat-number">{{ stats.branches || 12 }}</span>
+          <span class="stat-label">Branches / Teams</span>
+        </div>
+      </div>
+      <div class="card-trend trend-up">
+        <i class="fas fa-arrow-up"></i> <span>9%</span> vs last month
+      </div>
+    </div>
+
+    <!-- Card 5: On Leave Today -->
+    <div class="stat-card">
+      <div class="card-top">
+        <div class="stat-icon-box icon-red">
+          <i class="far fa-calendar-times"></i>
+        </div>
+        <div class="stat-value-group">
+          <span class="stat-number">{{ stats.onLeaveToday || 6 }}</span>
+          <span class="stat-label">On Leave Today</span>
+        </div>
+      </div>
+      <div class="card-trend trend-up">
+        <i class="fas fa-arrow-up"></i> <span>20%</span> vs yesterday
+      </div>
+    </div>
+
+    <!-- Card 6: Pending Approvals -->
+    <div class="stat-card">
+      <div class="card-top">
+        <div class="stat-icon-box icon-cyan">
+          <i class="far fa-clock"></i>
+        </div>
+        <div class="stat-value-group">
+          <span class="stat-number">{{ stats.pendingLeaves || 3 }}</span>
+          <span class="stat-label">Pending Approvals</span>
+        </div>
+      </div>
+      <div class="card-trend trend-down">
+        <i class="fas fa-arrow-down"></i> <span>25%</span> vs yesterday
+      </div>
+    </div>
   </div>
 
-  <!-- Main Content Grid -->
-  <div class="content-grid">
+  <!-- Quick Action Pill Buttons Row -->
+  <div class="quick-actions-row">
+    <button class="quick-pill-btn" routerLink="/hr/employees/add">
+      <i class="fas fa-plus icon-blue"></i>
+      <span>Add Employee</span>
+    </button>
 
-    <!-- Pending Leave Requests -->
-    <div class="panel panel-leaves">
+    <button class="quick-pill-btn" routerLink="/hr/leaves">
+      <i class="far fa-calendar-check icon-blue"></i>
+      <span>Approve Leave</span>
+    </button>
+
+    <button class="quick-pill-btn" routerLink="/hr/payroll">
+      <i class="far fa-file-alt icon-blue"></i>
+      <span>Run Payroll</span>
+    </button>
+
+    <button class="quick-pill-btn" routerLink="/hr/announcements">
+      <i class="fas fa-bullhorn icon-blue"></i>
+      <span>Post Announcement</span>
+    </button>
+
+    <button class="quick-pill-btn" routerLink="/hr/reports">
+      <i class="far fa-chart-bar icon-blue"></i>
+      <span>View Reports</span>
+    </button>
+  </div>
+
+  <!-- 2x2 Main Grid -->
+  <div class="grid-2x2">
+    <!-- Panel 1: Pending Leave Requests -->
+    <div class="dash-panel">
       <div class="panel-header">
-        <div class="panel-title">
-          <div class="panel-icon icon-warning"><i class="fas fa-calendar-check"></i></div>
-          <div>
+        <div class="header-left">
+          <div class="panel-icon-box icon-orange-soft">
+            <i class="far fa-calendar-alt"></i>
+          </div>
+          <div class="header-title-group">
             <h3>Pending Leave Requests</h3>
-            <p>Requires your approval</p>
+            <span class="sub-text">Requires your approval</span>
           </div>
         </div>
-        <span class="badge badge-warning">{{ pendingLeaves.length }} pending</span>
+        <a routerLink="/hr/leaves" class="view-all-link">View All</a>
       </div>
+
       <div class="panel-body">
         <div class="leave-item" *ngFor="let req of pendingLeaves">
-          <div class="leave-avatar">{{ req.name.charAt(0) }}</div>
-          <div class="leave-info">
-            <strong>{{ req.name }}</strong>
-            <span class="leave-type"><i class="fas fa-tag"></i> {{ req.type }}</span>
+          <div class="avatar-pill">{{ req.initials || 'EM' }}</div>
+          <div class="leave-details">
+            <span class="emp-name">{{ req.name }}</span>
+            <span class="leave-type">{{ req.type }}</span>
           </div>
-          <div class="leave-days">{{ req.days }} day<span *ngIf="req.days > 1">s</span></div>
-          <div class="leave-actions">
-            <button class="icon-btn btn-approve" title="Approve"><i class="fas fa-check"></i></button>
-            <button class="icon-btn btn-reject" title="Reject"><i class="fas fa-times"></i></button>
+          <div class="leave-time-info">
+            <span class="days-text">{{ req.days }}</span>
+            <span class="date-range">{{ req.dateRange }}</span>
           </div>
+          <div class="leave-status-badge">Pending</div>
+          <button class="menu-icon-btn" title="More options"><i class="fas fa-ellipsis-v"></i></button>
         </div>
-      </div>
-      <div class="panel-footer">
-        <a class="view-all-link">View all {{ stats.pendingLeaves }} requests <i class="fas fa-arrow-right"></i></a>
       </div>
     </div>
 
-    <!-- Department Distribution -->
-    <div class="panel panel-dept">
+    <!-- Panel 2: Department Distribution -->
+    <div class="dash-panel">
       <div class="panel-header">
-        <div class="panel-title">
-          <div class="panel-icon icon-primary"><i class="fas fa-sitemap"></i></div>
-          <div>
+        <div class="header-left">
+          <div class="panel-icon-box icon-purple-soft">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <div class="header-title-group">
             <h3>Department Distribution</h3>
-            <p>Employee headcount by team</p>
+            <span class="sub-text">Employee headcount by department</span>
           </div>
         </div>
-        <span class="total-emp">{{ stats.totalEmployees }} total</span>
+        <a routerLink="/hr/departments" class="view-all-link">View Details</a>
       </div>
-      <div class="panel-body">
-        <div class="dept-item" *ngFor="let d of departments">
-          <div class="dept-row">
-            <div class="dept-dot" [style.background]="d.color"></div>
-            <span class="dept-name">{{ d.name }}</span>
-            <span class="dept-count">{{ d.count }}</span>
-            <span class="dept-pct">{{ d.pct }}%</span>
+
+      <div class="panel-body dept-body-flex">
+        <!-- Donut chart left side -->
+        <div class="donut-chart-wrapper">
+          <svg width="150" height="150" viewBox="0 0 160 160" class="donut-svg">
+            <circle cx="80" cy="80" r="58" fill="transparent" stroke="#3b82f6" stroke-width="20" stroke-dasharray="102 364" stroke-dashoffset="0" />
+            <circle cx="80" cy="80" r="58" fill="transparent" stroke="#22c55e" stroke-width="20" stroke-dasharray="58 364" stroke-dashoffset="-102" />
+            <circle cx="80" cy="80" r="58" fill="transparent" stroke="#a855f7" stroke-width="20" stroke-dasharray="51 364" stroke-dashoffset="-160" />
+            <circle cx="80" cy="80" r="58" fill="transparent" stroke="#f97316" stroke-width="20" stroke-dasharray="44 364" stroke-dashoffset="-211" />
+            <circle cx="80" cy="80" r="58" fill="transparent" stroke="#ef4444" stroke-width="20" stroke-dasharray="36 364" stroke-dashoffset="-255" />
+            <circle cx="80" cy="80" r="58" fill="transparent" stroke="#06b6d4" stroke-width="20" stroke-dasharray="29 364" stroke-dashoffset="-291" />
+            <circle cx="80" cy="80" r="58" fill="transparent" stroke="#94a3b8" stroke-width="20" stroke-dasharray="44 364" stroke-dashoffset="-320" />
+          </svg>
+          <div class="donut-center">
+            <span class="donut-num">{{ stats.totalEmployees }}</span>
+            <span class="donut-lbl">Total</span>
           </div>
-          <div class="dept-bar-track">
-            <div class="dept-bar-fill" [style.width]="d.pct + '%'" [style.background]="d.color"></div>
+        </div>
+
+        <!-- Legend list right side -->
+        <div class="dept-legend-list">
+          <div class="dept-legend-row" *ngFor="let item of departments">
+            <div class="legend-dot-name">
+              <span class="legend-dot" [style.background-color]="item.color"></span>
+              <span class="dept-label-text">{{ item.name }}</span>
+            </div>
+            <div class="dept-count-pct">
+              <span class="dept-count-val">{{ item.count }}</span>
+              <span class="dept-pct-val">({{ item.pct }}%)</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Recent Activity -->
-    <div class="panel panel-activity">
+    <!-- Panel 3: Recent Activity -->
+    <div class="dash-panel">
       <div class="panel-header">
-        <div class="panel-title">
-          <div class="panel-icon icon-purple"><i class="fas fa-stream"></i></div>
-          <div>
+        <div class="header-left">
+          <div class="panel-icon-box icon-purple-soft">
+            <i class="fas fa-list-ul"></i>
+          </div>
+          <div class="header-title-group">
             <h3>Recent Activity</h3>
-            <p>Latest HR events</p>
+            <span class="sub-text">Latest HR events</span>
           </div>
         </div>
+        <a routerLink="/hr/reports" class="view-all-link">View All</a>
       </div>
+
       <div class="panel-body">
-        <div class="activity-feed">
-          <div class="activity-item" *ngFor="let a of recentActivity; let last = last">
-            <div class="activity-dot-col">
-              <div class="activity-icon" [style.background]="a.color + '22'" [style.color]="a.color">
-                <i [class]="a.icon"></i>
-              </div>
-              <div class="activity-line" *ngIf="!last"></div>
-            </div>
-            <div class="activity-content">
-              <p>{{ a.message }}</p>
-              <span class="activity-time"><i class="fas fa-clock"></i> {{ a.time }}</span>
-            </div>
+        <div class="activity-row" *ngFor="let act of recentActivity">
+          <div class="activity-icon-badge" [ngClass]="act.colorClass || 'icon-blue'">
+            <i [class]="act.icon"></i>
+          </div>
+          <div class="activity-msg-text">
+            {{ act.message }}
+          </div>
+          <div class="activity-time-text">
+            {{ act.time }}
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Upcoming Birthdays -->
-    <div class="panel panel-birthdays">
+    <!-- Panel 4: Upcoming Birthdays -->
+    <div class="dash-panel">
       <div class="panel-header">
-        <div class="panel-title">
-          <div class="panel-icon icon-pink"><i class="fas fa-birthday-cake"></i></div>
-          <div>
+        <div class="header-left">
+          <div class="panel-icon-box icon-pink-soft">
+            <i class="fas fa-birthday-cake"></i>
+          </div>
+          <div class="header-title-group">
             <h3>Upcoming Birthdays</h3>
-            <p>Don't forget to wish them!</p>
+            <span class="sub-text">Let's celebrate together!</span>
           </div>
         </div>
+        <a routerLink="/hr/employees" class="view-all-link">View All</a>
       </div>
-      <div class="panel-body">
-        <div *ngIf="birthdays.length === 0" style="padding:32px 20px;text-align:center;color:#94a3b8">
-          <i class="fas fa-birthday-cake" style="font-size:24px;opacity:0.4;display:block;margin-bottom:8px"></i>
-          <p style="font-size:13px;margin:0">No upcoming birthdays</p>
-        </div>
-        <div class="birthday-item" *ngFor="let b of birthdays">
-          <img *ngIf="b.avatar" [src]="b.avatar" class="birthday-avatar" [alt]="b.name" style="object-fit:cover">
-          <div class="birthday-avatar" *ngIf="!b.avatar">{{ b.name.charAt(0) }}</div>
-          <div class="birthday-info">
-            <strong>{{ b.name }}</strong>
-            <span><i class="fas fa-calendar-day"></i> {{ b.birthdayDay }} {{ b.birthdayMonth }}</span>
+
+      <div class="panel-body birthdays-horizontal-body">
+        <div class="birthday-card" *ngFor="let b of birthdays">
+          <div class="birthday-avatar" *ngIf="!b.avatar">
+            {{ b.name.split(' ')[0][0] + (b.name.split(' ')[1] ? b.name.split(' ')[1][0] : '') }}
           </div>
-          <span class="badge" [class.badge-warning]="!b.isToday && b.daysUntil !== 1" [class.badge-success]="b.isToday || b.daysUntil === 1">
-            {{ b.isToday ? 'Today' : (b.daysUntil === 1 ? 'Tomorrow' : b.daysUntil + ' days') }}
-          </span>
+          <img *ngIf="b.avatar" [src]="b.avatar" class="birthday-avatar-img" [alt]="b.name" />
+          <span class="birthday-name">{{ b.name }}</span>
+          <span class="birthday-date-tag">{{ b.birthdayDay }} Sep</span>
         </div>
       </div>
     </div>
-
   </div>
 </div>

@@ -1,32 +1,183 @@
-<app-page-header title="Teams" subtitle="Manage team assignments" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Teams'}]">
-      <button class="btn btn--primary"><i class="fas fa-plus"></i> Create Team</button>
-    </app-page-header>
-    <div class="teams-grid">
-      <div class="team-card" *ngFor="let team of teams">
-        <div class="team-card-top">
-          <div class="team-icon" [style.background]="team.color"><i [class]="team.icon"></i></div>
-          <span class="team-dept-badge">{{ team.department }}</span>
-        </div>
-        <h3 class="team-name">{{ team.name }}</h3>
-        <p class="team-lead">
-          <i class="fas fa-user-tie"></i> {{ team.lead }}
-        </p>
-        <div class="team-members-row">
-          <div class="member-avatars">
-            <div class="member-avatar" *ngFor="let m of team.memberAvatars; let i = index" [style.background]="team.color" [style.z-index]="10 - i">{{ m }}</div>
-            <div class="member-avatar more" *ngIf="team.memberCount > 4">+{{ team.memberCount - 4 }}</div>
-          </div>
-          <span class="member-count">{{ team.memberCount }} members</span>
-        </div>
-        <div class="team-tags">
-          <span class="tag" *ngFor="let tag of team.tags">{{ tag }}</span>
-        </div>
-        <div class="team-footer">
-          <span class="team-status" [class]="team.status.toLowerCase()">{{ team.status }}</span>
-          <span class="team-progress">{{ team.progress }}% complete</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" [style.width]="team.progress + '%'" [style.background]="team.color"></div>
-        </div>
+<div class="team-page-container" (click)="closeDropdowns()">
+
+  <!-- 1. Top Header Bar -->
+  <div class="team-header-bar">
+    <div class="header-left">
+      <div class="breadcrumb-trail">
+        <a routerLink="/hr/dashboard" class="crumb-link">Dashboard</a>
+        <span class="crumb-separator">></span>
+        <span class="crumb-current">Teams</span>
+      </div>
+      <h1 class="header-title">Teams</h1>
+      <p class="header-subtitle">Manage project and functional teams across the organization</p>
+    </div>
+
+    <div class="header-actions">
+      <!-- Search Input -->
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search teams..." class="search-field" />
+      </div>
+
+      <!-- Department Filter Dropdown -->
+      <div class="filter-dropdown-wrapper">
+        <i class="fas fa-filter filter-icon"></i>
+        <select [(ngModel)]="departmentFilter" class="filter-select">
+          <option value="All Departments">All Departments</option>
+          <option *ngFor="let dept of departments" [value]="dept.name">{{ dept.name }}</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <!-- Add Team Route Button -->
+      <a routerLink="/hr/teams/add" class="btn-create-team">
+        <i class="fas fa-plus"></i>
+        <span>Create Team</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 2. Summary Metric Cards Row -->
+  <div class="metrics-summary-row">
+    <div class="metric-card">
+      <div class="metric-icon-box purple-box">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <div class="metric-details">
+        <span class="metric-val">{{ teams.length }}</span>
+        <span class="metric-lbl">Total Teams</span>
       </div>
     </div>
+
+    <div class="metric-card">
+      <div class="metric-icon-box green-box">
+        <i class="fas fa-user-friends"></i>
+      </div>
+      <div class="metric-details">
+        <span class="metric-val">{{ activeTeamsCount }}</span>
+        <span class="metric-lbl">Active Teams</span>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon-box red-box">
+        <i class="fas fa-user-slash"></i>
+      </div>
+      <div class="metric-details">
+        <span class="metric-val">{{ inactiveTeamsCount }}</span>
+        <span class="metric-lbl">Inactive Teams</span>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon-box blue-box">
+        <i class="fas fa-user-tag"></i>
+      </div>
+      <div class="metric-details">
+        <span class="metric-val">{{ totalMembersCount }}</span>
+        <span class="metric-lbl">Total Members</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Teams Grid Cards -->
+  <div class="teams-cards-grid" *ngIf="filteredTeams.length > 0; else emptyState">
+    <div class="team-card-wrapper" *ngFor="let team of filteredTeams; let i = index">
+
+      <!-- Card Top Header Row -->
+      <div class="card-top-row">
+        <!-- Team Initial Square Avatar -->
+        <div class="team-initial-badge" [style.background]="getTeamColor(i).bg" [style.color]="getTeamColor(i).color">
+          <span>{{ getTeamInitial(team.name) }}</span>
+        </div>
+
+        <!-- Team Name & Department Subtitle -->
+        <div class="name-dept-group">
+          <a [routerLink]="['/hr/teams', team.id]" class="team-name-link">
+            <h3 class="team-name">{{ team.name }}</h3>
+          </a>
+          <span class="dept-subtitle">{{ team.departmentName || 'Engineering' }}</span>
+        </div>
+
+        <!-- Right Side: Status Badge & 3-Dots Menu -->
+        <div class="right-actions-group">
+          <span class="status-pill-badge" [class.inactive]="team.status !== 'Active'">
+            <span class="status-dot"></span>
+            <span>{{ team.status || 'Active' }}</span>
+          </span>
+
+          <div class="action-menu-popover-container">
+            <button type="button" class="btn-menu-trigger" (click)="toggleDropdown(team.id, $event)">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-popover" *ngIf="activeDropdownId === team.id" (click)="$event.stopPropagation()">
+              <a [routerLink]="['/hr/teams', team.id]" class="dropdown-item">
+                <i class="far fa-eye text-blue"></i> View Details
+              </a>
+              <a [routerLink]="['/hr/teams', team.id, 'edit']" class="dropdown-item">
+                <i class="far fa-edit text-blue"></i> Edit Team
+              </a>
+              <button class="dropdown-item text-danger" (click)="deleteTeam(team)">
+                <i class="far fa-trash-alt"></i> Deactivate
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description Paragraph -->
+      <p class="team-desc-text">
+        {{ team.description || 'Functional team driving product features, architectural goals, and team initiatives.' }}
+      </p>
+
+      <!-- Member Avatars Stack Row -->
+      <div class="members-stack-row">
+        <div class="avatar-stack">
+          <div class="avatar-circle">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar" />
+          </div>
+          <div class="avatar-circle">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Avatar" />
+          </div>
+          <div class="avatar-circle">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Avatar" />
+          </div>
+          <span class="more-members-badge">+{{ (team.memberCount && team.memberCount > 3) ? (team.memberCount - 3) : 5 }}</span>
+        </div>
+        <span class="member-count-lbl">{{ team.memberCount || 8 }} members</span>
+      </div>
+
+      <!-- Footer Info Row: Team Lead & Active Projects -->
+      <div class="card-footer-info">
+        <div class="lead-info">
+          <i class="far fa-user lead-icon"></i>
+          <div class="lead-text-wrap">
+            <span class="lead-name">{{ team.teamLeadName || 'Michael Chen' }}</span>
+            <span class="lead-lbl">Team Lead</span>
+          </div>
+        </div>
+
+        <div class="projects-info">
+          <i class="far fa-building project-icon"></i>
+          <span class="projects-count">{{ team.activeProjectsCount || 3 }} active projects</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <ng-template #emptyState>
+    <div class="empty-state-box">
+      <div class="empty-icon-circle">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <h3>No teams found</h3>
+      <p>Try adjusting your search or click "+ Create Team" to create a new team.</p>
+      <a routerLink="/hr/teams/add" class="btn-create-team mt-3">
+        <i class="fas fa-plus"></i> Create Team
+      </a>
+    </div>
+  </ng-template>
+
+</div>

@@ -1,0 +1,174 @@
+<app-page-header
+  [title]="branch ? branch.name : 'Branch Details'"
+  subtitle="View office address, contact information, and assigned staff members"
+  [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Branches',link:'/admin/branches'},{label: branch ? branch.name : 'Detail'}]">
+  <div class="header-actions-group">
+    <a routerLink="/admin/branches" class="btn btn--outline">
+      <i class="fas fa-arrow-left"></i> Back to Branches
+    </a>
+    <a *ngIf="branch" [routerLink]="['/admin/branches', branch.id, 'edit']" class="btn btn--primary">
+      <i class="fas fa-edit"></i> Edit Branch
+    </a>
+  </div>
+</app-page-header>
+
+<div *ngIf="loading" class="loading-state">
+  <i class="fas fa-spinner fa-spin"></i> Loading branch details...
+</div>
+
+<div *ngIf="!loading && branch" class="branch-detail-container">
+  <!-- Hero Cover Card -->
+  <div class="branch-hero-card">
+    <div class="hero-cover-wrap">
+      <img [src]="getBranchCover()" alt="Cover" class="hero-cover-img" />
+      <div class="hero-overlay-gradient"></div>
+
+      <span class="branch-status-badge" [class.inactive]="branch.status !== 'Active'">
+        <span class="dot"></span> {{ branch.status || 'Active' }}
+      </span>
+    </div>
+
+    <div class="hero-content-info">
+      <div class="branch-icon-floating">
+        <i class="fas fa-building text-blue"></i>
+      </div>
+
+      <div class="hero-text">
+        <div class="title-code-row">
+          <h2 class="branch-title">{{ branch.name }}</h2>
+          <span class="code-pill">{{ branch.code }}</span>
+        </div>
+        <p class="branch-loc-text"><i class="fas fa-location-dot"></i> {{ branch.address || branch.city + ', ' + branch.state + ' ' + branch.country }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Metrics Cards -->
+  <div class="metrics-summary-row">
+    <div class="metric-stat-card">
+      <div class="stat-icon blue-bg">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ branch.employeeCount || branchEmployees.length }}</span>
+        <span class="stat-lbl">Branch Staff</span>
+      </div>
+    </div>
+
+    <div class="metric-stat-card">
+      <div class="stat-icon green-bg">
+        <i class="fas fa-phone"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ branch.phone || 'N/A' }}</span>
+        <span class="stat-lbl">Phone Number</span>
+      </div>
+    </div>
+
+    <div class="metric-stat-card">
+      <div class="stat-icon purple-bg">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ branch.email || 'N/A' }}</span>
+        <span class="stat-lbl">Contact Email</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Grid Content -->
+  <div class="detail-content-grid">
+    <!-- Left Column: Staff Members Table -->
+    <div class="content-card">
+      <div class="card-title-header">
+        <h3><i class="fas fa-user-friends text-blue"></i> Branch Employees ({{ branchEmployees.length }})</h3>
+      </div>
+
+      <div class="emp-table-wrapper" *ngIf="branchEmployees.length > 0; else noEmployees">
+        <table class="emp-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Code</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let emp of branchEmployees">
+              <td>
+                <div class="emp-user-cell">
+                  <div class="emp-avatar-circle">{{ emp.fullName.charAt(0) }}</div>
+                  <div class="emp-user-info">
+                    <span class="emp-name">{{ emp.fullName }}</span>
+                    <span class="emp-email">{{ emp.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="code-badge">{{ emp.employeeCode }}</span></td>
+              <td>{{ emp.department || 'N/A' }}</td>
+              <td>{{ emp.designation || 'Staff' }}</td>
+              <td>
+                <span class="status-pill-small" [class.active]="emp.active">
+                  {{ emp.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td class="text-right">
+                <a [routerLink]="['/admin/employees', emp.id]" class="link-action">View <i class="fas fa-chevron-right"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noEmployees>
+        <div class="empty-list-box">
+          <i class="fas fa-users-slash"></i>
+          <p>No employees currently assigned to this branch location.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Right Side Column: Office Details & Actions -->
+    <div class="side-column">
+      <div class="content-card mb-4">
+        <div class="card-title-header">
+          <h3><i class="fas fa-info-circle text-blue"></i> Location Details</h3>
+        </div>
+
+        <div class="info-list">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-map-pin"></i> Address</span>
+            <span class="info-value">{{ branch.address || 'N/A' }}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-city"></i> City / State</span>
+            <span class="info-value">{{ branch.city }}, {{ branch.state }}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-globe"></i> Country</span>
+            <span class="info-value">{{ branch.country }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="card-title-header">
+          <h3><i class="fas fa-cog text-blue"></i> Quick Actions</h3>
+        </div>
+        <div class="actions-stack">
+          <a [routerLink]="['/admin/branches', branch.id, 'edit']" class="action-bar-btn">
+            <i class="far fa-edit text-blue"></i> Edit Branch Information
+          </a>
+          <button class="action-bar-btn text-danger" (click)="deactivateBranch()">
+            <i class="far fa-trash-alt"></i> Deactivate Branch
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

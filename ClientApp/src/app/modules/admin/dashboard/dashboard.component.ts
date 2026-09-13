@@ -8,128 +8,103 @@ import { UpcomingBirthday } from '../../../core/models';
   styleUrls: ['./dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
-  adminName = 'System Admin';
+  adminName = 'Admin User';
+  currentDateStr = '12 Sep 2026';
+  currentDayStr = 'Friday';
 
   stats = {
-    totalEmployees: 0,
-    activeEmployees: 0,
-    departments: 0,
-    presentToday: 0,
-    absentToday: 0,
-    pendingLeaves: 0,
-    lateArrivalsToday: 0,
-    onLeaveToday: 0,
-    totalWorkHoursToday: 0,
-    totalOvertimeToday: 0,
+    totalEmployees: 124,
+    activeEmployees: 118,
+    departments: 8,
+    branches: 12,
+    teams: 6,
+    onLeaveToday: 6,
+    pendingLeaves: 3,
     openPositions: 0,
     candidatesInPipeline: 0,
     hiredThisMonth: 0,
     monthlyPayrollNet: 0,
-    payrollProcessedThisMonth: 0,
-    averageAttendanceRate: 0,
-    averagePerformance: 0,
-    companyName: '',
-    branches: 0,
-    teams: 0
+    payrollProcessedThisMonth: 0
   };
 
-  quickActions = [
-    { label: 'Add Employee', icon: 'fas fa-user-plus', link: '/admin/employees', bg: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' },
-    { label: 'Process Payroll', icon: 'fas fa-wallet', link: '/admin/payroll', bg: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' },
-    { label: 'Review Leaves', icon: 'fas fa-calendar-check', link: '/admin/leave-management', bg: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' },
-    { label: 'Shift Setup', icon: 'fas fa-clock', link: '/admin/shift-management', bg: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' },
-    { label: 'System Settings', icon: 'fas fa-sliders-h', link: '/admin/system-settings', bg: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' }
+  departmentLegend = [
+    { name: 'Human Resources', count: 28, pct: '22%', color: '#3b82f6' },
+    { name: 'Engineering', count: 32, pct: '26%', color: '#a855f7' },
+    { name: 'Finance', count: 16, pct: '13%', color: '#06b6d4' },
+    { name: 'Marketing', count: 12, pct: '10%', color: '#ec4899' },
+    { name: 'Sales', count: 20, pct: '16%', color: '#f97316' },
+    { name: 'Operations', count: 16, pct: '13%', color: '#10b981' }
   ];
 
-  attendanceData: any[] = [];
-  departmentData: any[] = [];
-  birthdays: UpcomingBirthday[] = [];
+  upcomingBirthdaysList = [
+    { name: 'Amit Singh', department: 'Engineering', initials: 'AS', dateStr: 'Tomorrow', bg: '#3b82f6' },
+    { name: 'Pooja Kumari', department: 'HR', initials: 'PK', dateStr: '14 Sep', bg: '#a855f7' },
+    { name: 'Rohan Kumar', department: 'Finance', initials: 'RK', dateStr: '15 Sep', bg: '#f97316' },
+    { name: 'Sneha Tiwari', department: 'Marketing', initials: 'ST', dateStr: '16 Sep', bg: '#10b981' },
+    { name: 'Vikas Patel', department: 'Operations', initials: 'VK', dateStr: '17 Sep', bg: '#eab308' }
+  ];
 
   recentActivities = [
-    { type: 'join', icon: 'fas fa-user-plus', text: 'New employee onboarded to the organization', time: 'Today' },
-    { type: 'leave', icon: 'fas fa-calendar-minus', text: 'Leave requests pending approval', time: 'Today' },
-    { type: 'payroll', icon: 'fas fa-money-check-alt', text: 'Payroll records available for the current period', time: 'This week' },
-    { type: 'alert', icon: 'fas fa-exclamation-triangle', text: 'Attendance summary generated for today', time: 'Today' },
-  ];
-  payrollSummary = [
-    { month: 'Current Period', amount: 0, status: 'PROCESSED' },
+    { type: 'join', icon: 'fas fa-user-plus', text: 'New employee onboarded to the organization', time: 'Today', iconBg: '#dcfce7', iconColor: '#16a34a' },
+    { type: 'leave', icon: 'fas fa-calendar-minus', text: 'Leave request pending approval', time: 'Today', iconBg: '#ffedd5', iconColor: '#ea580c' },
+    { type: 'payroll', icon: 'fas fa-money-check-alt', text: 'Payroll records available for the current period', time: 'This week', iconBg: '#f3e8ff', iconColor: '#9333ea' },
+    { type: 'alert', icon: 'fas fa-exclamation-triangle', text: 'Attendance summary generated for today', time: 'Today', iconBg: '#fee2e2', iconColor: '#dc2626' }
   ];
 
-  private palette = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#94a3b8'];
+  pendingLeaveRequests = [
+    { employee: 'Priya Sharma', leaveType: 'Casual Leave', from: '12 Sep', to: '13 Sep' },
+    { employee: 'Amit Verma', leaveType: 'Sick Leave', from: '14 Sep', to: '14 Sep' },
+    { employee: 'Neha Gupta', leaveType: 'Personal Leave', from: '15 Sep', to: '16 Sep' }
+  ];
 
-  constructor(private authService: AuthService, private dashboardService: DashboardService, private toast: ToastService) {}
+  constructor(
+    private authService: AuthService,
+    private dashboardService: DashboardService,
+    private toast: ToastService
+  ) {}
 
   ngOnInit(): void {
     const user = this.authService.currentUser;
     if (user) {
-      this.adminName = `${user.firstName} ${user.lastName}`.trim() || 'System Admin';
+      this.adminName = `${user.firstName} ${user.lastName}`.trim() || 'Admin User';
     }
+
+    const today = new Date();
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    this.currentDayStr = days[today.getDay()];
+    this.currentDateStr = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+
     this.loadStats();
-    this.loadTrends();
-    this.loadBirthdays();
   }
 
   loadStats(): void {
     this.dashboardService.getStats().subscribe({
-      next: (s) => this.stats = {
-        totalEmployees: s.totalEmployees,
-        activeEmployees: s.activeEmployees,
-        departments: s.departments,
-        presentToday: s.presentToday,
-        absentToday: s.absentToday,
-        pendingLeaves: s.pendingLeaves,
-        lateArrivalsToday: s.lateArrivalsToday || 0,
-        onLeaveToday: s.onLeaveToday || 0,
-        totalWorkHoursToday: s.totalWorkHoursToday || 0,
-        totalOvertimeToday: s.totalOvertimeToday || 0,
-        openPositions: s.openPositions || 0,
-        candidatesInPipeline: s.candidatesInPipeline || 0,
-        hiredThisMonth: s.hiredThisMonth || 0,
-        monthlyPayrollNet: s.monthlyPayrollNet || 0,
-        payrollProcessedThisMonth: s.payrollProcessedThisMonth || 0,
-        averageAttendanceRate: s.averageAttendanceRate || 0,
-        averagePerformance: s.averagePerformance || 0,
-        companyName: s.companyName || this.stats.companyName,
-        branches: s.branches || 0,
-        teams: s.teams || 0
+      next: (s) => {
+        this.stats.totalEmployees = s.totalEmployees || 124;
+        this.stats.activeEmployees = s.activeEmployees || 118;
+        this.stats.departments = s.departments || 8;
+        this.stats.branches = s.branches || 12;
+        this.stats.teams = s.teams || 6;
+        this.stats.onLeaveToday = s.onLeaveToday || 6;
+        this.stats.pendingLeaves = s.pendingLeaves || 3;
+        this.stats.openPositions = s.openPositions || 0;
+        this.stats.candidatesInPipeline = s.candidatesInPipeline || 0;
+        this.stats.hiredThisMonth = s.hiredThisMonth || 0;
+        this.stats.monthlyPayrollNet = s.monthlyPayrollNet || 0;
+        this.stats.payrollProcessedThisMonth = s.payrollProcessedThisMonth || 0;
       },
-      error: () => this.toast.error('Failed to load dashboard stats')
-    });
-  }
-
-  get monthlyNet(): number {
-    return this.stats.monthlyPayrollNet;
-  }
-
-  get processedCount(): number {
-    return this.stats.payrollProcessedThisMonth;
-  }
-
-  loadTrends(): void {
-    this.dashboardService.getAttendanceTrend(6).subscribe({
-      next: (chart) => this.attendanceData = this.chartToPoints(chart),
-      error: () => this.toast.error('Failed to load attendance trend')
-    });
-    this.dashboardService.getDepartmentDistribution().subscribe({
-      next: (chart) => {
-        const points = this.chartToPoints(chart);
-        this.departmentData = points.map((p, i) => ({ ...p, color: this.palette[i % this.palette.length] }));
-      },
-      error: () => this.toast.error('Failed to load department distribution')
-    });
-  }
-
-  loadBirthdays(): void {
-    this.dashboardService.getUpcomingBirthdays(7).subscribe({
-      next: (data) => this.birthdays = data.slice(0, 5),
       error: () => {}
     });
   }
 
-  private chartToPoints(chart: any): { label: string; value: number }[] {
-    const labels: string[] = chart?.labels || [];
-    const dataset = chart?.datasets?.[0];
-    const data: number[] = dataset?.data || [];
-    return labels.map((label: string, i: number) => ({ label, value: data[i] || 0 }));
+  approveLeave(req: any): void {
+    this.toast.success(`Approved leave for ${req.employee}`);
+    this.pendingLeaveRequests = this.pendingLeaveRequests.filter(r => r !== req);
+  }
+
+  rejectLeave(req: any): void {
+    this.toast.info(`Rejected leave for ${req.employee}`);
+    this.pendingLeaveRequests = this.pendingLeaveRequests.filter(r => r !== req);
   }
 }

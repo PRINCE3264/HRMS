@@ -45,6 +45,122 @@
   }
 }
 
+/* Metric Executive Stat Cards */
+.doc-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.d-stat {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    border-color: #cbd5e1;
+  }
+
+  .d-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover .d-icon {
+    transform: scale(1.05);
+  }
+
+  .d-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+
+    .d-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #64748b;
+    }
+
+    .d-val {
+      display: block;
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #0f172a;
+      margin: 2px 0 3px 0;
+    }
+
+    .d-sub {
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      i {
+        font-size: 11px;
+      }
+    }
+  }
+
+  &.metric-blue {
+    .d-icon {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+  }
+
+  &.metric-emerald {
+    .d-icon {
+      background: #ecfdf5;
+      color: #10b981;
+    }
+  }
+
+  &.metric-violet {
+    .d-icon {
+      background: #f5f3ff;
+      color: #8b5cf6;
+    }
+  }
+
+  &.metric-amber {
+    .d-icon {
+      background: #fffbe3;
+      color: #d97706;
+    }
+  }
+}
+
 /* Categories Grid */
 .doc-categories {
   display: grid;

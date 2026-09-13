@@ -34,6 +34,7 @@ public class BranchService : IBranchService
             Country = b.Country,
             Phone = b.Phone,
             Email = b.Email,
+            ImageUrl = b.ImageUrl,
             CompanyId = b.CompanyId,
             EmployeeCount = b.Employees.Count,
             Status = b.IsActive ? "ACTIVE" : "INACTIVE"
@@ -57,6 +58,7 @@ public class BranchService : IBranchService
             Country = dto.Country,
             Phone = dto.Phone,
             Email = dto.Email,
+            ImageUrl = dto.ImageUrl,
             CompanyId = dto.CompanyId ?? (await _context.CompanyProfiles.FirstOrDefaultAsync())?.Id ?? Guid.Empty
         };
         await _branchRepository.AddAsync(branch);
@@ -73,6 +75,7 @@ public class BranchService : IBranchService
             Country = branch.Country,
             Phone = branch.Phone,
             Email = branch.Email,
+            ImageUrl = branch.ImageUrl,
             CompanyId = branch.CompanyId,
             EmployeeCount = employeeCount,
             Status = "ACTIVE"
@@ -90,6 +93,7 @@ public class BranchService : IBranchService
         branch.Country = dto.Country;
         branch.Phone = dto.Phone;
         branch.Email = dto.Email;
+        branch.ImageUrl = dto.ImageUrl;
         if (dto.CompanyId.HasValue) branch.CompanyId = dto.CompanyId.Value;
         branch.UpdatedAt = DateTime.UtcNow;
         await _branchRepository.UpdateAsync(branch);
@@ -106,6 +110,7 @@ public class BranchService : IBranchService
             Country = branch.Country,
             Phone = branch.Phone,
             Email = branch.Email,
+            ImageUrl = branch.ImageUrl,
             CompanyId = branch.CompanyId,
             EmployeeCount = employeeCount,
             Status = branch.IsActive ? "ACTIVE" : "INACTIVE"

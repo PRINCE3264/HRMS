@@ -4,6 +4,45 @@
   </button>
 </app-page-header>
 
+<!-- Metrics Overview Cards (Executive Light Cards) -->
+<div class="company-stats">
+  <div class="c-stat metric-blue">
+    <div class="c-icon"><i class="fas fa-building"></i></div>
+    <div class="c-info">
+      <span class="c-label">Company Entity</span>
+      <span class="c-val">{{ profile.companyName || 'Corporate HQ' }}</span>
+      <span class="c-sub"><i class="fas fa-map-marker-alt"></i> Surat, Gujarat</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-emerald">
+    <div class="c-icon"><i class="fas fa-file-invoice"></i></div>
+    <div class="c-info">
+      <span class="c-label">Tax Registration</span>
+      <span class="c-val">{{ profile.taxId || '24AAACE1234F1Z9' }}</span>
+      <span class="c-sub"><i class="fas fa-shield-alt"></i> GSTIN & PAN Verified</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-amber">
+    <div class="c-icon"><i class="fas fa-coins"></i></div>
+    <div class="c-info">
+      <span class="c-label">System Currency</span>
+      <span class="c-val">INR (₹)</span>
+      <span class="c-sub"><i class="fas fa-exchange-alt"></i> Default Ledger Currency</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-violet">
+    <div class="c-icon"><i class="fas fa-calendar-alt"></i></div>
+    <div class="c-info">
+      <span class="c-label">Fiscal Year</span>
+      <span class="c-val">{{ profile.fiscalYearStart || 'April' }} Cycle</span>
+      <span class="c-sub"><i class="fas fa-business-time"></i> {{ profile.workingDays || 'Mon - Sat' }}</span>
+    </div>
+  </div>
+</div>
+
 <div class="section-card">
   <div class="section-title"><i class="fas fa-building"></i> General Information</div>
   <div class="form-grid">

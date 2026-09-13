@@ -1,0 +1,239 @@
+<div class="shift-form-page">
+
+  <!-- Top Page Header -->
+  <div class="top-nav-bar">
+    <div class="nav-left">
+      <nav class="breadcrumbs">
+        <a routerLink="/hr/dashboard">Dashboard</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <a routerLink="/hr/shifts">Shift Management</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current">Edit Shift</span>
+      </nav>
+      <h1 class="page-title">Edit Work Shift Configuration</h1>
+      <p class="page-subtitle">Update shift schedules, working hours, break durations, and active days</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-cancel" (click)="onCancel()">
+        <i class="fas fa-times"></i> Cancel
+      </button>
+      <button class="btn btn-primary" (click)="onSubmit()" [disabled]="saving">
+        <i class="fas" [ngClass]="saving ? 'fa-spinner fa-spin' : 'fa-check'"></i>
+        {{ saving ? 'Saving Changes...' : 'Save Shift' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Form Container -->
+  <div class="form-container">
+    <form (ngSubmit)="onSubmit()">
+
+      <!-- General Information Section -->
+      <div class="form-section">
+        <div class="section-title">
+          <i class="fas fa-edit icon-indigo"></i>
+          <div>
+            <h3>Basic Shift Details</h3>
+            <p>Modify shift title, code designation, and category</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Shift Name <span class="required">*</span></label>
+            <input
+              type="text"
+              [(ngModel)]="form.name"
+              name="name"
+              placeholder="e.g. Morning Shift, General Shift..."
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Shift Code</label>
+            <input
+              type="text"
+              [(ngModel)]="form.code"
+              name="code"
+              placeholder="e.g. SH-01, SH-02"
+              class="form-control"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Shift Category</label>
+            <select [(ngModel)]="form.category" name="category" class="form-control">
+              <option *ngFor="let cat of shiftCategories" [value]="cat">{{ cat }} Shift</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Status</label>
+            <select [(ngModel)]="form.status" name="status" class="form-control">
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- Timing & Duration Section -->
+      <div class="form-section">
+        <div class="section-title">
+          <i class="far fa-clock icon-indigo"></i>
+          <div>
+            <h3>Timings & Grace Period Thresholds</h3>
+            <p>Adjust clock-in / clock-out times, break durations, and grace rules</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Clock In / Start Time <span class="required">*</span></label>
+            <input
+              type="time"
+              [(ngModel)]="form.startTime"
+              name="startTime"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Clock Out / End Time <span class="required">*</span></label>
+            <input
+              type="time"
+              [(ngModel)]="form.endTime"
+              name="endTime"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Break Duration (Minutes)</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                [(ngModel)]="form.breakDurationMinutes"
+                name="breakDurationMinutes"
+                placeholder="60"
+                class="form-control"
+              />
+              <span class="suffix">mins</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Late Grace Period (Minutes)</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                [(ngModel)]="form.lateGracePeriodMinutes"
+                name="lateGracePeriodMinutes"
+                placeholder="15"
+                class="form-control"
+              />
+              <span class="suffix">mins</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Half Day Threshold (Hours)</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                step="0.5"
+                [(ngModel)]="form.halfDayHours"
+                name="halfDayHours"
+                placeholder="4.5"
+                class="form-control"
+              />
+              <span class="suffix">hrs</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Overtime Minimum Threshold</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                step="0.5"
+                [(ngModel)]="form.overtimeThresholdHours"
+                name="overtimeThresholdHours"
+                placeholder="1.0"
+                class="form-control"
+              />
+              <span class="suffix">hrs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- Working Days Section -->
+      <div class="form-section">
+        <div class="section-title">
+          <i class="fas fa-calendar-alt icon-indigo"></i>
+          <div>
+            <h3>Working Days Schedule</h3>
+            <p>Select active working days for this shift</p>
+          </div>
+        </div>
+
+        <div class="days-toggle-container">
+          <button
+            *ngFor="let day of daysList"
+            type="button"
+            class="day-btn"
+            [class.selected]="isDaySelected(day)"
+            (click)="toggleDay(day)">
+            <i class="fas" [ngClass]="isDaySelected(day) ? 'fa-check-circle' : 'fa-circle'"></i>
+            <span>{{ day }}</span>
+          </button>
+        </div>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- Description & Policy Guidelines -->
+      <div class="form-section">
+        <div class="section-title">
+          <i class="fas fa-file-alt icon-indigo"></i>
+          <div>
+            <h3>Description & Notes</h3>
+            <p>Provide optional guidelines for employees assigned to this shift</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <textarea
+            [(ngModel)]="form.description"
+            name="description"
+            rows="3"
+            placeholder="e.g. Standard morning shift from 07:00 AM to 04:00 PM with 1 hour lunch break..."
+            class="form-control"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Bottom Actions Bar -->
+      <div class="form-actions-bar">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">
+          <i class="fas fa-arrow-left"></i> Back to Shift List
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving">
+          <i class="fas" [ngClass]="saving ? 'fa-spinner fa-spin' : 'fa-check'"></i>
+          {{ saving ? 'Saving Changes...' : 'Save Shift' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

@@ -1,6 +1,5 @@
-<div class="loading-overlay" *ngIf="loadingService.loading$ | async">
-      <div class="loading-spinner">
-        <div class="spinner-ring"></div>
-        <span>Loading...</span>
-      </div>
-    </div>
+<div class="loading-overlay" [class.active]="isLoading">
+  <div class="loading-animation-wrapper">
+    <iframe src="https://lottie.host/embed/a7e2dae1-7302-4c63-b0c1-ac526423f86e/6cXQbaMvT1.lottie" class="lottie-loader" frameborder="0"></iframe>
+  </div>
+</div>

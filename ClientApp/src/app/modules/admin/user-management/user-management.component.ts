@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserManagementService, ToastService } from '../../../core/services';
 import { TableColumn } from '../../../core/models';
 
@@ -44,7 +45,11 @@ export class AdminUserManagementComponent implements OnInit {
 
   users: any[] = [];
 
-  constructor(private userManagementService: UserManagementService, private toast: ToastService) {}
+  constructor(
+    private userManagementService: UserManagementService,
+    private toast: ToastService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -54,17 +59,34 @@ export class AdminUserManagementComponent implements OnInit {
     this.userManagementService.getUsers().subscribe({
       next: (data) => this.users = (data || []).map((u: any) => ({
         id: u.id,
-        username: u.username || (u.employeeId || u.email?.split('@')[0] || ''),
-        name: `${u.firstName || ''} ${u.lastName || ''}`.trim(),
-        email: u.email,
+        username: this.resolveUsername(u),
+        name: `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'System User',
+        email: u.email || 'N/A',
         role: this.roleLabel(u.role),
-        department: u.department || '',
-        lastLogin: '',
-        mfa: 'No',
-        status: 'ACTIVE'
+        department: u.department || 'General',
+        lastLogin: u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleDateString() : 'Never',
+        mfa: u.mfaEnabled ? 'Yes' : 'No',
+        status: u.isActive !== false ? 'ACTIVE' : 'INACTIVE'
       })),
       error: () => this.toast.error('Failed to load users')
     });
+  }
+
+  private resolveUsername(u: any): string {
+    const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    if (u.username && typeof u.username === 'string' && !guidRegex.test(u.username)) {
+      return u.username;
+    }
+    if (u.email && u.email.includes('@')) {
+      return u.email.split('@')[0];
+    }
+    if (u.employeeCode) {
+      return u.employeeCode;
+    }
+    if (u.firstName) {
+      return u.firstName.toLowerCase();
+    }
+    return 'user';
   }
 
   private roleLabel(role: string): string {
@@ -125,8 +147,10 @@ export class AdminUserManagementComponent implements OnInit {
     this.toast.success('User added locally (no create-user API available)');
   }
 
-  onAction(event: { action: string; row: any }): void {
-    if (event.action === 'delete') {
+  onAction(event: any): void {
+    if (event.action === 'edit') {
+      this.router.navigate(['/admin/users', event.row.id, 'edit']);
+    } else if (event.action === 'delete') {
       this.userManagementService.deleteUser(event.row.id).subscribe({
         next: () => {
           this.toast.success('User deleted');

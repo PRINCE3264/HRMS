@@ -32,6 +32,9 @@ public class Branch
     [MaxLength(255)]
     public string? Email { get; set; }
 
+    [MaxLength(500)]
+    public string? ImageUrl { get; set; }
+
     public Guid CompanyId { get; set; }
 
     public bool IsActive { get; set; } = true;

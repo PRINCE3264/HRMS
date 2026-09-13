@@ -8,6 +8,9 @@
           <ng-content select="[tableFilters]"></ng-content>
         </div>
         <div class="table-actions">
+          <button *ngIf="showExport" type="button" class="btn-excel-export" (click)="exportToExcel()" [title]="selectedItems.size > 0 ? 'Export ' + selectedItems.size + ' Selected Rows' : 'Export Table Data'">
+            <i class="fas fa-file-excel"></i> Export Excel <span *ngIf="selectedItems.size > 0">({{ selectedItems.size }})</span>
+          </button>
           <ng-content select="[tableActions]"></ng-content>
         </div>
       </div>

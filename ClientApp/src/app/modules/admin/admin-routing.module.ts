@@ -5,25 +5,45 @@ import { AdminEmployeesComponent } from './employees/employees.component';
 import { AdminEmployeeFormComponent } from './employees/employee-form.component';
 import { AdminEmployeeDetailComponent } from './employees/employee-detail.component';
 import { AdminDepartmentsComponent } from './departments/departments.component';
+import { AdminDepartmentFormComponent } from './departments/department-form.component';
+import { AdminDepartmentDetailComponent } from './departments/department-detail.component';
 import { AdminDesignationsComponent } from './designations/designations.component';
+import { AdminDesignationFormComponent } from './designations/designation-form.component';
 import { AdminBranchesComponent } from './branches/branches.component';
+import { AdminBranchFormComponent } from './branches/branch-form.component';
+import { AdminBranchDetailComponent } from './branches/branch-detail.component';
 import { AdminTeamsComponent } from './teams/teams.component';
+import { AdminTeamFormComponent } from './teams/team-form.component';
+import { AdminTeamDetailComponent } from './teams/team-detail.component';
 import { AdminAttendanceComponent } from './attendance/attendance.component';
 import { AdminLeaveComponent } from './leave-management/leave-management.component';
 import { AdminShiftComponent } from './shift-management/shift-management.component';
+import { AdminShiftAddComponent } from './shift-management/add-shift.component';
+import { AdminShiftEditComponent } from './shift-management/edit-shift.component';
 import { AdminPayrollComponent } from './payroll/payroll.component';
 import { AdminRecruitmentComponent } from './recruitment/recruitment.component';
+import { AdminJobAddComponent } from './recruitment/add-job.component';
+import { AdminJobEditComponent } from './recruitment/edit-job.component';
+import { AdminCandidateAddComponent } from './recruitment/add-candidate.component';
+import { AdminCandidateEditComponent } from './recruitment/edit-candidate.component';
 import { AdminOnboardingComponent } from './onboarding/onboarding.component';
+import { AdminOnboardingAddComponent } from './onboarding/add-onboarding.component';
+import { AdminOnboardingEditComponent } from './onboarding/edit-onboarding.component';
+import { AdminOnboardingDetailComponent } from './onboarding/onboarding-detail.component';
 import { AdminPerformanceComponent } from './performance/performance.component';
 import { AdminTrainingComponent } from './training/training.component';
 import { AdminDocumentsComponent } from './documents/documents.component';
 import { AdminAnnouncementsComponent } from './announcements/announcements.component';
 import { AdminReportsComponent } from './reports/reports.component';
 import { AdminUserManagementComponent } from './user-management/user-management.component';
+import { AdminUserAddComponent } from './user-management/add-user.component';
+import { AdminUserEditComponent } from './user-management/edit-user.component';
 import { AdminRolesPermissionsComponent } from './roles-permissions/roles-permissions.component';
 import { AdminSystemSettingsComponent } from './system-settings/system-settings.component';
 import { AdminAuditLogsComponent } from './audit-logs/audit-logs.component';
 import { AdminProjectsComponent } from './projects/projects.component';
+import { AdminProjectAddComponent } from './projects/add-project.component';
+import { AdminProjectEditComponent } from './projects/edit-project.component';
 import { AdminEmployeeManagementComponent } from './management/employee-management/employee-management.component';
 import { AdminTlManagementComponent } from './management/tl-management/tl-management.component';
 import { AdminHrManagementComponent } from './management/hr-management/hr-management.component';
@@ -31,7 +51,11 @@ import { AdminReportingHierarchyComponent } from './org/reporting-hierarchy.comp
 import { AdminAttendanceCorrectionsComponent } from './attendance/attendance-corrections.component';
 import { AdminAttendanceSummaryComponent } from './attendance/attendance-summary.component';
 import { AdminAttendanceRulesComponent } from './attendance/attendance-rules.component';
+import { AdminAttendanceRulesAddComponent } from './attendance/add-rule.component';
+import { AdminAttendanceRulesEditComponent } from './attendance/edit-rule.component';
 import { AdminSalaryStructuresComponent } from './payroll/salary-structures.component';
+import { AdminSalaryStructureAddComponent } from './payroll/add-salary-structure.component';
+import { AdminSalaryStructureEditComponent } from './payroll/edit-salary-structure.component';
 import { AdminPayrollReportsComponent } from './payroll/payroll-reports.component';
 import { AdminCompanySettingsComponent } from './settings/company-settings.component';
 import { AdminEmailSmsConfigComponent } from './settings/email-sms-config.component';
@@ -45,25 +69,50 @@ const routes: Routes = [
   { path: 'employees/:id/edit', component: AdminEmployeeFormComponent },
   { path: 'employees/:id', component: AdminEmployeeDetailComponent },
   { path: 'departments', component: AdminDepartmentsComponent },
+  { path: 'departments/add', component: AdminDepartmentFormComponent },
+  { path: 'departments/:id/edit', component: AdminDepartmentFormComponent },
+  { path: 'departments/:id', component: AdminDepartmentDetailComponent },
   { path: 'designations', component: AdminDesignationsComponent },
+  { path: 'designations/add', component: AdminDesignationFormComponent },
+  { path: 'designations/:id/edit', component: AdminDesignationFormComponent },
   { path: 'branches', component: AdminBranchesComponent },
+  { path: 'branches/add', component: AdminBranchFormComponent },
+  { path: 'branches/:id/edit', component: AdminBranchFormComponent },
+  { path: 'branches/:id', component: AdminBranchDetailComponent },
   { path: 'teams', component: AdminTeamsComponent },
+  { path: 'teams/add', component: AdminTeamFormComponent },
+  { path: 'teams/:id/edit', component: AdminTeamFormComponent },
+  { path: 'teams/:id', component: AdminTeamDetailComponent },
   { path: 'attendance', component: AdminAttendanceComponent },
   { path: 'leave', component: AdminLeaveComponent },
   { path: 'shifts', component: AdminShiftComponent },
+  { path: 'shifts/add', component: AdminShiftAddComponent },
+  { path: 'shifts/:id/edit', component: AdminShiftEditComponent },
   { path: 'payroll', component: AdminPayrollComponent },
   { path: 'recruitment', component: AdminRecruitmentComponent },
+  { path: 'recruitment/jobs/add', component: AdminJobAddComponent },
+  { path: 'recruitment/jobs/:id/edit', component: AdminJobEditComponent },
+  { path: 'recruitment/candidates/add', component: AdminCandidateAddComponent },
+  { path: 'recruitment/candidates/:id/edit', component: AdminCandidateEditComponent },
+  { path: 'recruitment/candidates/:id', component: AdminCandidateEditComponent },
   { path: 'onboarding', component: AdminOnboardingComponent },
+  { path: 'onboarding/add', component: AdminOnboardingAddComponent },
+  { path: 'onboarding/:id/edit', component: AdminOnboardingEditComponent },
+  { path: 'onboarding/:id', component: AdminOnboardingDetailComponent },
   { path: 'performance', component: AdminPerformanceComponent },
   { path: 'training', component: AdminTrainingComponent },
   { path: 'documents', component: AdminDocumentsComponent },
   { path: 'announcements', component: AdminAnnouncementsComponent },
   { path: 'reports', component: AdminReportsComponent },
   { path: 'users', component: AdminUserManagementComponent },
+  { path: 'users/add', component: AdminUserAddComponent },
+  { path: 'users/:id/edit', component: AdminUserEditComponent },
   { path: 'roles', component: AdminRolesPermissionsComponent },
   { path: 'settings', component: AdminSystemSettingsComponent },
   { path: 'audit-logs', component: AdminAuditLogsComponent },
   { path: 'projects', component: AdminProjectsComponent },
+  { path: 'projects/add', component: AdminProjectAddComponent },
+  { path: 'projects/:id/edit', component: AdminProjectEditComponent },
   { path: 'employee-management', component: AdminEmployeeManagementComponent },
   { path: 'tl-management', component: AdminTlManagementComponent },
   { path: 'hr-management', component: AdminHrManagementComponent },
@@ -71,7 +120,11 @@ const routes: Routes = [
   { path: 'attendance/corrections', component: AdminAttendanceCorrectionsComponent },
   { path: 'attendance/summary', component: AdminAttendanceSummaryComponent },
   { path: 'attendance/rules', component: AdminAttendanceRulesComponent },
+  { path: 'attendance/rules/add', component: AdminAttendanceRulesAddComponent },
+  { path: 'attendance/rules/:id/edit', component: AdminAttendanceRulesEditComponent },
   { path: 'payroll/salary-structures', component: AdminSalaryStructuresComponent },
+  { path: 'payroll/salary-structures/add', component: AdminSalaryStructureAddComponent },
+  { path: 'payroll/salary-structures/:id/edit', component: AdminSalaryStructureEditComponent },
   { path: 'payroll/reports', component: AdminPayrollReportsComponent },
   { path: 'settings/company', component: AdminCompanySettingsComponent },
   { path: 'settings/email-sms', component: AdminEmailSmsConfigComponent },
@@ -83,4 +136,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AdminRoutingModule {}
+export class AdminRoutingModule { }

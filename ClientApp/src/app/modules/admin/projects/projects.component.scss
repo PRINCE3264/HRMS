@@ -1,16 +1,132 @@
 :host { display: block; }
 
-.btn { padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-.btn--primary { background: #6366f1; color: #fff; }
-.btn--primary:hover { background: #4f46e5; }
+.btn { padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; }
+.btn--primary { background: linear-gradient(135deg, #4461f6 0%, #1e40af 100%); color: #fff; box-shadow: 0 4px 12px rgba(68, 97, 246, 0.3); }
+.btn--primary:hover { transform: translateY(-1px); }
 
-.text-blue { color: #6366f1; }
+/* Metric Executive Stat Cards */
+.project-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.p-stat {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    border-color: #cbd5e1;
+  }
+
+  .p-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover .p-icon {
+    transform: scale(1.05);
+  }
+
+  .p-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+
+    .p-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #64748b;
+    }
+
+    .p-val {
+      display: block;
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #0f172a;
+      margin: 2px 0 3px 0;
+    }
+
+    .p-sub {
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      i {
+        font-size: 11px;
+      }
+    }
+  }
+
+  &.metric-blue {
+    .p-icon {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+  }
+
+  &.metric-emerald {
+    .p-icon {
+      background: #ecfdf5;
+      color: #10b981;
+    }
+  }
+
+  &.metric-violet {
+    .p-icon {
+      background: #f5f3ff;
+      color: #8b5cf6;
+    }
+  }
+
+  &.metric-amber {
+    .p-icon {
+      background: #fffbe3;
+      color: #d97706;
+    }
+  }
+}
+
+.text-blue { color: #4461f6; }
 
 .modal-backdrop {
   position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
 }
 .modal-card {
-  background: #fff; border-radius: 14px; width: 100%; max-width: 560px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); overflow: hidden;
+  background: #fff; border-radius: 16px; width: 100%; max-width: 560px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); overflow: hidden;
 }
 .modal-card.members-modal { max-width: 620px; }
 .modal-header {
@@ -22,8 +138,8 @@
 .modal-body { padding: 20px 22px; max-height: 60vh; overflow-y: auto; }
 .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 22px; border-top: 1px solid #f1f5f9; }
 .btn-cancel { padding: 9px 16px; border-radius: 8px; background: #f1f5f9; color: #475569; border: none; cursor: pointer; font-weight: 600; }
-.btn-save { padding: 9px 16px; border-radius: 8px; background: #6366f1; color: #fff; border: none; cursor: pointer; font-weight: 600; }
-.btn-save:hover { background: #4f46e5; }
+.btn-save { padding: 9px 16px; border-radius: 8px; background: #4461f6; color: #fff; border: none; cursor: pointer; font-weight: 600; }
+.btn-save:hover { background: #1e40af; }
 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -31,17 +147,17 @@
 .form-group label { font-size: 13px; font-weight: 600; color: #334155; }
 .form-group .required { color: #ef4444; }
 .form-control { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; color: #1e293b; outline: none; width: 100%; background: #fbfdff; }
-.form-control:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12); }
+.form-control:focus { border-color: #4461f6; box-shadow: 0 0 0 3px rgba(68, 97, 246, 0.12); }
 textarea.form-control { resize: vertical; }
 .form-hint { font-size: 12px; color: #94a3b8; margin: 4px 0 0; }
 
 .members-list { display: flex; flex-direction: column; gap: 10px; }
 .member-row { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 10px; padding: 10px 12px; }
-.member-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0; }
+.member-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #4461f6, #1e40af); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0; }
 .member-info { flex: 1; min-width: 0; }
 .member-name { font-size: 14px; font-weight: 600; color: #1e293b; }
 .member-meta { font-size: 12px; color: #64748b; }
-.member-status { font-size: 11px; font-weight: 700; background: #eef2ff; color: #6366f1; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.03em; }
+.member-status { font-size: 11px; font-weight: 700; background: #eef2ff; color: #4461f6; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.03em; }
 .member-status.done { background: #ecfdf5; color: #10b981; }
 .btn-remove { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; }
 .btn-remove:hover { color: #ef4444; }

@@ -12,10 +12,12 @@ namespace HRMAPI.Controllers;
 public class EmployeeController : BaseController
 {
     private readonly IEmployeeService _employeeService;
+    private readonly IWebHostEnvironment _env;
 
-    public EmployeeController(IEmployeeService employeeService)
+    public EmployeeController(IEmployeeService employeeService, IWebHostEnvironment env)
     {
         _employeeService = employeeService;
+        _env = env;
     }
 
     [HttpGet]
@@ -64,6 +66,34 @@ public class EmployeeController : BaseController
     {
         var result = await _employeeService.CreateEmployeeAsync(dto);
         return Ok(ApiResponse<EmployeeDto>.Ok(result, "Employee created."));
+    }
+
+    [HttpPost("upload-avatar")]
+    [Authorize(Roles = "ADMIN,HR")]
+    [DisableRequestSizeLimit]
+    public async Task<ActionResult<ApiResponse<object>>> UploadAvatar([FromForm] IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(ApiResponse<object>.Fail("No file selected."));
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest(ApiResponse<object>.Fail("Image size must be under 5 MB."));
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".bmp" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(ext))
+            return BadRequest(ApiResponse<object>.Fail("Only image files are allowed."));
+
+        var uploadsDir = Path.Combine(_env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot"), "uploads", "employees");
+        Directory.CreateDirectory(uploadsDir);
+        var storedName = $"{Guid.NewGuid():N}{ext}";
+        var fullPath = Path.Combine(uploadsDir, storedName);
+        await using (var stream = System.IO.File.Create(fullPath))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var fileUrl = $"uploads/employees/{storedName}";
+        return Ok(ApiResponse<object>.Ok(new { imageUrl = $"/{fileUrl}" }, "Avatar uploaded."));
     }
 
     [HttpPut("{id:guid}")]

@@ -1,147 +1,186 @@
-<app-page-header title="Employee Onboarding" subtitle="Track and manage new hire orientation, IT provisioning, and training workflows" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Onboarding'}]">
-  <button class="btn btn--primary" (click)="openModal()"><i class="fas fa-user-plus"></i> New Onboarding Candidate</button>
-</app-page-header>
-
-<!-- Metrics Overview Cards -->
-<div class="onboard-stats">
-  <div class="o-stat metric-blue">
-    <div class="o-icon"><i class="fas fa-handshake"></i></div>
-    <div class="o-info">
-      <span class="o-val">{{ activeOnboardings.length }}</span>
-      <span class="o-label">In Progress</span>
-    </div>
-  </div>
-  <div class="o-stat metric-emerald">
-    <div class="o-icon"><i class="fas fa-check-circle"></i></div>
-    <div class="o-info">
-      <span class="o-val">12</span>
-      <span class="o-label">Completed (This Month)</span>
-    </div>
-  </div>
-  <div class="o-stat metric-amber">
-    <div class="o-icon"><i class="fas fa-user-clock"></i></div>
-    <div class="o-info">
-      <span class="o-val">3</span>
-      <span class="o-label">Upcoming Joinees</span>
-    </div>
-  </div>
-  <div class="o-stat metric-violet">
-    <div class="o-icon"><i class="fas fa-tasks"></i></div>
-    <div class="o-info">
-      <span class="o-val">42%</span>
-      <span class="o-label">Avg. Task Completion</span>
-    </div>
-  </div>
-</div>
-
-<!-- Search & Filter Controls -->
-<div class="onboarding-toolbar">
-  <div class="search-box">
-    <i class="fas fa-search search-icon"></i>
-    <input type="text" [(ngModel)]="searchTerm" placeholder="Search new hires, position, mentor..." />
-  </div>
-
-  <div class="filter-controls">
-    <div class="select-box">
-      <select [(ngModel)]="deptFilter">
-        <option value="ALL">All Departments</option>
-        <option value="Engineering">Engineering</option>
-        <option value="Marketing">Marketing</option>
-        <option value="Sales">Sales</option>
-        <option value="Finance">Finance</option>
-      </select>
-    </div>
-  </div>
-</div>
-
-<!-- Onboarding Cards Grid -->
-<div class="onboarding-grid" *ngIf="filteredOnboardings.length > 0; else noData">
-  <div class="onboard-card" *ngFor="let person of filteredOnboardings">
-    <div class="onboard-card__header">
-      <div class="onboard-card__avatar" [style.background]="person.color">
-        {{ person.initials }}
+<div class="onboarding-page">
+  <!-- Top Header Bar -->
+  <div class="page-top-bar">
+    <div class="page-title-section">
+      <div class="breadcrumbs">
+        <span>Dashboard</span> <i class="fas fa-chevron-right breadcrumb-sep"></i> <span class="active-crumb">Onboarding</span>
       </div>
-      <div class="onboard-card__info">
-        <h4>{{ person.name }}</h4>
-        <span class="pos-dept">{{ person.position }} &bull; <strong>{{ person.department }}</strong></span>
-        <span class="onboard-card__date"><i class="far fa-calendar-alt"></i> Joined: {{ person.joinDate }}</span>
+      <h1 class="page-title">Onboarding</h1>
+      <p class="page-subtitle">Track new employee onboarding progress & orientation workflows</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary-action" (click)="navigateToAdd()">
+        <i class="fas fa-plus"></i> New Onboarding
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 Top Metric Cards Bar (Matching Image Design) -->
+  <div class="metric-cards-bar">
+    <div class="stat-card stat-blue" (click)="statusFilter = statusFilter === 'In Progress' ? 'ALL' : 'In Progress'">
+      <div class="stat-icon-box">
+        <i class="fas fa-user-friends"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">{{ inProgressCount }}</span>
+        <span class="stat-label">In Progress</span>
       </div>
     </div>
 
-    <div class="onboard-card__progress">
-      <div class="progress-info">
-        <span>Onboarding Progress</span>
-        <span>{{ person.progress }}%</span>
+    <div class="stat-card stat-green" (click)="statusFilter = statusFilter === 'Completed' ? 'ALL' : 'Completed'">
+      <div class="stat-icon-box">
+        <i class="fas fa-user-check"></i>
       </div>
-      <div class="progress-bar">
-        <div class="progress-bar__fill" [style.width]="person.progress + '%'" [style.background]="person.progress === 100 ? '#10b981' : '#4461f6'"></div>
-      </div>
-    </div>
-
-    <div class="onboard-card__tasks">
-      <span class="tasks-title">Checklist Tasks</span>
-      <div class="task" *ngFor="let task of person.tasks" [class.completed]="task.done" (click)="toggleTask(person, task)">
-        <i [class]="task.done ? 'fas fa-check-circle' : 'far fa-circle'"></i>
-        <span>{{ task.label }}</span>
+      <div class="stat-info">
+        <span class="stat-number">{{ completedCount }}</span>
+        <span class="stat-label">Completed (Month)</span>
       </div>
     </div>
 
-    <div class="onboard-card__mentor">
-      <span><i class="fas fa-user-graduate"></i> Mentor: <strong>{{ person.mentor }}</strong></span>
+    <div class="stat-card stat-red">
+      <div class="stat-icon-box">
+        <i class="fas fa-user-clock"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">{{ upcomingCount }}</span>
+        <span class="stat-label">Upcoming Joinees</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-purple">
+      <div class="stat-icon-box">
+        <i class="fas fa-tasks"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">75%</span>
+        <span class="stat-label">Avg. Completion</span>
+      </div>
     </div>
   </div>
-</div>
 
-<ng-template #noData>
-  <div class="empty-state">
-    <i class="fas fa-handshake empty-icon"></i>
-    <h3>No Onboarding Candidates Found</h3>
-    <p>Try adjusting your search criteria or add a new onboarding candidate.</p>
-  </div>
-</ng-template>
-
-<!-- Modal: Add Onboarding Candidate -->
-<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-card" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3><i class="fas fa-user-plus"></i> New Onboarding Candidate</h3>
-      <button class="close-btn" (click)="closeModal()">&times;</button>
+  <!-- Search & Filter Toolbar Bar -->
+  <div class="onboarding-toolbar">
+    <div class="search-input-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Search employee, position, mentor..." />
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Employee Name *</label>
-        <input type="text" [(ngModel)]="newPerson.name" placeholder="e.g. Alice Cooper" />
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Position / Role *</label>
-          <input type="text" [(ngModel)]="newPerson.position" placeholder="e.g. Senior Frontend Developer" />
-        </div>
-        <div class="form-group">
+
+    <div class="filter-dropdown-container">
+      <button class="btn btn-filter" (click)="toggleFilterDropdown()">
+        <i class="fas fa-filter"></i> Filter
+        <i class="fas fa-chevron-down caret-icon"></i>
+      </button>
+
+      <div class="filter-menu" *ngIf="showFilterDropdown">
+        <div class="filter-group">
           <label>Department</label>
-          <select [(ngModel)]="newPerson.department">
+          <select [(ngModel)]="deptFilter">
+            <option value="ALL">All Departments</option>
             <option value="Engineering">Engineering</option>
             <option value="Marketing">Marketing</option>
             <option value="Sales">Sales</option>
+            <option value="Design">Design</option>
             <option value="Finance">Finance</option>
-            <option value="Human Resources">Human Resources</option>
           </select>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Joining Date</label>
-          <input type="date" [(ngModel)]="newPerson.joinDate" />
+        <div class="filter-group">
+          <label>Status</label>
+          <select [(ngModel)]="statusFilter">
+            <option value="ALL">All Statuses</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
         </div>
-        <div class="form-group">
-          <label>Assigned Mentor</label>
-          <input type="text" [(ngModel)]="newPerson.mentor" placeholder="e.g. Michael Chen" />
-        </div>
+        <button class="btn-clear-filter" (click)="deptFilter = 'ALL'; statusFilter = 'ALL'; showFilterDropdown = false">
+          Reset Filters
+        </button>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn--cancel" (click)="closeModal()">Cancel</button>
-      <button class="btn btn--primary" (click)="saveOnboarding()"><i class="fas fa-check"></i> Add Onboarding</button>
     </div>
   </div>
+
+  <!-- Onboarding Cards Grid -->
+  <div class="onboarding-cards-grid" *ngIf="filteredOnboardings.length > 0; else noData">
+    <div class="onboarding-card" *ngFor="let person of filteredOnboardings">
+      <!-- Card Header / User Info -->
+      <div class="card-top">
+        <div class="avatar-wrapper">
+          <img *ngIf="person.avatar" [src]="person.avatar" [alt]="person.name" class="avatar-img" />
+          <div *ngIf="!person.avatar" class="avatar-initials" [style.background]="person.accentColor">{{ person.initials }}</div>
+        </div>
+
+        <div class="user-meta">
+          <div class="name-row">
+            <h3 class="user-name" (click)="navigateToDetail(person)">{{ person.name }}</h3>
+            <span class="status-pill" [class]="person.statusClass">{{ person.status || 'In Progress' }}</span>
+          </div>
+          <div class="user-role">{{ person.position }} - {{ person.department }}</div>
+          <div class="user-joined"><i class="far fa-calendar"></i> Joined: {{ person.joinDate }}</div>
+        </div>
+
+        <div class="completion-meta">
+          <span class="percent-val">{{ person.progress }}%</span>
+          <span class="percent-label">complete</span>
+        </div>
+      </div>
+
+      <!-- Colored Progress Line Accent -->
+      <div class="card-progress-bar">
+        <div class="bar-fill" [style.width]="person.progress + '%'" [style.background]="person.accentColor || '#2563eb'"></div>
+      </div>
+
+      <!-- Card Body: Tasks Checklist + Meta Details -->
+      <div class="card-body">
+        <!-- Left: Checklist Tasks -->
+        <div class="tasks-column">
+          <div class="task-item" *ngFor="let task of person.tasks" [class.done]="task.done" (click)="toggleTask(person, task)">
+            <span class="task-check-icon">
+              <i *ngIf="task.done" class="fas fa-check-circle check-filled"></i>
+              <i *ngIf="!task.done" class="far fa-circle check-empty"></i>
+            </span>
+            <span class="task-label">{{ task.label }}</span>
+          </div>
+        </div>
+
+        <!-- Right: Mentor, Department, Start Date -->
+        <div class="meta-column">
+          <div class="meta-item">
+            <i class="fas fa-user-tie meta-icon"></i>
+            <div class="meta-content">
+              <span class="meta-label">Mentor</span>
+              <span class="meta-value">{{ person.mentor || 'Unassigned' }}</span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-building meta-icon"></i>
+            <div class="meta-content">
+              <span class="meta-label">Department</span>
+              <span class="meta-value">{{ person.department || 'Engineering' }}</span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <i class="far fa-calendar-alt meta-icon"></i>
+            <div class="meta-content">
+              <span class="meta-label">Start Date</span>
+              <span class="meta-value">{{ person.joinDate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="card-footer">
+        <button class="btn-view-details" (click)="navigateToDetail(person)">View Details</button>
+        <button class="btn-more-options" aria-label="More options" (click)="navigateToDetail(person)"><i class="fas fa-ellipsis-v"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      <i class="fas fa-user-check empty-icon"></i>
+      <h3>No Onboarding Records Found</h3>
+      <p>Try adjusting your search or filter criteria or add a new onboarding candidate.</p>
+    </div>
+  </ng-template>
 </div>

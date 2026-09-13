@@ -1,0 +1,75 @@
+<app-page-header title="Edit Job Opening" subtitle="Update job details, salary range, location, and requirements" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Recruitment',link:'/admin/recruitment'},{label:'Edit Job'}]">
+  <button class="btn btn--outline" (click)="cancel()"><i class="fas fa-arrow-left"></i> Back to List</button>
+</app-page-header>
+
+<div class="form-container">
+  <div class="form-card">
+    <div class="card-header">
+      <h3><i class="fas fa-edit"></i> Edit Job Opening Details</h3>
+    </div>
+
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>Job Title *</label>
+          <input type="text" [(ngModel)]="formData.title" placeholder="e.g. Senior Full Stack Developer" />
+        </div>
+
+        <div class="form-group">
+          <label>Department</label>
+          <select [(ngModel)]="formData.department">
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Employment Type</label>
+          <select [(ngModel)]="formData.type">
+            <option *ngFor="let type of employmentTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" [(ngModel)]="formData.location" placeholder="e.g. Remote / Mumbai / Bangalore" />
+        </div>
+
+        <div class="form-group">
+          <label>Salary Range (INR ₹)</label>
+          <input type="text" [(ngModel)]="formData.salaryRange" placeholder="e.g. ₹12,00,000 - ₹18,00,000 / yr" />
+        </div>
+
+        <div class="form-group">
+          <label>Vacancies / Positions</label>
+          <input type="number" [(ngModel)]="formData.vacancies" min="1" />
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="formData.status">
+            <option value="ACTIVE">Active</option>
+            <option value="PAUSED">Paused</option>
+            <option value="CLOSED">Closed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group full-width mt-3">
+        <label>Job Description</label>
+        <textarea rows="3" [(ngModel)]="formData.description" placeholder="Enter key responsibilities, role overview, and objectives..."></textarea>
+      </div>
+
+      <div class="form-group full-width mt-3">
+        <label>Skills & Requirements</label>
+        <textarea rows="3" [(ngModel)]="formData.requirements" placeholder="e.g. Angular, Node.js, TypeScript, PostgreSQL, 4+ years experience..."></textarea>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn--cancel" (click)="cancel()">Cancel</button>
+      <button class="btn btn--primary" (click)="save()" [disabled]="loading">
+        <i class="fas fa-check"></i> {{ loading ? 'Updating...' : 'Update Job Opening' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,37 +1,95 @@
-<app-page-header title="HR Management" subtitle="Assign, review, and manage HR team members" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'HR Management'}]">
+<app-page-header title="HR Management" subtitle="Assign, review, and manage HR team members" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'HR Management'}]">
 </app-page-header>
 
-<div class="assign-row">
-  <select class="assign-select" [(ngModel)]="selectedEmployeeId">
-    <option value="" disabled>Select an employee to assign an HR role</option>
-    <option *ngFor="let c of candidates" [value]="c.id">
-      {{ c.fullName }} &mdash; {{ c.employeeCode }} ({{ c.designation || 'No designation' }})
-    </option>
-  </select>
-  <button class="btn btn--primary" [disabled]="assigning" (click)="assignAsHR()">
-    <i class="fas fa-user-shield"></i> Assign HR Role
-  </button>
-  <span class="assign-hint" *ngIf="candidates.length === 0">
-    No eligible employees (need an active account) to assign.
-  </span>
+<!-- Metrics Overview Cards (Executive Light Cards) -->
+<div class="hr-stats">
+  <div class="c-stat metric-blue">
+    <div class="c-icon"><i class="fas fa-user-shield"></i></div>
+    <div class="c-info">
+      <span class="c-label">Active HR Team</span>
+      <span class="c-val">{{ hrMembers.length }}</span>
+      <span class="c-sub"><i class="fas fa-users"></i> HR Administrators</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-emerald">
+    <div class="c-icon"><i class="fas fa-check-circle"></i></div>
+    <div class="c-info">
+      <span class="c-label">HR Status</span>
+      <span class="c-val">Active</span>
+      <span class="c-sub"><i class="fas fa-shield-alt"></i> Full Access Granted</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-violet">
+    <div class="c-icon"><i class="fas fa-user-plus"></i></div>
+    <div class="c-info">
+      <span class="c-label">Eligible Candidates</span>
+      <span class="c-val">{{ candidates.length }}</span>
+      <span class="c-sub"><i class="fas fa-id-card"></i> Ready for HR Role</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-amber">
+    <div class="c-icon"><i class="fas fa-user-lock"></i></div>
+    <div class="c-info">
+      <span class="c-label">Role Policy</span>
+      <span class="c-val">Restricted</span>
+      <span class="c-sub"><i class="fas fa-key"></i> Admin Managed Only</span>
+    </div>
+  </div>
 </div>
 
-<app-data-table
-  [columns]="columns"
-  [data]="hrMembers"
-  [pageSize]="10"
-  [actions]="tableActions"
-  emptyTitle="No HR members found"
-  emptyMessage="Assign an employee above to give them an HR role."
-  emptyIcon="fas fa-user-shield"
-  (onActionClick)="onAction($event)">
-</app-data-table>
+<div class="assign-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-user-plus"></i> Assign New HR Role
+    </div>
+    <span class="card-subtitle">Select an active employee account to grant HR administrative privileges.</span>
+  </div>
+  
+  <div class="assign-row">
+    <div class="select-wrapper">
+      <i class="fas fa-search select-icon"></i>
+      <select class="assign-select" [(ngModel)]="selectedEmployeeId">
+        <option value="" disabled selected>Select an employee to assign an HR role...</option>
+        <option *ngFor="let c of candidates" [value]="c.id">
+          {{ c.fullName }} &mdash; {{ c.employeeCode }} ({{ c.designation || 'No designation' }})
+        </option>
+      </select>
+    </div>
+    <button class="btn btn--primary" [disabled]="assigning || !selectedEmployeeId" (click)="assignAsHR()">
+      <i class="fas" [ngClass]="assigning ? 'fa-spinner fa-spin' : 'fa-user-shield'"></i> {{ assigning ? 'Assigning...' : 'Assign HR Role' }}
+    </button>
+  </div>
+  <div class="assign-hint" *ngIf="candidates.length === 0">
+    <i class="fas fa-info-circle"></i> No eligible employees with active accounts available for HR role assignment.
+  </div>
+</div>
+
+<div class="table-container-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fas fa-list-check"></i> Current HR Team Members
+    </div>
+  </div>
+  <app-data-table
+    [columns]="columns"
+    [data]="hrMembers"
+    [pageSize]="10"
+    [actions]="tableActions"
+    emptyTitle="No HR members found"
+    emptyMessage="Assign an employee above to give them an HR role."
+    emptyIcon="fas fa-user-shield"
+    (onActionClick)="onAction($event)">
+  </app-data-table>
+</div>
 
 <app-confirm-dialog
   [isOpen]="showRevokeConfirm"
   title="Revoke HR Role"
   [message]="revoking ? 'Remove ' + revoking.fullName + ' from the HR role? They will become a regular Employee.' : ''"
-  confirmText="Revoke"
+  confirmText="Revoke Role"
   type="danger"
   (confirmed)="confirmRevoke()"
   (cancelled)="cancelRevoke()">

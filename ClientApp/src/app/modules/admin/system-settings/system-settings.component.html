@@ -2,13 +2,51 @@
 </app-page-header>
 
 <div class="system-settings-container">
-
   <!-- Read-Only Banner for Employees / HR / TLs -->
   <div class="read-only-banner" *ngIf="!isAdmin">
     <div class="banner-icon-box"><i class="fas fa-lock"></i></div>
     <div class="banner-text">
       <strong>System Overview (Read-Only Mode)</strong>
       <p>You are logged in as <span>{{ userRole }}</span>. System configuration can only be edited by System Admins.</p>
+    </div>
+  </div>
+
+  <!-- Metrics Overview Cards (Executive Light Cards) -->
+  <div class="settings-stats">
+    <div class="s-stat metric-blue">
+      <div class="s-icon"><i class="fas fa-server"></i></div>
+      <div class="s-info">
+        <span class="s-label">System Environment</span>
+        <span class="s-val">Production</span>
+        <span class="s-sub"><i class="fas fa-check-circle"></i> Live v2.6.4 System</span>
+      </div>
+    </div>
+
+    <div class="s-stat metric-emerald">
+      <div class="s-icon"><i class="fas fa-map-marked-alt"></i></div>
+      <div class="s-info">
+        <span class="s-label">Geofence Status</span>
+        <span class="s-val">Active (500m)</span>
+        <span class="s-sub"><i class="fas fa-crosshairs"></i> GPS Radius Enforced</span>
+      </div>
+    </div>
+
+    <div class="s-stat metric-violet">
+      <div class="s-icon"><i class="fas fa-clock"></i></div>
+      <div class="s-info">
+        <span class="s-label">Standard Shift</span>
+        <span class="s-val">09:30 - 18:30</span>
+        <span class="s-sub"><i class="fas fa-business-time"></i> 15m Grace Period</span>
+      </div>
+    </div>
+
+    <div class="s-stat metric-amber">
+      <div class="s-icon"><i class="fas fa-shield-alt"></i></div>
+      <div class="s-info">
+        <span class="s-label">Security & Access</span>
+        <span class="s-val">RBAC Enforced</span>
+        <span class="s-sub"><i class="fas fa-key"></i> High Privilege Mode</span>
+      </div>
     </div>
   </div>
 

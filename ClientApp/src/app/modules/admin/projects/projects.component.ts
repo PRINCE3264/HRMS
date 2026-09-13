@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProjectService, DepartmentService, ToastService } from '../../../core/services';
 import { Project, ProjectMember, EmployeeOption } from '../../../core/models';
 import { TableColumn } from '../../../core/models';
@@ -21,25 +22,11 @@ export class AdminProjectsComponent implements OnInit {
     { key: 'memberCount', label: 'Members', type: 'number', sortable: true }
   ];
   tableActions = [
-    { label: 'Assign TL', icon: 'fas fa-user-tie', action: 'assign-tl', color: '#6366f1' },
+    { label: 'Assign TL', icon: 'fas fa-user-tie', action: 'assign-tl', color: '#4461f6' },
     { label: 'Members', icon: 'fas fa-users', action: 'members', color: '#10b981' },
     { label: 'Edit', icon: 'fas fa-edit', action: 'edit', color: '#f59e0b' },
     { label: 'Delete', icon: 'fas fa-trash', action: 'delete', color: '#ef4444' }
   ];
-
-  showForm = false;
-  isEdit = false;
-  editingId = '';
-  form = {
-    name: '',
-    projectCode: '',
-    description: '',
-    departmentId: '',
-    teamLeadId: '',
-    priority: 'MEDIUM',
-    startDate: '',
-    endDate: ''
-  };
 
   showAssignTl = false;
   assignTarget: Project | null = null;
@@ -52,7 +39,8 @@ export class AdminProjectsComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private departmentService: DepartmentService,
-    private toast: ToastService
+    private toast: ToastService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -67,6 +55,18 @@ export class AdminProjectsComponent implements OnInit {
     });
   }
 
+  get inProgressCount(): number {
+    return this.projects.filter(p => p.status !== 'COMPLETED').length;
+  }
+
+  get highPriorityCount(): number {
+    return this.projects.filter(p => p.priority === 'HIGH' || p.priority === 'CRITICAL').length;
+  }
+
+  get assignedTlCount(): number {
+    return this.projects.filter(p => !!p.teamLeadId || !!p.teamLeadName).length;
+  }
+
   private loadProjects(): void {
     this.projectService.getProjects().subscribe({
       next: (data) => this.projects = data.map(p => ({ ...p, status: p.status, priority: p.priority })),
@@ -74,87 +74,11 @@ export class AdminProjectsComponent implements OnInit {
     });
   }
 
-  today(): string {
-    return new Date().toISOString().split('T')[0];
-  }
-
-  openAdd(): void {
-    this.isEdit = false;
-    this.editingId = '';
-    this.form = {
-      name: '',
-      projectCode: '',
-      description: '',
-      departmentId: '',
-      teamLeadId: '',
-      priority: 'MEDIUM',
-      startDate: this.today(),
-      endDate: ''
-    };
-    this.showForm = true;
-  }
-
-  openEdit(project: Project): void {
-    this.isEdit = true;
-    this.editingId = project.id;
-    this.form = {
-      name: project.name,
-      projectCode: project.projectCode,
-      description: project.description || '',
-      departmentId: project.departmentId,
-      teamLeadId: project.teamLeadId || '',
-      priority: project.priority,
-      startDate: project.startDate ? project.startDate.split('T')[0] : this.today(),
-      endDate: project.endDate ? project.endDate.split('T')[0] : ''
-    };
-    this.showForm = true;
-  }
-
-  closeForm(): void {
-    this.showForm = false;
-  }
-
-  saveForm(): void {
-    if (!this.form.name.trim()) {
-      this.toast.error('Project name is required.');
-      return;
-    }
-    if (!this.form.departmentId) {
-      this.toast.error('Please select a department.');
-      return;
-    }
-
-    const teamLeadId = this.form.teamLeadId || undefined;
-    const payload = {
-      name: this.form.name.trim(),
-      projectCode: this.form.projectCode || undefined,
-      description: this.form.description || undefined,
-      departmentId: this.form.departmentId,
-      teamLeadId,
-      priority: this.form.priority,
-      startDate: this.form.startDate || undefined,
-      endDate: this.form.endDate || undefined
-    };
-
-    const request = this.isEdit
-      ? this.projectService.updateProject(this.editingId, { ...payload, status: 'IN_PROGRESS' })
-      : this.projectService.createProject(payload);
-
-    request.subscribe({
-      next: () => {
-        this.toast.success(this.isEdit ? 'Project updated' : 'Project created');
-        this.closeForm();
-        this.loadProjects();
-      },
-      error: (err) => this.toast.error(err?.error?.message || 'Failed to save project')
-    });
-  }
-
-  onAction(event: { action: string; row: any }): void {
+  onAction(event: any): void {
     const project: Project = event.row;
     switch (event.action) {
       case 'edit':
-        this.openEdit(project);
+        this.router.navigate(['/admin/projects', project.id, 'edit']);
         break;
       case 'assign-tl':
         this.openAssignTl(project);

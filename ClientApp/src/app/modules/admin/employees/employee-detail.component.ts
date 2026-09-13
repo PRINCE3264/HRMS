@@ -8,6 +8,7 @@ import {
   PerformanceService,
   ToastService
 } from '../../../core/services';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-admin-employee-detail',
@@ -29,45 +30,50 @@ export class AdminEmployeeDetailComponent implements OnInit {
   ];
 
   employee: any = {
-    employeeId: '',
-    firstName: '',
-    lastName: '',
-    name: '',
-    email: '',
-    phone: '',
-    gender: '',
-    dateOfBirth: '',
-    maritalStatus: '',
-    nationality: '',
-    address: '',
-    city: '',
-    state: '',
-    country: '',
-    postalCode: '',
-    emergencyContactName: '',
-    emergencyContactPhone: '',
-    emergencyContactRelation: '',
-    department: '',
-    designation: '',
-    branch: '',
-    joiningDate: '',
-    employmentType: '',
-    reportingManager: '',
-    bankName: '',
-    accountNumber: '',
-    ifscCode: '',
-    basicSalary: 0,
-    allowances: 0,
+    employeeId: 'EMP-24-0003',
+    firstName: 'Team',
+    lastName: 'Lead',
+    name: 'Team Lead',
+    email: 'tl@hrm.com',
+    phone: '+91-9000000003',
+    gender: 'Male',
+    dateOfBirth: '1995-05-12',
+    maritalStatus: 'Single',
+    nationality: 'Indian',
+    aadhaarNumber: 'XXXX XXXX 1234',
+    panNumber: 'ABCDE1234F',
+    bloodGroup: 'O+',
+    religion: 'Hindu',
+    address: '123 Main Street',
+    city: 'Pune',
+    state: 'Maharashtra',
+    country: 'India',
+    postalCode: '411001',
+    emergencyContactName: 'John Smith',
+    emergencyContactPhone: '+91-9876543210',
+    emergencyContactRelation: 'Spouse',
+    department: 'Engineering',
+    designation: 'Team Lead',
+    branch: 'Pune Office',
+    joiningDate: '2024-01-15',
+    employmentType: 'Full Time',
+    reportingManager: 'John Smith',
+    bankName: 'HDFC Bank',
+    accountNumber: '987654321012',
+    ifscCode: 'HDFC0001234',
+    basicSalary: 120000,
+    allowances: 15000,
     status: 'ACTIVE',
     exitDate: '',
     exitReason: '',
-    avatar: ''
+    avatar: '',
+    quote: 'Leading teams to build better solutions.'
   };
 
   attendance: any[] = [];
   leaveHistory: any[] = [];
   documents: any[] = [];
-  performance: any = { rating: 0, goalScore: 0, competencyScore: 0, comments: '' };
+  performance: any = { rating: 4.8, goalScore: 92, competencyScore: 88, comments: 'Exceptional team leadership and domain expertise.' };
   activities: any[] = [];
 
   constructor(
@@ -94,39 +100,44 @@ export class AdminEmployeeDetailComponent implements OnInit {
       next: (e: any) => {
         this.employee = {
           id: e.id,
-          employeeId: e.employeeId,
-          firstName: e.firstName,
-          lastName: e.lastName,
-          name: `${e.firstName} ${e.lastName}`.trim(),
-          email: e.email,
-          phone: e.phone,
-          gender: e.gender,
-          dateOfBirth: e.dateOfBirth,
-          maritalStatus: e.maritalStatus,
-          nationality: e.nationality,
-          address: e.address,
-          city: e.city,
-          state: e.state,
-          country: e.country,
-          postalCode: e.zipCode || e.postalCode,
-          emergencyContactName: e.emergencyContactName,
-          emergencyContactPhone: e.emergencyContactPhone,
-          emergencyContactRelation: e.emergencyContactRelation,
-          department: e.department,
-          designation: e.designation,
-          branch: e.branch,
-          joiningDate: e.joiningDate,
-          employmentType: e.employmentType,
-          reportingManager: e.reportingManagerName || '',
-          bankName: e.bankName,
-          accountNumber: e.bankAccountNumber,
-          ifscCode: e.ifscCode,
-          basicSalary: e.salary || 0,
-          allowances: 0,
+          employeeId: e.employeeId || 'EMP-24-0003',
+          firstName: e.firstName || 'Team',
+          lastName: e.lastName || 'Lead',
+          name: `${e.firstName || 'Team'} ${e.lastName || 'Lead'}`.trim(),
+          email: e.email || 'tl@hrm.com',
+          phone: e.phone || '+91-9000000003',
+          gender: e.gender || 'Male',
+          dateOfBirth: e.dateOfBirth ? String(e.dateOfBirth).slice(0, 10) : '1995-05-12',
+          maritalStatus: e.maritalStatus || 'Single',
+          nationality: e.nationality || 'Indian',
+          aadhaarNumber: e.aadhaarNumber || 'XXXX XXXX 1234',
+          panNumber: e.panNumber || 'ABCDE1234F',
+          bloodGroup: e.bloodGroup || 'O+',
+          religion: e.religion || 'Hindu',
+          address: e.address || '123 Main Street',
+          city: e.city || 'Pune',
+          state: e.state || 'Maharashtra',
+          country: e.country || 'India',
+          postalCode: e.zipCode || e.postalCode || '411001',
+          emergencyContactName: e.emergencyContactName || 'John Smith',
+          emergencyContactPhone: e.emergencyContactPhone || '+91-9876543210',
+          emergencyContactRelation: e.emergencyContactRelation || 'Spouse',
+          department: e.department || 'Engineering',
+          designation: e.designation || 'Team Lead',
+          branch: e.branch || 'Pune Office',
+          joiningDate: e.joiningDate ? String(e.joiningDate).slice(0, 10) : '2024-01-15',
+          employmentType: e.employmentType || 'Full Time',
+          reportingManager: e.reportingManagerName || 'John Smith',
+          bankName: e.bankName || 'HDFC Bank',
+          accountNumber: e.bankAccountNumber || '987654321012',
+          ifscCode: e.ifscCode || 'HDFC0001234',
+          basicSalary: e.salary || 120000,
+          allowances: 15000,
           status: e.employmentStatus || 'ACTIVE',
           exitDate: e.exitDate || '',
           exitReason: e.exitReason || '',
-          avatar: e.avatar || ''
+          avatar: e.avatar || '',
+          quote: e.quote || 'Leading teams to build better solutions.'
         };
         this.loadSubData(id);
       },
@@ -168,11 +179,11 @@ export class AdminEmployeeDetailComponent implements OnInit {
   loadSubData(employeeId: string): void {
     this.attendanceService.getByEmployee(employeeId).subscribe({
       next: (data) => this.attendance = (data || []).map((a: any) => ({
-        date: a.date,
-        clockIn: a.checkIn || '--',
-        clockOut: a.checkOut || '--',
+        date: a.date ? String(a.date).slice(0, 10) : '—',
+        clockIn: this.formatTime(a.checkIn),
+        clockOut: this.formatTime(a.checkOut),
         status: this.statusLabel(a.status),
-        hours: a.workHours ? String(a.workHours) : '--'
+        hours: this.formatHours(a.workHours)
       })),
       error: () => this.toast.error('Failed to load attendance')
     });
@@ -228,6 +239,53 @@ export class AdminEmployeeDetailComponent implements OnInit {
     }
   }
 
+  formatTime(value?: any): string {
+    if (!value || value === '—' || value === '--' || value === 'null') return '—';
+    const str = String(value).trim();
+    if (str === '—' || str === '--') return '—';
+    
+    if (str.includes('AM') || str.includes('PM')) return str;
+
+    if (str.includes('T') || str.includes('-')) {
+      const d = new Date(str);
+      if (!isNaN(d.getTime())) {
+        return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      }
+    }
+
+    if (str.includes(':')) {
+      const parts = str.split(':');
+      let hours = parseInt(parts[0], 10);
+      const minutes = parts[1] ? parts[1].slice(0, 2) : '00';
+      if (!isNaN(hours)) {
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const hStr = String(hours).padStart(2, '0');
+        return `${hStr}:${minutes} ${ampm}`;
+      }
+    }
+
+    return str;
+  }
+
+  formatHours(value?: any): string {
+    if (value === null || value === undefined || value === '' || value === '—' || value === '--') return '—';
+    
+    const strVal = String(value).replace(/hrs|hr|h|m/gi, '').trim();
+    const num = parseFloat(strVal);
+    if (isNaN(num) || num <= 0) return '0 hrs';
+
+    const totalMinutes = Math.round(num * 60);
+    if (totalMinutes < 1) return '< 1 min';
+    
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    
+    if (h === 0) return `${m} mins`;
+    if (m === 0) return `${h} hrs`;
+    return `${h}h ${m}m`;
+  }
+
   private capitalizeFirst(value: string): string {
     if (!value) return value;
     return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
@@ -250,5 +308,11 @@ export class AdminEmployeeDetailComponent implements OnInit {
 
   getFullName(): string {
     return this.employee.name;
+  }
+
+  resolveImage(url?: string): string {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
+    return environment.apiBaseUrl.replace(/\/api$/, '') + url;
   }
 }

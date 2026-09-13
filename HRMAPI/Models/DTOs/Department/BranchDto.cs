@@ -13,6 +13,7 @@ public class BranchDto
     public string Country { get; set; } = string.Empty;
     public string? Phone { get; set; }
     public string? Email { get; set; }
+    public string? ImageUrl { get; set; }
     public Guid? CompanyId { get; set; }
     public int EmployeeCount { get; set; }
     public string Status { get; set; } = "ACTIVE";

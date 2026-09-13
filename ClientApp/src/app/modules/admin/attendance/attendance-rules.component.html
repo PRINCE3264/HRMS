@@ -1,71 +1,265 @@
-<app-page-header title="Attendance Rules" subtitle="Configure attendance policies, grace periods and overtime" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Attendance'},{label:'Rules'}]">
-  <button class="btn btn--primary" (click)="openCreate()"><i class="fas fa-plus"></i> New Rule</button>
-</app-page-header>
-
-<div *ngIf="showForm" class="filter-card rule-form">
-  <h3 class="form-title"><i class="fas fa-sliders-h"></i> {{ editingId ? 'Edit' : 'New' }} Attendance Rule</h3>
-  <div class="form-grid">
-    <div class="form-field">
-      <label>Policy Name *</label>
-      <input type="text" class="filter-input" [(ngModel)]="form.name" placeholder="e.g. Standard Office Policy" />
+<div class="rules-container">
+  <!-- Header Banner (Matching screenshot design system) -->
+  <div class="header-banner">
+    <div class="header-title-box">
+      <div class="header-icon">
+        <i class="fas fa-sliders-h"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Attendance Rules & Policies</h1>
+        <p class="page-subtitle">Configure late threshold limits, grace periods, minimum working hours, and overtime rules</p>
+      </div>
     </div>
-    <div class="form-field">
-      <label>Late Threshold</label>
-      <input type="time" class="filter-input" [(ngModel)]="form.lateThresholdTime" />
-    </div>
-    <div class="form-field">
-      <label>Grace Minutes</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.graceMinutes" />
-    </div>
-    <div class="form-field">
-      <label>Min Work Hours</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.minWorkHours" />
-    </div>
-    <div class="form-field">
-      <label>Max Break Minutes</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.maxBreakMinutes" />
-    </div>
-    <div class="form-field">
-      <label>Overtime After (hrs)</label>
-      <input type="number" class="filter-input" [(ngModel)]="form.overtimeAfterHours" />
-    </div>
-    <div class="form-field">
-      <label>Overtime Policy</label>
-      <select class="filter-input" [(ngModel)]="form.overtimePolicy">
-        <option *ngFor="let p of overtimePolicies" [value]="p">{{ p }}</option>
-      </select>
-    </div>
-    <div class="form-field form-field--check">
-      <label class="check-label">
-        <input type="checkbox" [(ngModel)]="form.autoMarkAbsentOnNoCheckIn" />
-        Auto-mark absent when no check-in
-      </label>
-      <label class="check-label">
-        <input type="checkbox" [(ngModel)]="form.isActive" />
-        Active
-      </label>
-    </div>
-    <div class="form-field form-field--wide">
-      <label>Description</label>
-      <input type="text" class="filter-input" [(ngModel)]="form.description" placeholder="Optional description" />
+    <div class="header-actions">
+      <button class="btn btn-create" (click)="openCreate()">
+        <i class="fas fa-plus"></i> New Policy Rule
+      </button>
+      <button class="btn btn-refresh" (click)="loadRules()">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i> Refresh
+      </button>
     </div>
   </div>
-  <div class="form-actions">
-    <button class="btn btn--outline" (click)="showForm = false">Cancel</button>
-    <button class="btn btn--primary" (click)="saveRule()"><i class="fas fa-check"></i> Save Rule</button>
+
+  <!-- KPI Metrics Grid -->
+  <div class="metrics-grid">
+    <div class="metric-card metric-primary">
+      <div class="metric-icon">
+        <i class="fas fa-gavel"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Configured Policies</span>
+        <h3 class="metric-value">{{ metrics.totalRules }}</h3>
+        <span class="metric-sub text-positive"><i class="fas fa-check-circle"></i> {{ metrics.activeRules }} active</span>
+      </div>
+    </div>
+
+    <div class="metric-card metric-success">
+      <div class="metric-icon">
+        <i class="fas fa-hourglass-half"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Avg Grace Period</span>
+        <h3 class="metric-value">{{ metrics.avgGraceMinutes }}m</h3>
+        <span class="metric-sub text-positive"><i class="fas fa-clock"></i> Punctuality buffer</span>
+      </div>
+    </div>
+
+    <div class="metric-card metric-warning">
+      <div class="metric-icon">
+        <i class="fas fa-user-clock"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Auto-Absent Rules</span>
+        <h3 class="metric-value">{{ metrics.autoAbsentEnabled }}</h3>
+        <span class="metric-sub text-warning"><i class="fas fa-exclamation-triangle"></i> Enabled policies</span>
+      </div>
+    </div>
+
+    <div class="metric-card metric-info">
+      <div class="metric-icon">
+        <i class="fas fa-business-time"></i>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Overtime Setup</span>
+        <h3 class="metric-value">Active</h3>
+        <span class="metric-sub text-info"><i class="fas fa-calculator"></i> Standard 8h threshold</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="filter-card">
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search policy rule by name, scope, or description..."
+        [(ngModel)]="searchTerm"
+      />
+      <button *ngIf="searchTerm" class="clear-search" (click)="searchTerm = ''">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Rules Grid -->
+  <div class="rules-grid">
+    <div class="rule-card" *ngFor="let rule of filteredRules" [class.is-default]="rule.isDefault" [class.is-inactive]="!rule.isActive">
+      <!-- Card Top Header -->
+      <div class="rule-card-header">
+        <div class="title-wrap">
+          <h3 class="rule-name">{{ rule.name }}</h3>
+          <span class="default-badge" *ngIf="rule.isDefault">
+            <i class="fas fa-star"></i> Default Policy
+          </span>
+        </div>
+        <div class="status-switch" (click)="toggleStatus(rule, $event)">
+          <span class="status-label" [class.active]="rule.isActive">
+            {{ rule.isActive ? 'Active' : 'Inactive' }}
+          </span>
+          <div class="toggle-pill" [class.checked]="rule.isActive">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description & Target -->
+      <p class="rule-desc">{{ rule.description || 'No description provided.' }}</p>
+      
+      <div class="applies-chip">
+        <i class="fas fa-users-cog"></i> Scope: {{ rule.appliesTo }}
+      </div>
+
+      <!-- Rule Parameters Grid -->
+      <div class="param-grid">
+        <div class="param-item">
+          <span class="param-label"><i class="far fa-clock"></i> Late Threshold</span>
+          <span class="param-val highlight-purple">{{ rule.lateThresholdTime }}</span>
+        </div>
+
+        <div class="param-item">
+          <span class="param-label"><i class="fas fa-stopwatch"></i> Grace Period</span>
+          <span class="param-val highlight-blue">{{ rule.graceMinutes }} Mins</span>
+        </div>
+
+        <div class="param-item">
+          <span class="param-label"><i class="fas fa-briefcase"></i> Min Work Hours</span>
+          <span class="param-val">{{ rule.minWorkHours }} hrs/day</span>
+        </div>
+
+        <div class="param-item">
+          <span class="param-label"><i class="fas fa-coffee"></i> Max Break</span>
+          <span class="param-val">{{ rule.maxBreakMinutes }} Mins</span>
+        </div>
+      </div>
+
+      <!-- Overtime & Auto-Absent Footer -->
+      <div class="card-footer-info">
+        <div class="footer-badge badge-ot">
+          <i class="fas fa-calculator"></i> Overtime: {{ rule.overtimePolicy }} (>{{ rule.overtimeAfterHours }}h)
+        </div>
+        <div class="footer-badge" [ngClass]="rule.autoMarkAbsentOnNoCheckIn ? 'badge-absent-yes' : 'badge-absent-no'">
+          <i class="fas" [ngClass]="rule.autoMarkAbsentOnNoCheckIn ? 'fa-user-slash' : 'fa-user-check'"></i>
+          Auto-Absent: {{ rule.autoMarkAbsentOnNoCheckIn ? 'Enabled' : 'Disabled' }}
+        </div>
+      </div>
+
+      <!-- Card Action Buttons -->
+      <div class="rule-card-actions">
+        <button class="action-btn btn-edit" (click)="openEdit(rule)">
+          <i class="fas fa-pen"></i> Edit Policy
+        </button>
+        <button class="action-btn btn-default" *ngIf="!rule.isDefault" (click)="setDefaultRule(rule)">
+          <i class="far fa-star"></i> Set Default
+        </button>
+        <button class="action-btn btn-delete" (click)="deleteRule(rule)">
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state-card" *ngIf="filteredRules.length === 0">
+      <i class="fas fa-sliders-h"></i>
+      <h4>No attendance rules found</h4>
+      <p>Try modifying your search or click "+ New Policy Rule" to create a new attendance policy.</p>
+    </div>
   </div>
 </div>
 
-<div class="table-card">
-  <app-data-table
-    [columns]="columns"
-    [data]="rules"
-    [pageSize]="10"
-    [actions]="tableActions"
-    (onActionClick)="onAction($event)">
-  </app-data-table>
-  <div class="empty-state" *ngIf="rules.length === 0">
-    <i class="fas fa-sliders-h"></i>
-    <p>No attendance rules configured yet.</p>
+<!-- CREATE / EDIT RULE MODAL -->
+<div class="modal-backdrop" *ngIf="showForm" (click)="showForm = false">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title-box">
+        <i class="fas fa-sliders-h modal-icon"></i>
+        <div>
+          <h2 class="modal-title">{{ editingId ? 'Edit Attendance Policy' : 'Create Attendance Policy' }}</h2>
+          <p class="modal-sub">Define check-in rules, grace periods, minimum work hours, and overtime triggers</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="showForm = false">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label class="form-label">Policy Name <span class="required">*</span></label>
+          <input type="text" class="form-input" [(ngModel)]="form.name" placeholder="e.g. Standard Shift Punctuality Policy" />
+        </div>
+
+        <div class="form-group full-width">
+          <label class="form-label">Scope / Target Audience</label>
+          <input type="text" class="form-input" [(ngModel)]="form.appliesTo" placeholder="e.g. All General Staff, Software Engineers, Sales Dept" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Late Threshold Time</label>
+          <input type="text" class="form-input" [(ngModel)]="form.lateThresholdTime" placeholder="e.g. 09:15 AM" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Grace Period (Minutes)</label>
+          <input type="number" class="form-input" [(ngModel)]="form.graceMinutes" placeholder="15" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Minimum Daily Work Hours</label>
+          <input type="number" step="0.5" class="form-input" [(ngModel)]="form.minWorkHours" placeholder="8.0" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Max Allowed Break Minutes</label>
+          <input type="number" class="form-input" [(ngModel)]="form.maxBreakMinutes" placeholder="60" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Overtime Calculation Policy</label>
+          <select class="form-select" [(ngModel)]="form.overtimePolicy">
+            <option *ngFor="let p of overtimePolicies" [value]="p">{{ p }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Overtime Threshold (Hours)</label>
+          <input type="number" step="0.5" class="form-input" [(ngModel)]="form.overtimeAfterHours" placeholder="8.0" />
+        </div>
+
+        <div class="form-group full-width">
+          <label class="form-label">Policy Description</label>
+          <textarea class="form-textarea" rows="2" [(ngModel)]="form.description" placeholder="Brief description explaining the scope and rules of this policy..."></textarea>
+        </div>
+
+        <div class="checkbox-row full-width">
+          <label class="custom-checkbox">
+            <input type="checkbox" [(ngModel)]="form.autoMarkAbsentOnNoCheckIn" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Auto-mark Absent if no check-in punch recorded by noon</span>
+          </label>
+
+          <label class="custom-checkbox">
+            <input type="checkbox" [(ngModel)]="form.isActive" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Enable this policy immediately (Active)</span>
+          </label>
+
+          <label class="custom-checkbox">
+            <input type="checkbox" [(ngModel)]="form.isDefault" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Set as default organization attendance policy</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="showForm = false">Cancel</button>
+      <button class="btn-save" (click)="saveRule()">
+        <i class="fas fa-check"></i> Save Attendance Policy
+      </button>
+    </div>
   </div>
 </div>

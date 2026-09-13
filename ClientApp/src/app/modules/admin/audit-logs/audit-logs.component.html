@@ -1,5 +1,5 @@
 <app-page-header title="Audit Logs" subtitle="Track system activities and changes" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Audit Logs'}]">
-      <button class="btn btn--outline"><i class="fas fa-download"></i> Export Logs</button>
+      <button class="btn btn--outline" (click)="exportLogs()"><i class="fas fa-file-excel"></i> Export Logs</button>
     </app-page-header>
 
     <div class="filter-bar">

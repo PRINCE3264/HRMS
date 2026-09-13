@@ -1,0 +1,75 @@
+<app-page-header title="Schedule Interview" subtitle="Assign candidate, interviewer, and set meeting schedule" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Recruitment',link:'/hr/recruitment'},{label:'Schedule Interview'}]">
+  <button class="btn btn--outline" (click)="cancel()"><i class="fas fa-arrow-left"></i> Back to Recruitment</button>
+</app-page-header>
+
+<div class="form-container">
+  <div class="form-card">
+    <div class="card-header">
+      <h3><i class="fas fa-calendar-plus"></i> Interview Schedule Details</h3>
+    </div>
+
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Candidate *</label>
+          <select [(ngModel)]="interviewForm.candidateId">
+            <option value="">Select candidate...</option>
+            <option *ngFor="let c of candidates" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Job Position *</label>
+          <select [(ngModel)]="interviewForm.jobId">
+            <option value="">Select job position...</option>
+            <option *ngFor="let j of jobOpenings" [value]="j.id">{{ j.title }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Interviewer</label>
+          <select [(ngModel)]="interviewForm.interviewerId">
+            <option value="">Select interviewer...</option>
+            <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Scheduled Date & Time *</label>
+          <input type="datetime-local" [(ngModel)]="interviewForm.scheduledAt" />
+        </div>
+
+        <div class="form-group">
+          <label>Interview Round</label>
+          <input type="text" [(ngModel)]="interviewForm.round" placeholder="e.g. SCREENING, TECHNICAL, HR" />
+        </div>
+
+        <div class="form-group">
+          <label>Interview Type</label>
+          <select [(ngModel)]="interviewForm.interviewType">
+            <option value="ONLINE">Online (Virtual)</option>
+            <option value="OFFLINE">Offline (In-Person)</option>
+            <option value="PHONE">Phone Screening</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Duration (Minutes)</label>
+          <input type="number" min="15" step="15" [(ngModel)]="interviewForm.durationMinutes" placeholder="60" />
+        </div>
+
+        <div class="form-group">
+          <label>Meeting Link / Venue</label>
+          <input type="url" [(ngModel)]="interviewForm.meetingLink" placeholder="https://meet.google.com/xyz or Room 302" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn--cancel" (click)="cancel()">Cancel</button>
+      <button class="btn btn--primary" (click)="save()" [disabled]="loading">
+        <i class="fas fa-calendar-check"></i> {{ loading ? 'Scheduling...' : 'Schedule Interview' }}
+      </button>
+    </div>
+  </div>
+</div>

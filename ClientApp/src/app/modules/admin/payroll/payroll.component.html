@@ -1,50 +1,449 @@
-<app-page-header title="Payroll Management" subtitle="Process monthly salaries, calculate deductions, and generate employee payslips" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Payroll'}]">
-  <button class="btn btn--outline" (click)="goToSalaryStructures()"><i class="fas fa-file-invoice-dollar"></i> Salary Structure</button>
-  <button class="btn btn--outline" (click)="goToReports()"><i class="fas fa-chart-line"></i> Reports</button>
-  <button class="btn btn--primary"><i class="fas fa-play"></i> Run Payroll</button>
-</app-page-header>
+<div class="payroll-container">
+  <!-- Executive Light Header Banner -->
+  <div class="payroll-banner">
+    <div class="payroll-banner__content">
+      <div class="payroll-banner__breadcrumbs">
+        <a routerLink="/admin/dashboard" class="bc-link"><i class="fas fa-home"></i> Dashboard</a>
+        <span class="bc-sep"><i class="fas fa-chevron-right"></i></span>
+        <span class="bc-current">Payroll Management</span>
+      </div>
+      <h1 class="payroll-banner__title">Payroll & Disbursements</h1>
+      <p class="payroll-banner__subtitle">Calculate monthly compensation, manage deductions, review tax structures, and
+        generate employee payslips.</p>
+    </div>
+    <div class="payroll-banner__actions">
+      <button class="btn btn--secondary" (click)="goToSalaryStructures()">
+        <i class="fas fa-sliders-h"></i> Salary Structures
+      </button>
+      <button class="btn btn--secondary" (click)="goToReports()">
+        <i class="fas fa-chart-line"></i> Reports
+      </button>
+      <button class="btn btn--outline-dark" (click)="exportSelectedToExcel()">
+        <i class="fas fa-file-excel"></i> Export Excel
+      </button>
+      <button class="btn btn--primary" (click)="openRunPayrollModal()">
+        <i class="fas fa-paper-plane"></i> Run Payroll
+      </button>
+    </div>
+  </div>
 
-<div class="payroll-summary">
-  <div class="summary-card total">
-    <div class="summary-card__icon"><i class="fas fa-wallet"></i></div>
-    <div class="summary-card__content">
-      <span class="summary-card__label">Total Gross Pay</span>
-      <span class="summary-card__value">$485,200.00</span>
-      <span class="summary-card__sub">December 2024</span>
+  <!-- KPI Metric Cards -->
+  <div class="payroll-metrics">
+    <div class="metric-card gross">
+      <div class="metric-card__icon"><i class="fas fa-wallet"></i></div>
+      <div class="metric-card__info">
+        <span class="metric-card__label">Total Gross Pay</span>
+        <span class="metric-card__value">{{ totalGrossPay | currency:'INR':'symbol-narrow':'1.2-2' }}</span>
+        <span class="metric-card__sub"><i class="fas fa-calendar-alt"></i> {{ selectedMonth }}</span>
+      </div>
+    </div>
+
+    <div class="metric-card deductions">
+      <div class="metric-card__icon"><i class="fas fa-file-invoice-dollar"></i></div>
+      <div class="metric-card__info">
+        <span class="metric-card__label">Total Deductions</span>
+        <span class="metric-card__value">{{ totalDeductions | currency:'INR':'symbol-narrow':'1.2-2' }}</span>
+        <span class="metric-card__sub"><i class="fas fa-shield-alt"></i> PF, ESI & Taxes</span>
+      </div>
+    </div>
+
+    <div class="metric-card net">
+      <div class="metric-card__icon"><i class="fas fa-hand-holding-usd"></i></div>
+      <div class="metric-card__info">
+        <span class="metric-card__label">Net Payable Amount</span>
+        <span class="metric-card__value">{{ totalNetPay | currency:'INR':'symbol-narrow':'1.2-2' }}</span>
+        <span class="metric-card__sub"><i class="fas fa-check-circle"></i> Ready for Transfer</span>
+      </div>
+    </div>
+
+    <div class="metric-card processed">
+      <div class="metric-card__icon"><i class="fas fa-users-cog"></i></div>
+      <div class="metric-card__info">
+        <span class="metric-card__label">Disbursement Status</span>
+        <span class="metric-card__value">{{ processedCount }} / {{ totalCount }}</span>
+        <span class="metric-card__sub">Employees Disbursed</span>
+      </div>
     </div>
   </div>
-  <div class="summary-card deductions">
-    <div class="summary-card__icon"><i class="fas fa-file-invoice-dollar"></i></div>
-    <div class="summary-card__content">
-      <span class="summary-card__label">Total Deductions</span>
-      <span class="summary-card__value">$62,480.00</span>
-      <span class="summary-card__sub">Tax + Benefits</span>
+
+  <!-- Table & Filters Container -->
+  <div class="table-card">
+    <!-- Filter Toolbar -->
+    <div class="table-toolbar">
+      <div class="table-toolbar__search">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search employee, ID, designation or department..." [(ngModel)]="searchTerm"
+          (input)="onSearchChange()" class="search-input" />
+      </div>
+
+      <div class="table-toolbar__filters">
+        <div class="filter-group">
+          <label><i class="fas fa-building"></i> Dept:</label>
+          <select [(ngModel)]="selectedDepartment" (change)="onDepartmentChange()" class="filter-select">
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label><i class="fas fa-calendar"></i> Month:</label>
+          <select [(ngModel)]="selectedMonth" (change)="onMonthChange()" class="filter-select">
+            <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="summary-card net">
-    <div class="summary-card__icon"><i class="fas fa-dollar-sign"></i></div>
-    <div class="summary-card__content">
-      <span class="summary-card__label">Net Pay</span>
-      <span class="summary-card__value">$422,720.00</span>
-      <span class="summary-card__sub">After deductions</span>
+
+    <!-- Status Tabs -->
+    <div class="status-tabs">
+      <button *ngFor="let status of statusOptions" class="status-tab" [class.active]="selectedStatus === status"
+        (click)="onFilterStatus(status)">
+        {{ status }}
+      </button>
     </div>
-  </div>
-  <div class="summary-card processed">
-    <div class="summary-card__icon"><i class="fas fa-user-check"></i></div>
-    <div class="summary-card__content">
-      <span class="summary-card__label">Processed</span>
-      <span class="summary-card__value">231</span>
-      <span class="summary-card__sub">of 248 employees</span>
+
+    <!-- Row Selection Banner -->
+    <div class="selection-banner" *ngIf="getSelectedCount() > 0">
+      <div class="selection-banner__info">
+        <i class="fas fa-check-square"></i>
+        <span><strong>{{ getSelectedCount() }}</strong> employee payroll records selected</span>
+      </div>
+      <div class="selection-banner__actions">
+        <button class="btn btn--sm btn--excel" (click)="exportSelectedToExcel()">
+          <i class="fas fa-file-excel"></i> Export Selected to Excel
+        </button>
+        <button class="btn btn--sm btn--success" (click)="batchMarkAsPaid()">
+          <i class="fas fa-check-double"></i> Mark Selected as Paid
+        </button>
+        <button class="btn btn--sm btn--ghost" (click)="clearSelection()">
+          Clear Selection
+        </button>
+      </div>
+    </div>
+
+    <!-- Payroll Data Table -->
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th class="col-checkbox">
+              <input type="checkbox" [checked]="isAllSelected" (change)="toggleSelectAll()" class="custom-checkbox" />
+            </th>
+            <th>Employee</th>
+            <th>Department</th>
+            <th class="text-right">Basic Salary</th>
+            <th class="text-right">Allowances</th>
+            <th class="text-right">Deductions</th>
+            <th class="text-right">Net Pay</th>
+            <th>Status</th>
+            <th>Payment Date</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of filteredList" [class.selected-row]="record.selected">
+            <td class="col-checkbox">
+              <input type="checkbox" [checked]="record.selected" (change)="toggleRowSelection(record)"
+                class="custom-checkbox" />
+            </td>
+            <td>
+              <div class="user-cell">
+                <img [src]="record.avatar || 'assets/images/default-avatar.png'" alt="Avatar" class="user-avatar" />
+                <div class="user-info">
+                  <span class="user-name">{{ record.employeeName }}</span>
+                  <span class="user-sub">{{ record.employeeId }} • {{ record.designation }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-badge">{{ record.department }}</span>
+            </td>
+            <td class="text-right font-medium">{{ record.basicSalary | currency:'INR':'symbol-narrow':'1.0-0' }}</td>
+            <td class="text-right text-success">+{{ (record.hra + record.allowances) |
+              currency:'INR':'symbol-narrow':'1.0-0' }}</td>
+            <td class="text-right text-danger">-{{ record.totalDeductions | currency:'INR':'symbol-narrow':'1.0-0' }}
+            </td>
+            <td class="text-right font-bold text-primary">{{ record.netPay | currency:'INR':'symbol-narrow':'1.0-0' }}
+            </td>
+            <td>
+              <span class="status-pill" [ngClass]="'status--' + record.status.toLowerCase().replace(' ', '-')">
+                <i class="fas" [ngClass]="{
+                  'fa-check-circle': record.status === 'Paid',
+                  'fa-spinner fa-spin': record.status === 'Processing',
+                  'fa-clock': record.status === 'Pending',
+                  'fa-pause-circle': record.status === 'On Hold'
+                }"></i>
+                {{ record.status }}
+              </span>
+            </td>
+            <td>
+              <span class="pay-date">{{ record.paymentDate || 'N/A' }}</span>
+              <span class="pay-method">{{ record.paymentMethod }}</span>
+            </td>
+            <td class="text-center">
+              <div class="action-buttons">
+                <button class="action-btn action-btn--view" title="View Payslip" (click)="openPayslipModal(record)">
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+                <button class="action-btn action-btn--edit" title="Edit Salary Structure"
+                  (click)="openEditSalaryModal(record)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn action-btn--toggle"
+                  [title]="record.status === 'Paid' ? 'Mark Pending' : 'Mark Paid'"
+                  (click)="togglePaymentStatus(record)">
+                  <i class="fas" [ngClass]="record.status === 'Paid' ? 'fa-undo' : 'fa-check'"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredList.length === 0">
+            <td colspan="10" class="empty-cell">
+              <div class="empty-state">
+                <i class="fas fa-receipt empty-icon"></i>
+                <h3>No Payroll Records Found</h3>
+                <p>Try adjusting your search query, department, or status filters.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
-<div class="table-card">
-  <app-data-table 
-    [columns]="columns" 
-    [data]="payrollData" 
-    [pageSize]="10" 
-    [actions]="tableActions" 
-    (onActionClick)="onAction($event)">
-  </app-data-table>
+<!-- PAYSLIP MODAL -->
+<div class="modal-backdrop" *ngIf="selectedPayslip">
+  <div class="modal-card payslip-card printable-payslip-content">
+    <div class="payslip-header">
+      <div class="payslip-branding">
+        <div class="company-logo"><i class="fas fa-building-columns"></i> Envision Beyond Pvt. Ltd.</div>
+        <p class="company-address">Tower 3, Corporate Park, Sector 62 • Noida, UP 201309, India</p>
+      </div>
+      <div class="payslip-title-box">
+        <button class="close-btn no-print" (click)="closePayslipModal()">&times;</button>
+        <h2>PAYSLIP</h2>
+        <span class="payslip-month">{{ selectedPayslip.month }}</span>
+      </div>
+    </div>
+
+    <div class="payslip-employee-meta">
+      <div class="meta-item">
+        <span class="meta-label">Employee Code:</span>
+        <span class="meta-val"><strong>{{ selectedPayslip.employeeId }}</strong></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Employee Name:</span>
+        <span class="meta-val"><strong>{{ selectedPayslip.employeeName }}</strong></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Designation:</span>
+        <span class="meta-val">{{ selectedPayslip.designation }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Department:</span>
+        <span class="meta-val">{{ selectedPayslip.department }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Payment Date:</span>
+        <span class="meta-val">{{ selectedPayslip.paymentDate }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Payment Mode:</span>
+        <span class="meta-val">{{ selectedPayslip.paymentMethod }}</span>
+      </div>
+    </div>
+
+    <div class="payslip-grid">
+      <!-- Earnings -->
+      <div class="payslip-section">
+        <h4 class="section-title text-success"><i class="fas fa-plus-circle"></i> Earnings</h4>
+        <table class="mini-table">
+          <tr>
+            <td>Basic Salary</td>
+            <td class="text-right font-medium">{{ selectedPayslip.basicSalary | currency:'INR':'symbol-narrow':'1.2-2'
+              }}</td>
+          </tr>
+          <tr>
+            <td>House Rent Allowance (HRA)</td>
+            <td class="text-right font-medium">{{ selectedPayslip.hra | currency:'INR':'symbol-narrow':'1.2-2' }}</td>
+          </tr>
+          <tr>
+            <td>Special Allowances</td>
+            <td class="text-right font-medium">{{ selectedPayslip.allowances | currency:'INR':'symbol-narrow':'1.2-2' }}
+            </td>
+          </tr>
+          <tr class="total-row">
+            <td><strong>Total Earnings (Gross)</strong></td>
+            <td class="text-right text-success"><strong>{{ (selectedPayslip.basicSalary + selectedPayslip.hra +
+                selectedPayslip.allowances) | currency:'INR':'symbol-narrow':'1.2-2' }}</strong></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Deductions -->
+      <div class="payslip-section">
+        <h4 class="section-title text-danger"><i class="fas fa-minus-circle"></i> Deductions</h4>
+        <table class="mini-table">
+          <tr>
+            <td>Provident Fund (PF)</td>
+            <td class="text-right font-medium">{{ selectedPayslip.pfDeduction | currency:'INR':'symbol-narrow':'1.2-2'
+              }}</td>
+          </tr>
+          <tr>
+            <td>Income Tax (TDS)</td>
+            <td class="text-right font-medium">{{ selectedPayslip.taxDeduction | currency:'INR':'symbol-narrow':'1.2-2'
+              }}</td>
+          </tr>
+          <tr>
+            <td>Other Deductions</td>
+            <td class="text-right font-medium">{{ selectedPayslip.otherDeductions |
+              currency:'INR':'symbol-narrow':'1.2-2' }}</td>
+          </tr>
+          <tr class="total-row">
+            <td><strong>Total Deductions</strong></td>
+            <td class="text-right text-danger"><strong>{{ selectedPayslip.totalDeductions |
+                currency:'INR':'symbol-narrow':'1.2-2' }}</strong></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Net Pay Banner -->
+    <div class="net-pay-banner">
+      <div class="net-pay-label">
+        <span>NET PAYABLE AMOUNT</span>
+        <small>(Gross Earnings - Total Deductions)</small>
+      </div>
+      <div class="net-pay-amount">
+        {{ selectedPayslip.netPay | currency:'INR':'symbol-narrow':'1.2-2' }}
+      </div>
+    </div>
+
+    <!-- Official Signature Block for Print -->
+    <div class="payslip-signatures">
+      <div class="sig-block">
+        <div class="sig-line"></div>
+        <span>Employee Signature</span>
+      </div>
+      <div class="sig-block text-right">
+        <div class="company-seal"><i class="fas fa-certificate"></i> OFFICIAL SEAL</div>
+        <div class="sig-line"></div>
+        <span>Authorized Signatory</span>
+      </div>
+    </div>
+
+    <div class="modal-footer no-print">
+      <button class="btn btn--outline btn--sm" (click)="printPayslip()">
+        <i class="fas fa-print"></i> Print Payslip
+      </button>
+      <button class="btn btn--primary btn--sm" (click)="closePayslipModal()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- EDIT SALARY MODAL -->
+<div class="modal-backdrop" *ngIf="editingRecord">
+  <div class="modal-card form-modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-edit"></i> Edit Salary - {{ editingRecord.employeeName }}</h3>
+      <button class="close-btn" (click)="closeEditSalaryModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Basic Salary (₹)</label>
+          <input type="number" [(ngModel)]="editingRecord.basicSalary" (input)="recalculateEditingNetPay()"
+            class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>HRA (₹)</label>
+          <input type="number" [(ngModel)]="editingRecord.hra" (input)="recalculateEditingNetPay()"
+            class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Special Allowances (₹)</label>
+          <input type="number" [(ngModel)]="editingRecord.allowances" (input)="recalculateEditingNetPay()"
+            class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>PF Deduction (₹)</label>
+          <input type="number" [(ngModel)]="editingRecord.pfDeduction" (input)="recalculateEditingNetPay()"
+            class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Tax Deduction (₹)</label>
+          <input type="number" [(ngModel)]="editingRecord.taxDeduction" (input)="recalculateEditingNetPay()"
+            class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Other Deductions (₹)</label>
+          <input type="number" [(ngModel)]="editingRecord.otherDeductions" (input)="recalculateEditingNetPay()"
+            class="form-control" />
+        </div>
+      </div>
+
+      <div class="calculated-summary">
+        <div class="calc-item">
+          <span>Gross Pay:</span>
+          <strong>{{ (editingRecord.basicSalary + editingRecord.hra + editingRecord.allowances) |
+            currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <div class="calc-item text-danger">
+          <span>Total Deductions:</span>
+          <strong>-{{ editingRecord.totalDeductions | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <div class="calc-item text-primary">
+          <span>Calculated Net Pay:</span>
+          <strong class="text-xl">{{ editingRecord.netPay | currency:'INR':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--outline" (click)="closeEditSalaryModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="saveEditedSalary()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- RUN PAYROLL MODAL -->
+<div class="modal-backdrop" *ngIf="showRunPayrollModal">
+  <div class="modal-card run-modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-play-circle"></i> Execute Monthly Payroll</h3>
+      <button class="close-btn" (click)="closeRunPayrollModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Select the month and target department to trigger batch disbursement calculation.</p>
+
+      <div class="form-group">
+        <label>Payroll Period</label>
+        <select [(ngModel)]="runPayrollMonth" class="form-control">
+          <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Department Scope</label>
+        <select [(ngModel)]="runPayrollDept" class="form-control">
+          <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+        </select>
+      </div>
+
+      <div class="info-alert">
+        <i class="fas fa-info-circle"></i>
+        <span>Running payroll will mark all pending disbursements as paid and update employee payslip records.</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--outline" (click)="closeRunPayrollModal()">Cancel</button>
+      <button class="btn btn--primary" (click)="executeRunPayroll()" [disabled]="isProcessingPayroll">
+        <i class="fas" [ngClass]="isProcessingPayroll ? 'fa-spinner fa-spin' : 'fa-check'"></i>
+        {{ isProcessingPayroll ? 'Processing Payroll...' : 'Confirm & Process' }}
+      </button>
+    </div>
+  </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService, DepartmentService, ToastService } from '../../../core/services';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-admin-employee-form',
@@ -12,10 +13,10 @@ export class AdminEmployeeFormComponent implements OnInit {
   employeeForm!: FormGroup;
   currentStep = 1;
   steps = [
-    { label: 'Personal Info', icon: 'fas fa-user' },
-    { label: 'Contact Info', icon: 'fas fa-phone' },
-    { label: 'Job Details', icon: 'fas fa-briefcase' },
-    { label: 'Salary & Bank', icon: 'fas fa-money-bill' }
+    { label: 'Personal Info', sublabel: 'Basic details', icon: 'fas fa-user' },
+    { label: 'Contact Info', sublabel: 'How to reach', icon: 'fas fa-phone' },
+    { label: 'Job Details', sublabel: 'Role & Department', icon: 'fas fa-briefcase' },
+    { label: 'Salary & Bank', sublabel: 'Compensation', icon: 'fas fa-money-bill' }
   ];
   departments: { id: string; name: string }[] = [];
   designations: { id: string; title: string }[] = [];
@@ -38,12 +39,15 @@ export class AdminEmployeeFormComponent implements OnInit {
     this.employeeForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
+      avatar: [''],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9+\-\s]{10,15}$/)]],
       gender: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       maritalStatus: [''],
       nationality: [''],
+      bloodGroup: [''],
+      aadhaarNumber: [''],
       address: ['', Validators.required],
       city: ['', Validators.required],
       state: [''],
@@ -98,6 +102,7 @@ export class AdminEmployeeFormComponent implements OnInit {
         this.employeeForm.patchValue({
           firstName: e.firstName,
           lastName: e.lastName,
+          avatar: e.avatar || '',
           email: e.email,
           phone: e.phone,
           gender: e.gender,
@@ -143,6 +148,30 @@ export class AdminEmployeeFormComponent implements OnInit {
     return !!(f && f.invalid && (f.dirty || f.touched));
   }
 
+  resolveImage(url?: string): string {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
+    return environment.apiBaseUrl.replace(/\/api$/, '') + url;
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    this.employeeService.uploadAvatar(file).subscribe({
+      next: (res) => {
+        this.employeeForm.patchValue({ avatar: res.imageUrl });
+        this.toast.success('Profile picture uploaded successfully');
+      },
+      error: (err) => this.toast.error(err?.error?.message || 'Failed to upload profile picture')
+    });
+    input.value = '';
+  }
+
+  removeImage(): void {
+    this.employeeForm.patchValue({ avatar: '' });
+  }
+
   onSubmit(): void {
     Object.keys(this.employeeForm.controls).forEach(k => this.employeeForm.get(k)?.markAsTouched());
     if (this.employeeForm.valid) {
@@ -151,6 +180,7 @@ export class AdminEmployeeFormComponent implements OnInit {
       const payload: any = {
         firstName: v.firstName,
         lastName: v.lastName,
+        avatar: v.avatar || undefined,
         email: v.email,
         phone: v.phone,
         gender: v.gender,

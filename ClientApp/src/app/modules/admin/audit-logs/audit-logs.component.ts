@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ReportService, ToastService } from '../../../core/services';
+import { ReportService, ToastService, ExcelExportService } from '../../../core/services';
 import { TableColumn } from '../../../core/models';
 
 @Component({
@@ -22,10 +22,22 @@ export class AdminAuditLogsComponent implements OnInit {
   ];
   logs: any[] = [];
 
-  constructor(private reportService: ReportService, private toast: ToastService) {}
+  constructor(
+    private reportService: ReportService,
+    private toast: ToastService,
+    private excelExport: ExcelExportService
+  ) {}
 
   ngOnInit(): void {
     this.loadLogs();
+  }
+
+  exportLogs(): void {
+    if (this.logs && this.logs.length > 0) {
+      this.excelExport.exportToExcel(this.logs, 'Audit_Logs');
+    } else {
+      this.toast.error('No log data available to export');
+    }
   }
 
   loadLogs(): void {

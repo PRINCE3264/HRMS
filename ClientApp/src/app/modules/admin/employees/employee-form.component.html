@@ -1,484 +1,531 @@
 <div class="employee-form-container">
-  <!-- Top Banner Header -->
+
+  <!-- 1. Hero Header Banner -->
   <div class="form-hero-header">
-    <div class="header-content">
-      <div class="header-left">
-        <span class="hero-badge"><i class="fas fa-user-plus"></i> Onboarding Portal</span>
-        <h1>Add New Employee</h1>
-        <nav class="breadcrumbs">
-          <a routerLink="/admin/dashboard">Dashboard</a>
-          <span class="separator"><i class="fas fa-chevron-right"></i></span>
-          <a routerLink="/admin/employees">Employee Management</a>
-          <span class="separator"><i class="fas fa-chevron-right"></i></span>
-          <span class="current">Add Employee</span>
-        </nav>
+    <div class="hero-left">
+      <span class="portal-tag">ONBOARDING PORTAL</span>
+      <h1 class="hero-title">{{ editingId ? 'Edit Employee Details' : 'Add New Employee' }}</h1>
+      <p class="hero-subtitle">Create a new employee record and complete the onboarding details.</p>
+
+      <div class="breadcrumb-trail">
+        <i class="fas fa-home home-icon"></i>
+        <a routerLink="/admin/dashboard" class="crumb-link">Dashboard</a>
+        <span class="crumb-separator">></span>
+        <a routerLink="/admin/employees" class="crumb-link">Employee Management</a>
+        <span class="crumb-separator">></span>
+        <span class="crumb-current">{{ editingId ? 'Edit Employee' : 'Add Employee' }}</span>
+      </div>
+    </div>
+
+    <!-- Right Side Hero Callout Box -->
+    <div class="hero-callout-card">
+      <div class="callout-icon-box">
+        <i class="fas fa-user-plus"></i>
+        <span class="plus-dot">+</span>
+      </div>
+      <div class="callout-text-wrap">
+        <span class="callout-title">Build A Stronger Team</span>
+        <div class="blue-underline"></div>
       </div>
     </div>
   </div>
 
-  <div class="form-card" *ngIf="!submitted">
-    <div class="stepper">
-      <div class="stepper-track">
-        <div class="stepper-line">
-          <div class="stepper-line-fill" [style.width]="((currentStep - 1) / (steps.length - 1)) * 100 + '%'"></div>
-        </div>
-        <div
-          *ngFor="let step of steps; let i = index"
-          class="stepper-step"
-          [class.active]="currentStep === i + 1"
-          [class.completed]="currentStep > i + 1"
-        >
-          <div class="step-circle">
-            <i [class]="step.icon" *ngIf="currentStep <= i + 1"></i>
-            <i class="fas fa-check" *ngIf="currentStep > i + 1"></i>
-          </div>
-          <span class="step-label">{{ step.label }}</span>
-        </div>
-      </div>
-    </div>
-
-    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-      <div class="form-body">
-        <div class="step-content" *ngIf="currentStep === 1">
-          <h2 class="step-title"><i class="fas fa-user"></i> Personal Information</h2>
-          <div class="form-grid">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="firstName">First Name <span class="required">*</span></label>
-                <input
-                  id="firstName"
-                  type="text"
-                  class="form-control"
-                  formControlName="firstName"
-                  placeholder="Enter first name"
-                  [class.is-invalid]="isFieldInvalid('firstName')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('firstName')">
-                  <ng-container *ngIf="employeeForm.get('firstName')?.errors?.['required']">First name is required</ng-container>
-                  <ng-container *ngIf="employeeForm.get('firstName')?.errors?.['minlength']">Minimum 2 characters required</ng-container>
-                </span>
-              </div>
-              <div class="form-group">
-                <label for="lastName">Last Name <span class="required">*</span></label>
-                <input
-                  id="lastName"
-                  type="text"
-                  class="form-control"
-                  formControlName="lastName"
-                  placeholder="Enter last name"
-                  [class.is-invalid]="isFieldInvalid('lastName')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('lastName')">
-                  <ng-container *ngIf="employeeForm.get('lastName')?.errors?.['required']">Last name is required</ng-container>
-                  <ng-container *ngIf="employeeForm.get('lastName')?.errors?.['minlength']">Minimum 2 characters required</ng-container>
-                </span>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Gender <span class="required">*</span></label>
-                <div class="radio-group">
-                  <label class="radio-option">
-                    <input type="radio" formControlName="gender" value="Male" />
-                    <span class="radio-custom"></span>
-                    Male
-                  </label>
-                  <label class="radio-option">
-                    <input type="radio" formControlName="gender" value="Female" />
-                    <span class="radio-custom"></span>
-                    Female
-                  </label>
-                  <label class="radio-option">
-                    <input type="radio" formControlName="gender" value="Other" />
-                    <span class="radio-custom"></span>
-                    Other
-                  </label>
-                </div>
-                <span class="error-text" *ngIf="isFieldInvalid('gender')">Gender is required</span>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
-                <input
-                  id="dateOfBirth"
-                  type="date"
-                  class="form-control"
-                  formControlName="dateOfBirth"
-                  [class.is-invalid]="isFieldInvalid('dateOfBirth')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('dateOfBirth')">Date of birth is required</span>
-              </div>
-              <div class="form-group">
-                <label for="maritalStatus">Marital Status</label>
-                <select id="maritalStatus" class="form-control" formControlName="maritalStatus">
-                  <option value="">Select marital status</option>
-                  <option value="Single">Single</option>
-                  <option value="Married">Married</option>
-                  <option value="Divorced">Divorced</option>
-                  <option value="Widowed">Widowed</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="nationality">Nationality</label>
-                <input
-                  id="nationality"
-                  type="text"
-                  class="form-control"
-                  formControlName="nationality"
-                  placeholder="Enter nationality"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step-content" *ngIf="currentStep === 2">
-          <h2 class="step-title"><i class="fas fa-phone"></i> Contact Information</h2>
-          <div class="form-grid">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="email">Email Address <span class="required">*</span></label>
-                <input
-                  id="email"
-                  type="email"
-                  class="form-control"
-                  formControlName="email"
-                  placeholder="Enter email address"
-                  [class.is-invalid]="isFieldInvalid('email')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('email')">
-                  <ng-container *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required</ng-container>
-                  <ng-container *ngIf="employeeForm.get('email')?.errors?.['email']">Please enter a valid email</ng-container>
-                </span>
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone Number <span class="required">*</span></label>
-                <input
-                  id="phone"
-                  type="tel"
-                  class="form-control"
-                  formControlName="phone"
-                  placeholder="Enter phone number"
-                  [class.is-invalid]="isFieldInvalid('phone')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('phone')">
-                  <ng-container *ngIf="employeeForm.get('phone')?.errors?.['required']">Phone number is required</ng-container>
-                  <ng-container *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Please enter a valid phone number</ng-container>
-                </span>
-              </div>
-            </div>
-            <div class="form-row full-width">
-              <div class="form-group">
-                <label for="address">Address <span class="required">*</span></label>
-                <textarea
-                  id="address"
-                  class="form-control"
-                  formControlName="address"
-                  placeholder="Enter full address"
-                  rows="3"
-                  [class.is-invalid]="isFieldInvalid('address')"
-                ></textarea>
-                <span class="error-text" *ngIf="isFieldInvalid('address')">Address is required</span>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="city">City <span class="required">*</span></label>
-                <input
-                  id="city"
-                  type="text"
-                  class="form-control"
-                  formControlName="city"
-                  placeholder="Enter city"
-                  [class.is-invalid]="isFieldInvalid('city')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('city')">City is required</span>
-              </div>
-              <div class="form-group">
-                <label for="state">State</label>
-                <input
-                  id="state"
-                  type="text"
-                  class="form-control"
-                  formControlName="state"
-                  placeholder="Enter state"
-                />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="country">Country <span class="required">*</span></label>
-                <input
-                  id="country"
-                  type="text"
-                  class="form-control"
-                  formControlName="country"
-                  placeholder="Enter country"
-                  [class.is-invalid]="isFieldInvalid('country')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('country')">Country is required</span>
-              </div>
-              <div class="form-group">
-                <label for="postalCode">Postal Code</label>
-                <input
-                  id="postalCode"
-                  type="text"
-                  class="form-control"
-                  formControlName="postalCode"
-                  placeholder="Enter postal code"
-                />
-              </div>
-            </div>
-            <div class="form-section-divider">
-              <h3>Emergency Contact</h3>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="emergencyContactName">Contact Name</label>
-                <input
-                  id="emergencyContactName"
-                  type="text"
-                  class="form-control"
-                  formControlName="emergencyContactName"
-                  placeholder="Enter emergency contact name"
-                />
-              </div>
-              <div class="form-group">
-                <label for="emergencyContactPhone">Contact Phone</label>
-                <input
-                  id="emergencyContactPhone"
-                  type="tel"
-                  class="form-control"
-                  formControlName="emergencyContactPhone"
-                  placeholder="Enter emergency contact phone"
-                />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="emergencyContactRelation">Relationship</label>
-                <select id="emergencyContactRelation" class="form-control" formControlName="emergencyContactRelation">
-                  <option value="">Select relationship</option>
-                  <option value="Spouse">Spouse</option>
-                  <option value="Parent">Parent</option>
-                  <option value="Sibling">Sibling</option>
-                  <option value="Child">Child</option>
-                  <option value="Friend">Friend</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step-content" *ngIf="currentStep === 3">
-          <h2 class="step-title"><i class="fas fa-briefcase"></i> Job Details</h2>
-          <div class="form-grid">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="employeeId">Employee ID</label>
-                <input
-                  id="employeeId"
-                  type="text"
-                  class="form-control"
-                  formControlName="employeeId"
-                  [placeholder]="editingId ? 'Auto-generated' : 'Auto-generated on save'"
-                  [disabled]="true"
-                />
-                <span class="form-hint">Employee ID is generated automatically by the system.</span>
-              </div>
-              <div class="form-group">
-                <label for="joiningDate">Joining Date <span class="required">*</span></label>
-                <input
-                  id="joiningDate"
-                  type="date"
-                  class="form-control"
-                  formControlName="joiningDate"
-                  [class.is-invalid]="isFieldInvalid('joiningDate')"
-                />
-                <span class="error-text" *ngIf="isFieldInvalid('joiningDate')">Joining date is required</span>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="department">Department <span class="required">*</span></label>
-                <select id="department" class="form-control" formControlName="department" [class.is-invalid]="isFieldInvalid('department')">
-                  <option value="">Select department</option>
-                  <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
-                </select>
-                <span class="error-text" *ngIf="isFieldInvalid('department')">Department is required</span>
-              </div>
-              <div class="form-group">
-                <label for="designation">Designation <span class="required">*</span></label>
-                <select id="designation" class="form-control" formControlName="designation" [class.is-invalid]="isFieldInvalid('designation')">
-                  <option value="">Select designation</option>
-                  <option *ngFor="let desig of designations" [value]="desig.id">{{ desig.title }}</option>
-                </select>
-                <span class="error-text" *ngIf="isFieldInvalid('designation')">Designation is required</span>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="branch">Branch <span class="required">*</span></label>
-                <select id="branch" class="form-control" formControlName="branch" [class.is-invalid]="isFieldInvalid('branch')">
-                  <option value="">Select branch</option>
-                  <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.name }}</option>
-                </select>
-                <span class="error-text" *ngIf="isFieldInvalid('branch')">Branch is required</span>
-              </div>
-              <div class="form-group">
-                <label for="employmentType">Employment Type <span class="required">*</span></label>
-                <select id="employmentType" class="form-control" formControlName="employmentType" [class.is-invalid]="isFieldInvalid('employmentType')">
-                  <option value="">Select employment type</option>
-                  <option *ngFor="let type of employmentTypes" [value]="type">{{ type }}</option>
-                </select>
-                <span class="error-text" *ngIf="isFieldInvalid('employmentType')">Employment type is required</span>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="reportingManager">Reporting Manager</label>
-                <input
-                  id="reportingManager"
-                  type="text"
-                  class="form-control"
-                  formControlName="reportingManager"
-                  placeholder="Enter reporting manager name"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step-content" *ngIf="currentStep === 4">
-          <h2 class="step-title"><i class="fas fa-money-bill"></i> Salary & Bank Details</h2>
-          <div class="form-grid">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="basicSalary">Basic Salary <span class="required">*</span></label>
-                <div class="input-prefix">
-                  <span class="prefix">$</span>
-                  <input
-                    id="basicSalary"
-                    type="number"
-                    class="form-control with-prefix"
-                    formControlName="basicSalary"
-                    placeholder="0.00"
-                    min="0"
-                    [class.is-invalid]="isFieldInvalid('basicSalary')"
-                  />
-                </div>
-                <span class="error-text" *ngIf="isFieldInvalid('basicSalary')">
-                  <ng-container *ngIf="employeeForm.get('basicSalary')?.errors?.['required']">Basic salary is required</ng-container>
-                  <ng-container *ngIf="employeeForm.get('basicSalary')?.errors?.['min']">Salary must be a positive number</ng-container>
-                </span>
-              </div>
-              <div class="form-group">
-                <label for="allowances">Allowances</label>
-                <div class="input-prefix">
-                  <span class="prefix">$</span>
-                  <input
-                    id="allowances"
-                    type="number"
-                    class="form-control with-prefix"
-                    formControlName="allowances"
-                    placeholder="0.00"
-                    min="0"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="form-section-divider">
-              <h3>Bank Details</h3>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="bankName">Bank Name</label>
-                <input
-                  id="bankName"
-                  type="text"
-                  class="form-control"
-                  formControlName="bankName"
-                  placeholder="Enter bank name"
-                />
-              </div>
-              <div class="form-group">
-                <label for="accountNumber">Account Number</label>
-                <input
-                  id="accountNumber"
-                  type="text"
-                  class="form-control"
-                  formControlName="accountNumber"
-                  placeholder="Enter account number"
-                />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="ifscCode">IFSC Code</label>
-                <input
-                  id="ifscCode"
-                  type="text"
-                  class="form-control"
-                  formControlName="ifscCode"
-                  placeholder="Enter IFSC code"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button
-          type="button"
-          class="btn btn-outline"
-          *ngIf="currentStep > 1"
-          (click)="prevStep()"
-        >
-          <i class="fas fa-arrow-left"></i> Back
-        </button>
-        <div class="actions-right">
-          <button
-            type="button"
-            class="btn btn-primary"
-            *ngIf="currentStep < 4"
-            (click)="nextStep()"
-          >
-            Next <i class="fas fa-arrow-right"></i>
-          </button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            *ngIf="currentStep === 4"
-            [disabled]="isSubmitting"
-          >
-            <span *ngIf="!isSubmitting"><i class="fas fa-save"></i> Save Employee</span>
-            <span *ngIf="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Saving...</span>
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-
+  <!-- Success Card State -->
   <div class="success-card" *ngIf="submitted">
     <div class="success-content">
       <div class="success-icon">
         <i class="fas fa-check-circle"></i>
       </div>
-      <h2>Employee Added Successfully</h2>
-      <p>The employee record has been created and saved to the system.</p>
+      <h2>Employee Saved Successfully</h2>
+      <p>The employee record has been saved to the database.</p>
       <div class="success-actions">
-        <button class="btn btn-primary" routerLink="/admin/employees">
+        <a class="btn btn-primary" routerLink="/admin/employees">
           <i class="fas fa-users"></i> View All Employees
-        </button>
+        </a>
         <button class="btn btn-outline" (click)="submitted = false; employeeForm.reset(); currentStep = 1;">
-          <i class="fas fa-plus"></i> Add Another
+          <i class="fas fa-plus"></i> Add Another Employee
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- Form Body & Stepper Container -->
+  <div class="form-card" *ngIf="!submitted">
+
+    <!-- 2. 4-Step Stepper Progress Bar -->
+    <div class="stepper-container">
+      <div class="stepper-line">
+        <div class="stepper-line-fill" [style.width]="((currentStep - 1) / (steps.length - 1)) * 100 + '%'"></div>
+      </div>
+
+      <div
+        *ngFor="let step of steps; let i = index"
+        class="stepper-step"
+        [class.active]="currentStep === i + 1"
+        [class.completed]="currentStep > i + 1"
+        (click)="currentStep = (i + 1 <= currentStep || editingId) ? i + 1 : currentStep"
+      >
+        <div class="step-circle">
+          <span *ngIf="currentStep <= i + 1">{{ i + 1 }}</span>
+          <i class="fas fa-check" *ngIf="currentStep > i + 1"></i>
+        </div>
+        <div class="step-label-group">
+          <span class="step-title-lbl">{{ step.label }}</span>
+          <span class="step-sub-lbl">{{ step.sublabel }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Form Content -->
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="form-wrapper">
+
+      <!-- STEP 1: Personal Information -->
+      <div class="step-panel" *ngIf="currentStep === 1">
+        <div class="panel-header">
+          <div class="header-title-box">
+            <div class="panel-icon-box blue-bg">
+              <i class="far fa-user"></i>
+            </div>
+            <div class="panel-text">
+              <h2>Personal Information</h2>
+              <p>Enter the basic details of the employee</p>
+            </div>
+          </div>
+          <div class="info-marked-pill">
+            <i class="fas fa-info-circle"></i> Fields marked with <span class="required-star">*</span> are required
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- First Name -->
+          <div class="form-group">
+            <label for="firstName">First Name <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('firstName')">
+              <i class="far fa-user field-icon"></i>
+              <input id="firstName" type="text" formControlName="firstName" placeholder="Enter first name" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('firstName')">First name is required</span>
+          </div>
+
+          <!-- Last Name -->
+          <div class="form-group">
+            <label for="lastName">Last Name <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('lastName')">
+              <i class="far fa-user field-icon"></i>
+              <input id="lastName" type="text" formControlName="lastName" placeholder="Enter last name" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('lastName')">Last name is required</span>
+          </div>
+
+          <!-- Gender Radio Cards -->
+          <div class="form-group full-width">
+            <label>Gender <span class="required">*</span></label>
+            <div class="gender-radio-cards">
+              <label class="gender-card" [class.selected]="employeeForm.get('gender')?.value === 'Male'">
+                <input type="radio" formControlName="gender" value="Male" class="hidden-radio" />
+                <div class="card-radio-circle">
+                  <i class="fas fa-check-circle check-icon" *ngIf="employeeForm.get('gender')?.value === 'Male'"></i>
+                </div>
+                <span class="gender-lbl">Male</span>
+              </label>
+
+              <label class="gender-card" [class.selected]="employeeForm.get('gender')?.value === 'Female'">
+                <input type="radio" formControlName="gender" value="Female" class="hidden-radio" />
+                <div class="card-radio-circle">
+                  <i class="fas fa-female icon-muted"></i>
+                </div>
+                <span class="gender-lbl">Female</span>
+              </label>
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('gender')">Gender selection is required</span>
+          </div>
+
+          <!-- Date of Birth -->
+          <div class="form-group">
+            <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('dateOfBirth')">
+              <i class="far fa-calendar-alt field-icon"></i>
+              <input id="dateOfBirth" type="date" formControlName="dateOfBirth" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('dateOfBirth')">Date of birth is required</span>
+          </div>
+
+          <!-- Marital Status -->
+          <div class="form-group">
+            <label for="maritalStatus">Marital Status</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-ring field-icon"></i>
+              <select id="maritalStatus" formControlName="maritalStatus" class="form-input select-input">
+                <option value="">Select marital status</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Widowed">Widowed</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+
+          <!-- Nationality -->
+          <div class="form-group">
+            <label for="nationality">Nationality</label>
+            <div class="input-icon-wrap">
+              <i class="far fa-flag field-icon"></i>
+              <select id="nationality" formControlName="nationality" class="form-input select-input">
+                <option value="">Select nationality</option>
+                <option value="Indian">Indian</option>
+                <option value="American">American</option>
+                <option value="British">British</option>
+                <option value="Canadian">Canadian</option>
+                <option value="Other">Other</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+
+          <!-- Blood Group -->
+          <div class="form-group">
+            <label for="bloodGroup">Blood Group</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-tint field-icon"></i>
+              <select id="bloodGroup" formControlName="bloodGroup" class="form-input select-input">
+                <option value="">Select blood group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+
+          <!-- Aadhaar Number -->
+          <div class="form-group">
+            <label for="aadhaarNumber">Aadhaar Number</label>
+            <div class="input-icon-wrap">
+              <i class="far fa-id-card field-icon"></i>
+              <input id="aadhaarNumber" type="text" formControlName="aadhaarNumber" placeholder="Enter 12 digit Aadhaar number" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Profile Picture -->
+          <div class="form-group full-width">
+            <label>Profile Picture</label>
+            <div class="avatar-upload-box">
+              <div class="avatar-preview-container" *ngIf="employeeForm.get('avatar')?.value">
+                <img [src]="resolveImage(employeeForm.get('avatar')?.value)" alt="Profile Picture" class="avatar-preview" />
+                <button type="button" class="btn-remove-img" (click)="removeImage()"><i class="fas fa-times"></i></button>
+              </div>
+
+              <div class="upload-controls">
+                <button type="button" class="btn-upload-file" (click)="avatarInput.click()">
+                  <i class="fas fa-cloud-upload-alt"></i> Upload Profile Picture
+                </button>
+                <input #avatarInput type="file" accept="image/*" hidden (change)="onImageSelected($event)" />
+                <span class="upload-hint">Or paste an image URL below</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="avatarUrl">Image URL</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-link field-icon"></i>
+              <input id="avatarUrl" type="url" formControlName="avatar" placeholder="https://example.com/photo.jpg" class="form-input" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STEP 2: Contact Information -->
+      <div class="step-panel" *ngIf="currentStep === 2">
+        <div class="panel-header">
+          <div class="header-title-box">
+            <div class="panel-icon-box blue-bg">
+              <i class="fas fa-phone-alt"></i>
+            </div>
+            <div class="panel-text">
+              <h2>Contact Information</h2>
+              <p>How to reach the employee and emergency contacts</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email Address <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('email')">
+              <i class="far fa-envelope field-icon"></i>
+              <input id="email" type="email" formControlName="email" placeholder="Enter email address" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('email')">Valid email address is required</span>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group">
+            <label for="phone">Phone Number <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('phone')">
+              <i class="fas fa-phone field-icon"></i>
+              <input id="phone" type="tel" formControlName="phone" placeholder="Enter phone number" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('phone')">Valid phone number is required</span>
+          </div>
+
+          <!-- Address -->
+          <div class="form-group full-width">
+            <label for="address">Street Address <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('address')">
+              <i class="fas fa-map-marker-alt field-icon"></i>
+              <input id="address" type="text" formControlName="address" placeholder="Enter street address" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('address')">Address is required</span>
+          </div>
+
+          <!-- City -->
+          <div class="form-group">
+            <label for="city">City <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('city')">
+              <i class="fas fa-city field-icon"></i>
+              <input id="city" type="text" formControlName="city" placeholder="Enter city" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('city')">City is required</span>
+          </div>
+
+          <!-- State -->
+          <div class="form-group">
+            <label for="state">State / Province</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-map field-icon"></i>
+              <input id="state" type="text" formControlName="state" placeholder="Enter state" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Country -->
+          <div class="form-group">
+            <label for="country">Country <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('country')">
+              <i class="fas fa-globe field-icon"></i>
+              <input id="country" type="text" formControlName="country" placeholder="Enter country" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('country')">Country is required</span>
+          </div>
+
+          <!-- Postal Code -->
+          <div class="form-group">
+            <label for="postalCode">Postal Code</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-mail-bulk field-icon"></i>
+              <input id="postalCode" type="text" formControlName="postalCode" placeholder="Enter postal code" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Emergency Contact Section Divider -->
+          <div class="form-section-title full-width">
+            <i class="fas fa-shield-alt"></i> Emergency Contact Details
+          </div>
+
+          <!-- Emergency Contact Name -->
+          <div class="form-group">
+            <label for="emergencyContactName">Emergency Contact Name</label>
+            <div class="input-icon-wrap">
+              <i class="far fa-user field-icon"></i>
+              <input id="emergencyContactName" type="text" formControlName="emergencyContactName" placeholder="Enter emergency contact name" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Emergency Contact Phone -->
+          <div class="form-group">
+            <label for="emergencyContactPhone">Emergency Contact Phone</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-phone field-icon"></i>
+              <input id="emergencyContactPhone" type="tel" formControlName="emergencyContactPhone" placeholder="Enter emergency contact phone" class="form-input" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Job Details -->
+      <div class="step-panel" *ngIf="currentStep === 3">
+        <div class="panel-header">
+          <div class="header-title-box">
+            <div class="panel-icon-box blue-bg">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="panel-text">
+              <h2>Job & Organizational Details</h2>
+              <p>Assign department, designation, branch, and role parameters</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Joining Date -->
+          <div class="form-group">
+            <label for="joiningDate">Joining Date <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('joiningDate')">
+              <i class="far fa-calendar-check field-icon"></i>
+              <input id="joiningDate" type="date" formControlName="joiningDate" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('joiningDate')">Joining date is required</span>
+          </div>
+
+          <!-- Department -->
+          <div class="form-group">
+            <label for="department">Department <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('department')">
+              <i class="fas fa-sitemap field-icon"></i>
+              <select id="department" formControlName="department" class="form-input select-input">
+                <option value="">Select department</option>
+                <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('department')">Department selection is required</span>
+          </div>
+
+          <!-- Designation -->
+          <div class="form-group">
+            <label for="designation">Designation <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('designation')">
+              <i class="fas fa-id-badge field-icon"></i>
+              <select id="designation" formControlName="designation" class="form-input select-input">
+                <option value="">Select designation</option>
+                <option *ngFor="let desig of designations" [value]="desig.id">{{ desig.title }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('designation')">Designation selection is required</span>
+          </div>
+
+          <!-- Branch -->
+          <div class="form-group">
+            <label for="branch">Branch Location <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('branch')">
+              <i class="fas fa-building field-icon"></i>
+              <select id="branch" formControlName="branch" class="form-input select-input">
+                <option value="">Select branch</option>
+                <option *ngFor="let b of branches" [value]="b.id">{{ b.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('branch')">Branch selection is required</span>
+          </div>
+
+          <!-- Employment Type -->
+          <div class="form-group">
+            <label for="employmentType">Employment Type <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('employmentType')">
+              <i class="fas fa-user-clock field-icon"></i>
+              <select id="employmentType" formControlName="employmentType" class="form-input select-input">
+                <option value="">Select employment type</option>
+                <option *ngFor="let type of employmentTypes" [value]="type">{{ type }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('employmentType')">Employment type is required</span>
+          </div>
+
+          <!-- Reporting Manager -->
+          <div class="form-group">
+            <label for="reportingManager">Reporting Manager</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-user-tie field-icon"></i>
+              <input id="reportingManager" type="text" formControlName="reportingManager" placeholder="Enter reporting manager name" class="form-input" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Salary & Bank Details -->
+      <div class="step-panel" *ngIf="currentStep === 4">
+        <div class="panel-header">
+          <div class="header-title-box">
+            <div class="panel-icon-box blue-bg">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <div class="panel-text">
+              <h2>Compensation & Bank Details</h2>
+              <p>Set basic salary structure and payroll accounts</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Basic Salary -->
+          <div class="form-group">
+            <label for="basicSalary">Basic Salary <span class="required">*</span></label>
+            <div class="input-icon-wrap" [class.is-invalid]="isFieldInvalid('basicSalary')">
+              <i class="fas fa-dollar-sign field-icon"></i>
+              <input id="basicSalary" type="number" formControlName="basicSalary" placeholder="0.00" min="0" class="form-input" />
+            </div>
+            <span class="error-msg" *ngIf="isFieldInvalid('basicSalary')">Valid basic salary is required</span>
+          </div>
+
+          <!-- Allowances -->
+          <div class="form-group">
+            <label for="allowances">Allowances & Bonuses</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-hand-holding-usd field-icon"></i>
+              <input id="allowances" type="number" formControlName="allowances" placeholder="0.00" min="0" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Bank Name -->
+          <div class="form-group">
+            <label for="bankName">Bank Name</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-university field-icon"></i>
+              <input id="bankName" type="text" formControlName="bankName" placeholder="Enter bank name" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Account Number -->
+          <div class="form-group">
+            <label for="accountNumber">Account Number</label>
+            <div class="input-icon-wrap">
+              <i class="far fa-credit-card field-icon"></i>
+              <input id="accountNumber" type="text" formControlName="accountNumber" placeholder="Enter account number" class="form-input" />
+            </div>
+          </div>
+
+          <!-- IFSC Code -->
+          <div class="form-group">
+            <label for="ifscCode">IFSC / Routing Code</label>
+            <div class="input-icon-wrap">
+              <i class="fas fa-code field-icon"></i>
+              <input id="ifscCode" type="text" formControlName="ifscCode" placeholder="Enter IFSC code" class="form-input" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Footer Action Bar -->
+      <div class="footer-actions-bar">
+        <a routerLink="/admin/employees" class="btn btn-cancel">Cancel</a>
+
+        <div class="right-buttons">
+          <button type="button" class="btn btn-back" *ngIf="currentStep > 1" (click)="prevStep()">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+
+          <button type="button" class="btn btn-next" *ngIf="currentStep < 4" (click)="nextStep()">
+            <span>Next</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+
+          <button type="submit" class="btn btn-submit" *ngIf="currentStep === 4" [disabled]="isSubmitting">
+            <span *ngIf="!isSubmitting"><i class="fas fa-check"></i> Submit Employee</span>
+            <span *ngIf="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Submitting...</span>
+          </button>
+        </div>
+      </div>
+
+    </form>
   </div>
 </div>

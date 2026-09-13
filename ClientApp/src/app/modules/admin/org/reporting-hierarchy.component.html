@@ -5,6 +5,45 @@
   </div>
 </app-page-header>
 
+<!-- Metrics Overview Cards (Executive Light Cards) -->
+<div class="hierarchy-stats">
+  <div class="c-stat metric-blue">
+    <div class="c-icon"><i class="fas fa-sitemap"></i></div>
+    <div class="c-info">
+      <span class="c-label">Total Mapped</span>
+      <span class="c-val">{{ allEmployees.length }}</span>
+      <span class="c-sub"><i class="fas fa-users"></i> Staff Members</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-emerald">
+    <div class="c-icon"><i class="fas fa-user-tie"></i></div>
+    <div class="c-info">
+      <span class="c-label">Managerial Heads</span>
+      <span class="c-val">Active</span>
+      <span class="c-sub"><i class="fas fa-project-diagram"></i> Direct Reporting</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-violet">
+    <div class="c-icon"><i class="fas fa-layer-group"></i></div>
+    <div class="c-info">
+      <span class="c-label">Org View Mode</span>
+      <span class="c-val">{{ viewMode === 'tree' ? 'Org Chart' : 'Flat List' }}</span>
+      <span class="c-sub"><i class="fas fa-sliders-h"></i> Dynamic Layout</span>
+    </div>
+  </div>
+
+  <div class="c-stat metric-amber">
+    <div class="c-icon"><i class="fas fa-network-wired"></i></div>
+    <div class="c-info">
+      <span class="c-label">Hierarchy Status</span>
+      <span class="c-val">Verified</span>
+      <span class="c-sub"><i class="fas fa-check-double"></i> Structure Synchronized</span>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="viewMode === 'tree'" class="section-card">
   <div class="section-toolbar">
     <div class="filter-group">

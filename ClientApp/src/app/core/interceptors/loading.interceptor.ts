@@ -6,8 +6,6 @@ import { LoadingService } from './loading.service';
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
-  private totalRequests = 0;
-
   constructor(private loadingService: LoadingService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -16,16 +14,11 @@ export class LoadingInterceptor implements HttpInterceptor {
       return next.handle(modifiedReq);
     }
 
-    this.totalRequests++;
     this.loadingService.show();
 
     return next.handle(req).pipe(
       finalize(() => {
-        this.totalRequests--;
-        if (this.totalRequests <= 0) {
-          this.totalRequests = 0;
-          this.loadingService.hide();
-        }
+        this.loadingService.hide();
       })
     );
   }

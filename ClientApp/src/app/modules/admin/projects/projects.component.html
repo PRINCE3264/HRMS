@@ -1,6 +1,45 @@
-<app-page-header title="Projects" subtitle="Add new projects, assign a Team Lead, and manage the team" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Projects'}]">
-  <button class="btn btn--primary" (click)="openAdd()"><i class="fas fa-plus"></i> Add Project</button>
+<app-page-header title="Projects" subtitle="Manage company projects, assign Team Leads, and track deliverables" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Projects'}]">
+  <button class="btn btn--primary" [routerLink]="['/admin/projects/add']"><i class="fas fa-plus"></i> Add Project</button>
 </app-page-header>
+
+<!-- Metrics Overview Cards (Executive Light Cards) -->
+<div class="project-stats">
+  <div class="p-stat metric-blue">
+    <div class="p-icon"><i class="fas fa-project-diagram"></i></div>
+    <div class="p-info">
+      <span class="p-label">Total Projects</span>
+      <span class="p-val">{{ projects.length }}</span>
+      <span class="p-sub"><i class="fas fa-folder-open"></i> Active Workspace</span>
+    </div>
+  </div>
+
+  <div class="p-stat metric-emerald">
+    <div class="p-icon"><i class="fas fa-tasks"></i></div>
+    <div class="p-info">
+      <span class="p-label">In Progress</span>
+      <span class="p-val">{{ inProgressCount }}</span>
+      <span class="p-sub"><i class="fas fa-spinner fa-spin"></i> Active Deliverables</span>
+    </div>
+  </div>
+
+  <div class="p-stat metric-violet">
+    <div class="p-icon"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="p-info">
+      <span class="p-label">High Priority</span>
+      <span class="p-val">{{ highPriorityCount }}</span>
+      <span class="p-sub"><i class="fas fa-fire"></i> Urgent Milestones</span>
+    </div>
+  </div>
+
+  <div class="p-stat metric-amber">
+    <div class="p-icon"><i class="fas fa-user-tie"></i></div>
+    <div class="p-info">
+      <span class="p-label">Assigned TLs</span>
+      <span class="p-val">{{ assignedTlCount }}</span>
+      <span class="p-sub"><i class="fas fa-user-check"></i> Project Leads</span>
+    </div>
+  </div>
+</div>
 
 <app-data-table
   [columns]="columns"
@@ -12,74 +51,6 @@
   emptyIcon="fas fa-project-diagram"
   (onActionClick)="onAction($event)">
 </app-data-table>
-
-<!-- Create / Edit Project Modal -->
-<div class="modal-backdrop" *ngIf="showForm">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h3><i class="fas fa-tasks text-blue"></i> {{ isEdit ? 'Edit Project' : 'Create New Project' }}</h3>
-      <button class="close-btn" (click)="closeForm()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group full-width">
-          <label>Project Name <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="form.name" placeholder="e.g. HRM Mobile App" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>Project Code</label>
-          <input type="text" [(ngModel)]="form.projectCode" placeholder="Auto-generated if blank" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>Department <span class="required">*</span></label>
-          <select [(ngModel)]="form.departmentId" class="form-control">
-            <option value="">Select department</option>
-            <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Priority</label>
-          <select [(ngModel)]="form.priority" class="form-control">
-            <option value="LOW">Low</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HIGH">High</option>
-            <option value="CRITICAL">Critical</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Start Date</label>
-          <input type="date" [(ngModel)]="form.startDate" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label>End Date</label>
-          <input type="date" [(ngModel)]="form.endDate" class="form-control" />
-        </div>
-
-        <div class="form-group full-width">
-          <label>Assign Team Lead (optional)</label>
-          <select [(ngModel)]="form.teamLeadId" class="form-control">
-            <option value="">-- Select a Team Lead --</option>
-            <option *ngFor="let tl of teamLeads" [value]="tl.id">{{ tl.name }} ({{ tl.teamName || tl.designation || tl.department }})</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-          <label>Description</label>
-          <textarea [(ngModel)]="form.description" rows="3" placeholder="Project goals and scope..." class="form-control"></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" (click)="closeForm()">Cancel</button>
-      <button class="btn-save" (click)="saveForm()"><i class="fas fa-check"></i> {{ isEdit ? 'Update Project' : 'Create Project' }}</button>
-    </div>
-  </div>
-</div>
 
 <!-- Assign Team Lead Modal -->
 <div class="modal-backdrop" *ngIf="showAssignTl && assignTarget">

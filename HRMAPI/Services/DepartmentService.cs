@@ -33,6 +33,7 @@ public class DepartmentService : IDepartmentService
             Name = d.Name,
             Code = d.Code,
             Description = d.Description,
+            ImageUrl = d.ImageUrl,
             HeadId = d.HeadId,
             HeadName = d.Head != null ? $"{d.Head.FirstName} {d.Head.LastName}" : null,
             EmployeeCount = d.Employees.Count,
@@ -51,6 +52,7 @@ public class DepartmentService : IDepartmentService
             Name = d.Name,
             Code = d.Code,
             Description = d.Description,
+            ImageUrl = d.ImageUrl,
             HeadId = d.HeadId,
             HeadName = d.Head != null ? $"{d.Head.FirstName} {d.Head.LastName}" : null,
             EmployeeCount = await _departmentRepository.GetEmployeeCountAsync(id),
@@ -71,6 +73,7 @@ public class DepartmentService : IDepartmentService
             Name = dto.Name,
             Code = dto.Code.ToUpper(),
             Description = dto.Description,
+            ImageUrl = dto.ImageUrl,
             HeadId = dto.HeadId
         };
         await _departmentRepository.AddAsync(dept);
@@ -83,6 +86,7 @@ public class DepartmentService : IDepartmentService
         dept.Name = dto.Name;
         dept.Code = dto.Code.ToUpper();
         dept.Description = dto.Description;
+        dept.ImageUrl = dto.ImageUrl;
         dept.HeadId = dto.HeadId;
         dept.UpdatedAt = DateTime.UtcNow;
         await _departmentRepository.UpdateAsync(dept);

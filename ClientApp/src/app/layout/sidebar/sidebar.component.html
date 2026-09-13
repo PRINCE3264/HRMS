@@ -6,7 +6,7 @@
     <div class="sidebar__brand" *ngIf="!collapsed; else collapsedBrand">
       <img src="assets/images/hrm.png" alt="HRM Logo" class="brand-img-large">
       <div class="brand-text-block">
-        <h2 class="brand-title">HRM</h2>
+        <h2 class="brand-title">HRMS</h2>
         <span class="brand-tagline">HUMAN RESOURCE MANAGEMENT</span>
       </div>
     </div>
@@ -21,8 +21,9 @@
   <nav class="sidebar__menu">
     <div class="menu-item" *ngFor="let item of navItems">
       <!-- Menu Item without Children -->
-      <a *ngIf="!item.children" class="menu-link" [routerLink]="item.routerLink" [queryParams]="item.queryParams" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: item.routerLink === '/dashboard' }" (click)="closeMobile()">
+      <a *ngIf="!item.children" class="menu-link" [routerLink]="item.routerLink" [queryParams]="item.queryParams"
+        routerLinkActive="active" [routerLinkActiveOptions]="{ exact: item.routerLink === '/dashboard' }"
+        (click)="closeMobile()">
         <i [class]="item.icon" class="menu-icon"></i>
         <span class="menu-text" *ngIf="!collapsed">{{ item.label }}</span>
         <i class="fas fa-chevron-up chevron-icon" *ngIf="!collapsed"></i>
@@ -38,8 +39,8 @@
             *ngIf="!collapsed"></i>
         </div>
         <div class="submenu-list" *ngIf="expandedMenus.has(item.label) && !collapsed">
-          <a *ngFor="let child of item.children" class="submenu-link" [routerLink]="child.routerLink" [queryParams]="child.queryParams"
-            routerLinkActive="active" (click)="closeMobile()">
+          <a *ngFor="let child of item.children" class="submenu-link" [routerLink]="child.routerLink"
+            [queryParams]="child.queryParams" routerLinkActive="active" (click)="closeMobile()">
             <i [class]="child.icon || 'fas fa-file-alt'" class="submenu-icon"></i>
             <span>{{ child.label }}</span>
           </a>

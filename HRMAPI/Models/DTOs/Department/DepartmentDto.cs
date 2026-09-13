@@ -8,6 +8,7 @@ public class DepartmentDto
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string? ImageUrl { get; set; }
     public Guid? HeadId { get; set; }
     public string? HeadName { get; set; }
     public int EmployeeCount { get; set; }

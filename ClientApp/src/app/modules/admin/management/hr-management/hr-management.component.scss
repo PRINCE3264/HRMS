@@ -1,9 +1,240 @@
-:host { display: block; }
-
-.assign-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-.assign-select {
-  padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
-  font-size: 13px; min-width: 280px; color: #334155; background: #fff;
+:host {
+  display: block;
+  width: 100%;
 }
-.assign-select:focus { outline: none; border-color: #6366f1; }
-.assign-hint { font-size: 12px; color: #94a3b8; }
+
+/* Metric Executive Stat Cards */
+.hr-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.c-stat {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    border-color: #cbd5e1;
+  }
+
+  .c-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover .c-icon {
+    transform: scale(1.05);
+  }
+
+  .c-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+
+    .c-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #64748b;
+    }
+
+    .c-val {
+      display: block;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #0f172a;
+      margin: 2px 0 3px 0;
+    }
+
+    .c-sub {
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      i {
+        font-size: 11px;
+      }
+    }
+  }
+
+  &.metric-blue {
+    .c-icon {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+  }
+
+  &.metric-emerald {
+    .c-icon {
+      background: #ecfdf5;
+      color: #10b981;
+    }
+  }
+
+  &.metric-violet {
+    .c-icon {
+      background: #f5f3ff;
+      color: #8b5cf6;
+    }
+  }
+
+  &.metric-amber {
+    .c-icon {
+      background: #fffbe3;
+      color: #d97706;
+    }
+  }
+}
+
+/* Assign Card */
+.assign-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+  padding: 22px 24px;
+  margin-bottom: 24px;
+}
+
+.table-container-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+  padding: 24px;
+}
+
+.card-header {
+  margin-bottom: 18px;
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      color: #4f46e5;
+    }
+  }
+
+  .card-subtitle {
+    display: block;
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 3px;
+  }
+}
+
+.assign-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.select-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 300px;
+
+  .select-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 14px;
+    pointer-events: none;
+  }
+}
+
+.assign-select {
+  width: 100%;
+  padding: 11px 16px 11px 40px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #f8fafc;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: #4461f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 3.5px rgba(68, 97, 246, 0.12);
+  }
+}
+
+.btn {
+  padding: 11px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+
+  &--primary {
+    background: #4461f6;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      background: #3553e4;
+      box-shadow: 0 4px 12px rgba(68, 97, 246, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.assign-hint {
+  font-size: 13px;
+  color: #d97706;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

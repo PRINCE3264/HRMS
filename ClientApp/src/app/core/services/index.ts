@@ -22,3 +22,5 @@ export { ProjectService } from './project.service';
 export { ManagementService } from './management.service';
 export { OrganizationService } from './organization.service';
 export { SystemConfigService } from './system-config.service';
+export { ExcelExportService } from './excel-export.service';
+export { DynamicRouteService } from './dynamic-route.service';

@@ -86,6 +86,10 @@ export class AdminDocumentsComponent implements OnInit {
     });
   }
 
+  getCategoryCount(catName: string): number {
+    return this.documents.filter(d => d.category === catName).length;
+  }
+
   filterByCategory(catName: string) {
     if (this.selectedCategory === catName) {
       this.selectedCategory = 'ALL';

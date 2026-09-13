@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { User, UserRole, LoginRequest, RegisterRequest, LoginResponse, Permission, PermissionAction } from '../models';
 import { ROLE_PERMISSIONS } from '../constants';
+import { DynamicRouteService } from './dynamic-route.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -13,14 +14,27 @@ export class AuthService {
 
   private tokenSubject = new BehaviorSubject<string | null>(null);
 
-  constructor(private http: HttpClient) {
-    const stored = localStorage.getItem('hrm_user');
-    if (stored) {
-      this.currentUserSubject.next(JSON.parse(stored));
-    }
-    const token = localStorage.getItem('hrm_token');
-    if (token) {
-      this.tokenSubject.next(token);
+  constructor(private http: HttpClient, private dynamicRouteService: DynamicRouteService) {
+    const sessionUser = sessionStorage.getItem('hrm_user');
+    const sessionToken = sessionStorage.getItem('hrm_token');
+
+    if (sessionUser && sessionToken) {
+      try {
+        this.currentUserSubject.next(JSON.parse(sessionUser));
+        this.tokenSubject.next(sessionToken);
+      } catch (e) { }
+    } else {
+      const localUser = localStorage.getItem('hrm_user');
+      const localToken = localStorage.getItem('hrm_token');
+      if (localUser && localToken) {
+        try {
+          const userObj = JSON.parse(localUser);
+          this.currentUserSubject.next(userObj);
+          this.tokenSubject.next(localToken);
+          sessionStorage.setItem('hrm_user', localUser);
+          sessionStorage.setItem('hrm_token', localToken);
+        } catch (e) { }
+      }
     }
   }
 
@@ -35,10 +49,13 @@ export class AuthService {
         return { ...data, user: userWithPerms };
       }),
       tap(res => {
+        sessionStorage.setItem('hrm_user', JSON.stringify(res.user));
+        sessionStorage.setItem('hrm_token', res.token);
         localStorage.setItem('hrm_user', JSON.stringify(res.user));
         localStorage.setItem('hrm_token', res.token);
         this.currentUserSubject.next(res.user);
         this.tokenSubject.next(res.token);
+        this.dynamicRouteService.initialize();
       }),
       catchError(err => throwError(() => new Error(err?.error?.message || 'Invalid email or password')))
     );
@@ -60,6 +77,7 @@ export class AuthService {
         } as LoginResponse;
       }),
       tap(res => {
+        sessionStorage.setItem('hrm_user', JSON.stringify(res.user));
         localStorage.setItem('hrm_user', JSON.stringify(res.user));
         this.currentUserSubject.next(res.user);
       }),
@@ -81,6 +99,8 @@ export class AuthService {
   }
 
   logout(): void {
+    sessionStorage.removeItem('hrm_user');
+    sessionStorage.removeItem('hrm_token');
     localStorage.removeItem('hrm_user');
     localStorage.removeItem('hrm_token');
     this.currentUserSubject.next(null);

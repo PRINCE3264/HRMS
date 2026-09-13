@@ -11,6 +11,7 @@ public class UserPermissionConfiguration : IEntityTypeConfiguration<UserPermissi
 
             e.HasIndex(up => new { up.UserId, up.Module, up.Action }).IsUnique();
             e.Property(up => up.Action).HasConversion<string>().HasMaxLength(20);
+            e.HasOne(up => up.RoleRef).WithMany().HasForeignKey(up => up.RoleId).OnDelete(DeleteBehavior.SetNull);
         
     }
 }

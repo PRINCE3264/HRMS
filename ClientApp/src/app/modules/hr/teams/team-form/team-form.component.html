@@ -1,0 +1,102 @@
+<app-page-header
+  [title]="isEdit ? 'Edit Team' : 'Create New Team'"
+  [subtitle]="isEdit ? 'Update team name, leadership, and assigned department' : 'Set up a new project or functional team across the organization'"
+  [breadcrumbs]="[{label:'Dashboard',link:'/hr/dashboard'},{label:'Teams',link:'/hr/teams'},{label: isEdit ? 'Edit' : 'Create'}]">
+  <a routerLink="/hr/teams" class="btn btn--outline">
+    <i class="fas fa-arrow-left"></i> Cancel & Return
+  </a>
+</app-page-header>
+
+<div class="team-form-container">
+  <div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i> Loading team data...
+  </div>
+
+  <div *ngIf="!loading" class="form-card">
+    <div class="card-header">
+      <div class="header-icon-box">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <div class="header-title-wrap">
+        <h2>{{ isEdit ? 'Update Team Information' : 'Team Details' }}</h2>
+        <p>Fill out the team parameters, department assignment, and team lead below.</p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="form-body">
+      <div class="form-grid">
+
+        <!-- 1. Team Name -->
+        <div class="form-group full-width">
+          <label for="name">Team Name <span class="required">*</span></label>
+          <div class="input-with-icon">
+            <i class="fas fa-users input-icon"></i>
+            <input type="text" id="name" [(ngModel)]="form.name" name="name" required placeholder="e.g. Alpha Squad, Revenue Builders, Design Forge" class="form-control" />
+          </div>
+        </div>
+
+        <!-- 2. Department -->
+        <div class="form-group">
+          <label for="departmentId">Department</label>
+          <div class="input-with-icon">
+            <i class="fas fa-sitemap input-icon"></i>
+            <select id="departmentId" [(ngModel)]="form.departmentId" name="departmentId" class="form-control">
+              <option value="">Select Department</option>
+              <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }} ({{ dept.code }})</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 3. Team Lead -->
+        <div class="form-group">
+          <label for="teamLeadId">Team Lead</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user-tie input-icon"></i>
+            <select id="teamLeadId" [(ngModel)]="form.teamLeadId" name="teamLeadId" class="form-control">
+              <option value="">Select Team Lead</option>
+              <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }} ({{ emp.department || 'Employee' }})</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 4. Active Status -->
+        <div class="form-group">
+          <label for="status">Status</label>
+          <div class="input-with-icon">
+            <i class="fas fa-toggle-on input-icon"></i>
+            <select id="status" [(ngModel)]="form.status" name="status" class="form-control">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 5. Active Projects Count -->
+        <div class="form-group">
+          <label for="activeProjectsCount">Active Projects Count</label>
+          <div class="input-with-icon">
+            <i class="fas fa-briefcase input-icon"></i>
+            <input type="number" id="activeProjectsCount" [(ngModel)]="form.activeProjectsCount" name="activeProjectsCount" min="0" placeholder="0" class="form-control" />
+          </div>
+        </div>
+
+        <!-- 6. Description -->
+        <div class="form-group full-width">
+          <label for="description">Team Description & Responsibilities</label>
+          <textarea id="description" [(ngModel)]="form.description" name="description" rows="4" placeholder="Describe the team's core purpose, project architecture, or responsibilities..." class="form-control textarea-control"></textarea>
+        </div>
+
+      </div>
+
+      <!-- Action Footer -->
+      <div class="form-actions-footer">
+        <a routerLink="/hr/teams" class="btn btn--outline">Cancel</a>
+        <button type="submit" [disabled]="submitting" class="btn btn--primary">
+          <i class="fas fa-check" *ngIf="!submitting"></i>
+          <i class="fas fa-spinner fa-spin" *ngIf="submitting"></i>
+          <span>{{ submitting ? 'Saving...' : (isEdit ? 'Save Changes' : 'Create Team') }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

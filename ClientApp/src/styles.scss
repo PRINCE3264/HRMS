@@ -176,7 +176,7 @@ body {
   max-width: 100% !important;
 }
 
-[class*="-page"], [class*="-container"], [class*="-grid"], .shift-page, .dashboard {
+[class*="-page"], [class*="-container"]:not(.swal2-container), [class*="-grid"], .shift-page, .dashboard {
   width: 100% !important;
   max-width: 100% !important;
   margin-left: 0 !important;
@@ -437,6 +437,15 @@ textarea.form-control {
 .swal2-container {
   font-family: var(--font-family, 'Inter', sans-serif) !important;
   z-index: 100000 !important;
+  width: auto !important;
+
+  &.swal2-top-end,
+  &.swal2-top-right {
+    top: 16px !important;
+    right: 16px !important;
+    left: auto !important;
+    width: auto !important;
+  }
 }
 
 .swal2-popup {
@@ -444,6 +453,45 @@ textarea.form-control {
   padding: 1.5rem 1.75rem !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
   border: 1px solid rgba(226, 232, 240, 0.8) !important;
+
+  /* Toast specific styles */
+  &.swal2-toast {
+    width: auto !important;
+    min-width: 260px !important;
+    max-width: 380px !important;
+    padding: 10px 16px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    display: flex !important;
+    align-items: center !important;
+    background: #ffffff !important;
+
+    .swal2-title {
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #0f172a !important;
+      margin: 0 0 0 10px !important;
+      padding: 0 !important;
+    }
+
+    .swal2-icon {
+      margin: 0 !important;
+      width: 24px !important;
+      height: 24px !important;
+      min-width: 24px !important;
+      border-width: 2px !important;
+
+      .swal2-icon-content {
+        font-size: 14px !important;
+      }
+    }
+
+    .swal2-timer-progress-bar {
+      height: 3px !important;
+      border-radius: 0 0 12px 12px !important;
+    }
+  }
 }
 
 .swal2-title {

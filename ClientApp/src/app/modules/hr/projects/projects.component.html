@@ -1,0 +1,106 @@
+<app-page-header title="Projects" subtitle="Manage company projects, assign Team Leads, and track deliverables" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Projects'}]">
+  <button class="btn btn--primary" [routerLink]="['/hr/projects/add']"><i class="fas fa-plus"></i> Add Project</button>
+</app-page-header>
+
+<!-- Metrics Overview Cards (Executive Light Cards) -->
+<div class="project-stats">
+  <div class="p-stat metric-blue">
+    <div class="p-icon"><i class="fas fa-project-diagram"></i></div>
+    <div class="p-info">
+      <span class="p-label">Total Projects</span>
+      <span class="p-val">{{ projects.length }}</span>
+      <span class="p-sub"><i class="fas fa-folder-open"></i> Active Workspace</span>
+    </div>
+  </div>
+
+  <div class="p-stat metric-emerald">
+    <div class="p-icon"><i class="fas fa-tasks"></i></div>
+    <div class="p-info">
+      <span class="p-label">In Progress</span>
+      <span class="p-val">{{ inProgressCount }}</span>
+      <span class="p-sub"><i class="fas fa-spinner fa-spin"></i> Active Deliverables</span>
+    </div>
+  </div>
+
+  <div class="p-stat metric-violet">
+    <div class="p-icon"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="p-info">
+      <span class="p-label">High Priority</span>
+      <span class="p-val">{{ highPriorityCount }}</span>
+      <span class="p-sub"><i class="fas fa-fire"></i> Urgent Milestones</span>
+    </div>
+  </div>
+
+  <div class="p-stat metric-amber">
+    <div class="p-icon"><i class="fas fa-user-tie"></i></div>
+    <div class="p-info">
+      <span class="p-label">Assigned TLs</span>
+      <span class="p-val">{{ assignedTlCount }}</span>
+      <span class="p-sub"><i class="fas fa-user-check"></i> Project Leads</span>
+    </div>
+  </div>
+</div>
+
+<app-data-table
+  [columns]="columns"
+  [data]="projects"
+  [pageSize]="10"
+  [actions]="tableActions"
+  emptyTitle="No projects found"
+  emptyMessage="Create your first project to get started."
+  emptyIcon="fas fa-project-diagram"
+  (onActionClick)="onAction($event)">
+</app-data-table>
+
+<!-- Assign Team Lead Modal -->
+<div class="modal-backdrop" *ngIf="showAssignTl && assignTarget">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3><i class="fas fa-user-tie text-blue"></i> Assign Team Lead: {{ assignTarget.name }}</h3>
+      <button class="close-btn" (click)="closeAssignTl()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group full-width">
+        <label>Team Lead</label>
+        <select [(ngModel)]="selectedTeamLeadId" class="form-control">
+          <option value="">-- Unassign (remove TL) --</option>
+          <option *ngFor="let tl of teamLeads" [value]="tl.id">{{ tl.name }} ({{ tl.teamName || tl.designation || tl.department }})</option>
+        </select>
+        <p class="form-hint">The Team Lead will then assign this project to the members of their team.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeAssignTl()">Cancel</button>
+      <button class="btn-save" (click)="saveAssignTl()"><i class="fas fa-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Members Modal -->
+<div class="modal-backdrop" *ngIf="showMembers && membersTarget">
+  <div class="modal-card members-modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-users text-blue"></i> Project Members: {{ membersTarget.name }}</h3>
+      <button class="close-btn" (click)="closeMembers()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="members-list" *ngIf="members.length > 0; else noMembers">
+        <div class="member-row" *ngFor="let m of members">
+          <div class="member-avatar">{{ getMemberInitial(m.employeeName) }}</div>
+          <div class="member-info">
+            <div class="member-name">{{ m.employeeName }}</div>
+            <div class="member-meta">{{ m.designation || 'Employee' }}<span *ngIf="m.teamName"> &middot; {{ m.teamName }}</span></div>
+          </div>
+          <span class="member-status" [class.done]="m.status === 'COMPLETED'">{{ m.status.replace('_', ' ') }}</span>
+          <button class="btn-remove" (click)="removeMember(m)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <ng-template #noMembers>
+        <div class="empty-members"><i class="fas fa-user-plus"></i><p>No members yet. The Team Lead will assign the team from this page.</p></div>
+      </ng-template>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" (click)="closeMembers()">Close</button>
+    </div>
+  </div>
+</div>

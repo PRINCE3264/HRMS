@@ -2,34 +2,38 @@
   <button class="btn btn--primary" (click)="openProgramModal()"><i class="fas fa-plus"></i> Create Training Program</button>
 </app-page-header>
 
-<!-- Metrics Overview Cards -->
+<!-- Metrics Overview Cards (Light Executive Cards) -->
 <div class="training-stats">
   <div class="t-stat metric-blue">
     <div class="t-icon"><i class="fas fa-graduation-cap"></i></div>
     <div class="t-info">
-      <span class="t-val">{{ programs.length }}</span>
       <span class="t-label">Active Programs</span>
+      <span class="t-val">{{ programs.length }}</span>
+      <span class="t-sub"><i class="fas fa-calendar-alt"></i> Current Quarter</span>
     </div>
   </div>
   <div class="t-stat metric-emerald">
-    <div class="t-icon"><i class="fas fa-users-class"></i></div>
+    <div class="t-icon"><i class="fas fa-user-graduate"></i></div>
     <div class="t-info">
-      <span class="t-val">{{ totalEnrolled }}</span>
       <span class="t-label">Enrolled Employees</span>
+      <span class="t-val">{{ totalEnrolled }}</span>
+      <span class="t-sub"><i class="fas fa-users"></i> Across Batches</span>
     </div>
   </div>
   <div class="t-stat metric-violet">
     <div class="t-icon"><i class="fas fa-chart-line"></i></div>
     <div class="t-info">
-      <span class="t-val">92%</span>
       <span class="t-label">Completion Rate</span>
+      <span class="t-val">92%</span>
+      <span class="t-sub"><i class="fas fa-check-circle"></i> Certified Candidates</span>
     </div>
   </div>
   <div class="t-stat metric-amber">
     <div class="t-icon"><i class="fas fa-star"></i></div>
     <div class="t-info">
-      <span class="t-val">4.8 / 5</span>
       <span class="t-label">Avg. Feedback Score</span>
+      <span class="t-val">4.8 / 5</span>
+      <span class="t-sub"><i class="fas fa-thumbs-up"></i> Trainee Reviews</span>
     </div>
   </div>
 </div>
@@ -75,10 +79,10 @@
       <div class="training-card__progress">
         <div class="progress-info">
           <span>Capacity Filled</span>
-          <span>{{ (program.enrolled / program.capacity * 100) | number:'1.0-0' }}%</span>
+          <span>{{ (program.capacity > 0 ? (program.enrolled / program.capacity * 100) : 0) | number:'1.0-0' }}%</span>
         </div>
         <div class="progress-bar">
-          <div class="progress-bar__fill" [style.width]="(program.enrolled / program.capacity * 100) + '%'"></div>
+          <div class="progress-bar__fill" [style.width.%]="program.capacity > 0 ? (program.enrolled / program.capacity * 100) : 0"></div>
         </div>
       </div>
 
@@ -87,7 +91,7 @@
           <span class="tag" *ngFor="let tag of program.tags">{{ tag }}</span>
         </div>
         <button class="btn-sm" [disabled]="program.enrolled >= program.capacity" (click)="enrollUser(program)">
-          <i class="fas fa-plus"></i> Enroll
+          <i class="fas fa-user-plus"></i> {{ program.enrolled >= program.capacity ? 'Full' : 'Enroll' }}
         </button>
       </div>
     </div>

@@ -1,385 +1,238 @@
-<app-page-header title="HR Recruitment & Pipeline" subtitle="Manage job postings, candidate pipeline, and interview schedules" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Recruitment'}]">
-  <div class="header-actions">
-    <button class="btn btn--primary" (click)="openJobModal()"><i class="fas fa-plus"></i> New Job Posting</button>
-    <button class="btn btn--secondary" (click)="openCandidateModal()"><i class="fas fa-user-plus"></i> Add Candidate</button>
-  </div>
-</app-page-header>
-
-<!-- Metrics Overview Cards -->
-<div class="recruit-stats">
-  <div class="r-stat metric-blue">
-    <div class="r-icon"><i class="fas fa-briefcase"></i></div>
-    <div class="r-info">
-      <span class="r-val">{{ jobPostings.length }}</span>
-      <span class="r-label">Open Positions</span>
-    </div>
-  </div>
-  <div class="r-stat metric-emerald">
-    <div class="r-icon"><i class="fas fa-user-plus"></i></div>
-    <div class="r-info">
-      <span class="r-val">{{ candidates.length }}</span>
-      <span class="r-label">Applications</span>
-    </div>
-  </div>
-  <div class="r-stat metric-violet">
-    <div class="r-icon"><i class="fas fa-calendar-check"></i></div>
-    <div class="r-info">
-      <span class="r-val">{{ interviews.length }}</span>
-      <span class="r-label">Interviews Scheduled</span>
-    </div>
-  </div>
-  <div class="r-stat metric-amber">
-    <div class="r-icon"><i class="fas fa-file-signature"></i></div>
-    <div class="r-info">
-      <span class="r-val">6</span>
-      <span class="r-label">Offers Extended</span>
-    </div>
-  </div>
-</div>
-
-<!-- Tabs & Search/Filter Toolbar -->
-<div class="recruitment-toolbar">
-  <div class="tabs">
-    <button class="tab" [class.active]="activeTab === 'jobs'" (click)="activeTab = 'jobs'">
-      <i class="fas fa-briefcase"></i> Job Postings <span class="tab-count">{{ jobPostings.length }}</span>
-    </button>
-    <button class="tab" [class.active]="activeTab === 'pipeline'" (click)="activeTab = 'pipeline'">
-      <i class="fas fa-users"></i> Candidate Pipeline <span class="tab-count">{{ candidates.length }}</span>
-    </button>
-    <button class="tab" [class.active]="activeTab === 'interviews'" (click)="activeTab = 'interviews'">
-      <i class="fas fa-calendar-alt"></i> Interviews <span class="tab-count">{{ interviews.length }}</span>
-    </button>
-  </div>
-
-  <div class="filter-controls">
-    <div class="search-box">
-      <i class="fas fa-search search-icon"></i>
-      <input type="text" [(ngModel)]="searchTerm" placeholder="Search {{ activeTab }}..." />
+<div class="recruitment-page">
+  <!-- Top Header Bar -->
+  <div class="page-top-bar">
+    <div class="page-title-section">
+      <div class="breadcrumbs">
+        <a routerLink="/hr/dashboard" class="bc-link">Dashboard</a> <i class="fas fa-chevron-right breadcrumb-sep"></i> <span class="active-crumb">Recruitment</span>
+      </div>
+      <h1 class="page-title">Recruitment & Hiring</h1>
+      <p class="page-subtitle">Manage open positions, job applications, and candidate interview schedules</p>
     </div>
 
-    <div class="select-box" *ngIf="activeTab === 'pipeline'">
-      <select [(ngModel)]="selectedStage">
-        <option value="ALL">All Stages</option>
-        <option value="Screening">Screening</option>
-        <option value="Technical">Technical</option>
-        <option value="Interview">Interview</option>
-        <option value="Offer">Offer</option>
-        <option value="Hired">Hired</option>
-      </select>
-    </div>
-
-    <button class="btn btn--primary" *ngIf="activeTab === 'interviews'" (click)="openInterviewModal()">
-      <i class="fas fa-plus"></i> Schedule Interview
-    </button>
-    <button class="btn btn--secondary" *ngIf="activeTab === 'interviews'" (click)="loadInterviews()">
-      <i class="fas fa-sync-alt"></i>
-    </button>
-  </div>
-</div>
-
-<!-- Tab Content: Job Postings -->
-<div *ngIf="activeTab === 'jobs'" class="jobs-grid">
-  <div class="job-card" *ngFor="let job of filteredJobs">
-    <div class="job-card-header">
-      <h4>{{ job.title }}</h4>
-      <span class="job-status" [class]="job.status.toLowerCase().replace(' ', '-')">{{ job.status }}</span>
-    </div>
-    <div class="job-meta">
-      <span><i class="fas fa-building"></i> {{ job.department }}</span>
-      <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
-      <span><i class="fas fa-briefcase"></i> {{ job.type }}</span>
-    </div>
-    <div class="job-salary">{{ job.salary }}</div>
-    <div class="job-applicants">
-      <div class="applicant-dots">
-        <div class="dot" *ngFor="let c of job.colorDots" [style.background]="c"></div>
-      </div>
-      <span>{{ job.applicantCount }} applicants</span>
-    </div>
-    <div class="job-footer">
-      <span class="job-posted">Posted {{ job.posted }}</span>
-      <button class="btn-sm"><i class="fas fa-eye"></i> View Details</button>
-    </div>
-  </div>
-</div>
-
-<!-- Tab Content: Candidate Pipeline -->
-<div *ngIf="activeTab === 'pipeline'" class="table-card">
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Candidate</th>
-          <th>Position</th>
-          <th>Stage</th>
-          <th>Rating</th>
-          <th>Applied Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of filteredCandidates">
-          <td>
-            <div class="emp-cell">
-              <div class="avatar-sm" [style.background]="c.color">{{ c.name.charAt(0) }}</div>
-              <div>
-                <span class="emp-name">{{ c.name }}</span><br>
-                <span class="emp-id">{{ c.email }}</span>
-              </div>
-            </div>
-          </td>
-          <td>{{ c.position }}</td>
-          <td>
-            <span class="stage-badge" [class]="c.stage.toLowerCase()">{{ c.stage }}</span>
-          </td>
-          <td>
-            <div class="rating">
-              <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= c.rating ? '#f59e0b' : '#e2e8f0'"></i>
-            </div>
-          </td>
-          <td>{{ c.appliedDate }}</td>
-          <td>
-            <button class="btn-icon" title="Advance Stage" (click)="advanceStage(c)"><i class="fas fa-arrow-right"></i></button>
-            <button class="btn-icon" title="View Profile"><i class="fas fa-eye"></i></button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Tab Content: Interviews -->
-<div *ngIf="activeTab === 'interviews'" class="table-card">
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Candidate</th>
-          <th>Position</th>
-          <th>Interviewer</th>
-          <th>Date & Time</th>
-          <th>Round</th>
-          <th>Type</th>
-          <th>Duration</th>
-          <th>Status</th>
-          <th>Link</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let i of filteredInterviews" [class.row-completed]="i.status === 'COMPLETED'">
-          <td>
-            <div class="emp-cell">
-              <div class="avatar-sm" [style.background]="colorPool[0]">{{ (i.candidateName || '').charAt(0) || '?' }}</div>
-              <span class="emp-name">{{ i.candidateName }}</span>
-            </div>
-          </td>
-          <td>{{ i.jobTitle }}</td>
-          <td>{{ i.interviewerName }}</td>
-          <td>{{ formatScheduledAt(i.scheduledAt) }}</td>
-          <td>{{ i.round }}</td>
-          <td><span class="type-badge">{{ i.interviewType }}</span></td>
-          <td>{{ i.durationMinutes }}m</td>
-          <td>
-            <span class="status-badge" [style.background]="getStatusColor(i.status) + '20'" [style.color]="getStatusColor(i.status)">{{ i.status }}</span>
-          </td>
-          <td>
-            <a *ngIf="i.meetingLink" [href]="i.meetingLink" target="_blank" class="meeting-link"><i class="fas fa-external-link-alt"></i></a>
-          </td>
-          <td class="actions-cell">
-            <div class="row-actions" *ngIf="i.status === 'SCHEDULED' || i.status === 'RESCHEDULED'">
-              <button class="btn-icon" title="Complete" (click)="openStatusModal(i, 'COMPLETED')"><i class="fas fa-check-circle" style="color:#10b981"></i></button>
-              <button class="btn-icon" title="Cancel" (click)="openStatusModal(i, 'CANCELLED')"><i class="fas fa-times-circle" style="color:#ef4444"></i></button>
-              <button class="btn-icon" title="No Show" (click)="openStatusModal(i, 'NO_SHOW')"><i class="fas fa-user-slash" style="color:#f59e0b"></i></button>
-              <button class="btn-icon" title="Edit" (click)="editInterviewModal(i)"><i class="fas fa-edit"></i></button>
-            </div>
-            <button class="btn-icon" title="Delete" (click)="deleteInterview(i.id)"><i class="fas fa-trash" style="color:#ef4444"></i></button>
-          </td>
-        </tr>
-        <tr *ngIf="filteredInterviews.length === 0">
-          <td colspan="10" style="text-align:center;color:#94a3b8;padding:32px">No interviews found.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="completed-feedback" *ngIf="filteredInterviews.length > 0">
-    <ng-container *ngFor="let i of filteredInterviews">
-      <div *ngIf="i.status === 'COMPLETED' && i.feedback" class="feedback-row">
-        <span class="feedback-label">{{ i.candidateName }} ({{ i.round }}):</span>
-        <span class="feedback-text">{{ i.feedback }}</span>
-        <span class="feedback-rating" *ngIf="i.rating">
-          <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= (i.rating || 0) ? '#f59e0b' : '#e2e8f0'" style="font-size:11px"></i>
-        </span>
-      </div>
-    </ng-container>
-  </div>
-</div>
-
-<!-- Modal: Post New Job Posting -->
-<div class="modal-backdrop" *ngIf="showJobModal" (click)="closeJobModal()">
-  <div class="modal-card" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3><i class="fas fa-plus-circle"></i> Create Job Posting</h3>
-      <button class="close-btn" (click)="closeJobModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Job Title *</label>
-        <input type="text" [(ngModel)]="newJob.title" placeholder="e.g. Senior Software Engineer" />
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Department</label>
-          <select [(ngModel)]="newJob.department">
-            <option value="Engineering">Engineering</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Design">Design</option>
-            <option value="Human Resources">Human Resources</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Location</label>
-          <input type="text" [(ngModel)]="newJob.location" placeholder="e.g. Remote / New York" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Employment Type</label>
-          <select [(ngModel)]="newJob.type">
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Contract">Contract</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Salary Range</label>
-          <input type="text" [(ngModel)]="newJob.salary" placeholder="e.g. $90K - $120K" />
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn--cancel" (click)="closeJobModal()">Cancel</button>
-      <button class="btn btn--primary" (click)="saveJob()"><i class="fas fa-check"></i> Post Job</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Add Candidate -->
-<div class="modal-backdrop" *ngIf="showCandidateModal" (click)="closeCandidateModal()">
-  <div class="modal-card" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3><i class="fas fa-user-plus"></i> Add New Candidate</h3>
-      <button class="close-btn" (click)="closeCandidateModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Candidate Name *</label>
-        <input type="text" [(ngModel)]="newCandidate.name" placeholder="e.g. Jane Doe" />
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" [(ngModel)]="newCandidate.email" placeholder="jane@example.com" />
-        </div>
-        <div class="form-group">
-          <label>Position Applied For</label>
-          <input type="text" [(ngModel)]="newCandidate.position" placeholder="e.g. Product Designer" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Initial Stage</label>
-          <select [(ngModel)]="newCandidate.stage">
-            <option value="Screening">Screening</option>
-            <option value="Technical">Technical</option>
-            <option value="Interview">Interview</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Initial Rating (1-5)</label>
-          <input type="number" min="1" max="5" [(ngModel)]="newCandidate.rating" />
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn--cancel" (click)="closeCandidateModal()">Cancel</button>
-      <button class="btn btn--primary" (click)="saveCandidate()"><i class="fas fa-check"></i> Save Candidate</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Schedule / Edit Interview -->
-<div class="modal-backdrop" *ngIf="showInterviewModal" (click)="closeInterviewModal()">
-  <div class="modal-card modal-card--wide" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3><i class="fas fa-calendar-plus"></i> {{ editingInterview ? 'Edit Interview' : 'Schedule Interview' }}</h3>
-      <button class="close-btn" (click)="closeInterviewModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Candidate *</label>
-          <select [(ngModel)]="interviewForm.candidateId">
-            <option value="">Select candidate...</option>
-            <option *ngFor="let c of candidates" [value]="c.id">{{ c.name }}</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Job *</label>
-          <select [(ngModel)]="interviewForm.jobId">
-            <option value="">Select job...</option>
-            <option *ngFor="let j of jobPostings" [value]="j.id">{{ j.title }}</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Interviewer</label>
-          <select [(ngModel)]="interviewForm.interviewerId">
-            <option value="">Select interviewer...</option>
-            <option *ngFor="let e of employees" [value]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Scheduled At *</label>
-          <input type="datetime-local" [(ngModel)]="interviewForm.scheduledAt" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Round</label>
-          <input type="text" [(ngModel)]="interviewForm.round" placeholder="e.g. SCREENING" />
-        </div>
-        <div class="form-group">
-          <label>Interview Type</label>
-          <select [(ngModel)]="interviewForm.interviewType">
-            <option value="ONLINE">Online</option>
-            <option value="OFFLINE">Offline</option>
-            <option value="PHONE">Phone</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Duration (minutes)</label>
-          <input type="number" min="15" step="15" [(ngModel)]="interviewForm.durationMinutes" />
-        </div>
-        <div class="form-group">
-          <label>Meeting Link</label>
-          <input type="url" [(ngModel)]="interviewForm.meetingLink" placeholder="https://..." />
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn--cancel" (click)="closeInterviewModal()">Cancel</button>
-      <button class="btn btn--primary" (click)="saveInterview()">
-        <i class="fas fa-check"></i> {{ editingInterview ? 'Update' : 'Schedule' }}
+    <div class="header-actions">
+      <button class="btn btn-secondary-action" (click)="openCandidateModal()">
+        <i class="fas fa-user-plus"></i> Add Candidate
+      </button>
+      <button class="btn btn-primary-action" (click)="openJobModal()">
+        <i class="fas fa-plus"></i> Post New Opening
       </button>
     </div>
   </div>
+
+  <!-- 4 Top Metric Cards Bar -->
+  <div class="metric-cards-bar">
+    <div class="stat-card stat-blue" (click)="activeTab = 'openings'">
+      <div class="stat-icon-box">
+        <i class="fas fa-briefcase"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">{{ jobOpenings.length }}</span>
+        <span class="stat-label">Total Job Openings</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-green" (click)="activeTab = 'candidates'">
+      <div class="stat-icon-box">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">{{ candidates.length }}</span>
+        <span class="stat-label">Total Applicants</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-orange" (click)="activeTab = 'interviews'">
+      <div class="stat-icon-box">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">{{ interviews.length }}</span>
+        <span class="stat-label">Interviews Scheduled</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-purple">
+      <div class="stat-icon-box">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div class="stat-info">
+        <span class="stat-number">2</span>
+        <span class="stat-label">Offers Extended</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar & Segmented Tabs Bar -->
+  <div class="recruitment-toolbar">
+    <div class="tabs-group">
+      <button class="tab-btn" [class.active]="activeTab === 'openings'" (click)="activeTab = 'openings'">
+        <i class="fas fa-briefcase"></i> Job Openings <span class="tab-badge">{{ jobOpenings.length }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'candidates'" (click)="activeTab = 'candidates'">
+        <i class="fas fa-users"></i> Candidates <span class="tab-badge">{{ candidates.length }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'interviews'" (click)="activeTab = 'interviews'">
+        <i class="fas fa-calendar-alt"></i> Interviews <span class="tab-badge">{{ interviews.length }}</span>
+      </button>
+    </div>
+
+    <div class="toolbar-controls">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search openings, candidates, interviews..." />
+      </div>
+
+      <div class="select-box" *ngIf="activeTab === 'openings'">
+        <select [(ngModel)]="statusFilter">
+          <option value="ALL">All Statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="PAUSED">Paused</option>
+          <option value="CLOSED">Closed</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary-action" *ngIf="activeTab === 'interviews'" (click)="openInterviewModal()">
+        <i class="fas fa-plus"></i> Schedule Interview
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Content 1: Job Openings Grid -->
+  <div *ngIf="activeTab === 'openings'">
+    <div class="openings-grid" *ngIf="filteredJobOpenings.length > 0; else noOpenings">
+      <div class="opening-card" *ngFor="let job of filteredJobOpenings">
+        <div class="opening-card__header">
+          <div>
+            <h3 class="job-title">{{ job.title }}</h3>
+            <span class="dept-badge"><i class="fas fa-building"></i> {{ job.department }}</span>
+          </div>
+          <app-status-badge [status]="job.status"></app-status-badge>
+        </div>
+
+        <div class="opening-card__meta">
+          <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+          <span><i class="fas fa-briefcase"></i> {{ job.type }}</span>
+        </div>
+
+        <div class="opening-card__salary"><i class="fas fa-rupee-sign"></i> {{ job.salaryRange }}</div>
+
+        <div class="opening-card__footer">
+          <span class="posted-date"><i class="far fa-clock"></i> Posted {{ job.postedDate }}</span>
+          <span class="applicants-count"><i class="fas fa-users"></i> {{ job.applicants }} Applicants</span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noOpenings>
+      <div class="empty-state">
+        <i class="fas fa-folder-open empty-icon"></i>
+        <h3>No Job Openings Found</h3>
+        <p>Try adjusting your search criteria or post a new job opening.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Tab Content 2: Candidates Table -->
+  <div *ngIf="activeTab === 'candidates'">
+    <div class="table-card" *ngIf="filteredCandidates.length > 0; else noCandidates">
+      <app-data-table 
+        [columns]="candidateColumns" 
+        [data]="filteredCandidates" 
+        [pageSize]="10" 
+        [actions]="candidateActions" 
+        (onActionClick)="onAction($event)">
+      </app-data-table>
+    </div>
+
+    <ng-template #noCandidates>
+      <div class="empty-state">
+        <i class="fas fa-user-slash empty-icon"></i>
+        <h3>No Candidates Found</h3>
+        <p>Try adjusting your search criteria or add a new candidate.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Tab Content 3: Interviews Table (HR Only Schedule Feature) -->
+  <div *ngIf="activeTab === 'interviews'">
+    <div class="table-card" *ngIf="filteredInterviews.length > 0; else noInterviews">
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Position</th>
+              <th>Interviewer</th>
+              <th>Date & Time</th>
+              <th>Round</th>
+              <th>Type</th>
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Link</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i of filteredInterviews" [class.row-completed]="i.status === 'COMPLETED'">
+              <td>
+                <div class="emp-cell">
+                  <div class="avatar-sm" [style.background]="'#6366f1'">{{ (i.candidateName || '').charAt(0) || '?' }}</div>
+                  <span class="emp-name">{{ i.candidateName }}</span>
+                </div>
+              </td>
+              <td>{{ i.jobTitle }}</td>
+              <td>{{ i.interviewerName }}</td>
+              <td>{{ formatScheduledAt(i.scheduledAt) }}</td>
+              <td><span class="badge badge--outline-purple">{{ i.round }}</span></td>
+              <td><span class="type-badge">{{ i.interviewType }}</span></td>
+              <td>{{ i.durationMinutes }}m</td>
+              <td>
+                <span class="status-badge" [style.background]="getStatusColor(i.status) + '20'" [style.color]="getStatusColor(i.status)">{{ i.status }}</span>
+              </td>
+              <td>
+                <a *ngIf="i.meetingLink" [href]="i.meetingLink" target="_blank" class="meeting-link"><i class="fas fa-external-link-alt"></i></a>
+              </td>
+              <td class="text-right">
+                <div class="action-buttons" *ngIf="i.status === 'SCHEDULED' || i.status === 'RESCHEDULED'">
+                  <button class="icon-btn icon-btn--success" title="Complete" (click)="openStatusModal(i, 'COMPLETED')"><i class="fas fa-check-circle"></i></button>
+                  <button class="icon-btn icon-btn--danger" title="Cancel" (click)="openStatusModal(i, 'CANCELLED')"><i class="fas fa-times-circle"></i></button>
+                  <button class="icon-btn icon-btn--warning" title="No Show" (click)="openStatusModal(i, 'NO_SHOW')"><i class="fas fa-user-slash"></i></button>
+                  <button class="icon-btn icon-btn--secondary" title="Edit" (click)="editInterviewModal(i)"><i class="fas fa-edit"></i></button>
+                  <button class="icon-btn icon-btn--danger" title="Delete" (click)="deleteInterview(i.id)"><i class="fas fa-trash"></i></button>
+                </div>
+                <div class="action-buttons" *ngIf="i.status !== 'SCHEDULED' && i.status !== 'RESCHEDULED'">
+                  <button class="icon-btn icon-btn--danger" title="Delete" (click)="deleteInterview(i.id)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #noInterviews>
+      <div class="empty-state">
+        <i class="fas fa-calendar-times empty-icon"></i>
+        <h3>No Interviews Scheduled</h3>
+        <p>Click "Schedule Interview" to assign candidates to interviewers.</p>
+      </div>
+    </ng-template>
+
+    <div class="completed-feedback" *ngIf="filteredInterviews.length > 0">
+      <ng-container *ngFor="let i of filteredInterviews">
+        <div *ngIf="i.status === 'COMPLETED' && i.feedback" class="feedback-row">
+          <span class="feedback-label">{{ i.candidateName }} ({{ i.round }}):</span>
+          <span class="feedback-text">{{ i.feedback }}</span>
+          <span class="feedback-rating" *ngIf="i.rating">
+            <i *ngFor="let s of [1,2,3,4,5]" class="fas fa-star" [style.color]="s <= (i.rating || 0) ? '#f59e0b' : '#e2e8f0'" style="font-size:11px"></i>
+          </span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
 </div>
 
-<!-- Modal: Update Interview Status -->
+<!-- Modal: Update Interview Status (HR Only) -->
 <div class="modal-backdrop" *ngIf="showStatusModal" (click)="closeStatusModal()">
   <div class="modal-card" (click)="$event.stopPropagation()">
     <div class="modal-header">

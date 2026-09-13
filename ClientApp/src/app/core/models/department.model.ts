@@ -3,6 +3,7 @@ export interface Department {
   name: string;
   code: string;
   description?: string;
+  imageUrl?: string;
   headId?: string;
   headName?: string;
   employeeCount: number;
@@ -33,6 +34,7 @@ export interface Branch {
   country: string;
   phone?: string;
   email?: string;
+  imageUrl?: string;
   employeeCount: number;
   status: string;
 }
@@ -40,10 +42,12 @@ export interface Branch {
 export interface Team {
   id: string;
   name: string;
-  departmentId: string;
-  departmentName: string;
-  teamLeadId: string;
-  teamLeadName: string;
-  memberCount: number;
-  status: string;
+  departmentId?: string;
+  departmentName?: string;
+  teamLeadId?: string;
+  teamLeadName?: string;
+  memberCount?: number;
+  status?: string;
+  description?: string;
+  activeProjectsCount?: number;
 }

@@ -1,120 +1,322 @@
-<app-page-header title="Attendance Management" subtitle="Track employee attendance and working hours" [breadcrumbs]="[{label:'Dashboard',link:'/admin/dashboard'},{label:'Attendance'}]">
-  <button class="btn btn--outline"><i class="fas fa-download"></i> Download Report</button>
-  <button class="btn btn--primary"><i class="fas fa-calendar-plus"></i> Mark Attendance</button>
-</app-page-header>
+<div class="attendance-management-page">
 
-<!-- Mini Stats Cards Row -->
-<div class="stats-row">
-  <div class="mini-stat present">
-    <div class="stat-top">
-      <span class="stat-dot present-dot"></span>
-      <span class="mini-stat__label">Present</span>
+  <!-- Top Page Header -->
+  <div class="top-nav-bar">
+    <div class="nav-left">
+      <nav class="breadcrumbs">
+        <a routerLink="/admin/dashboard">Dashboard</a>
+        <span class="separator"><i class="fas fa-chevron-right"></i></span>
+        <span class="current">Attendance</span>
+      </nav>
+      <h1 class="page-title">Attendance Management</h1>
+      <p class="page-subtitle">Track real-time employee check-ins, working hours, leaves, and attendance corrections</p>
     </div>
-    <span class="mini-stat__value">198</span>
-  </div>
-  <div class="mini-stat absent">
-    <div class="stat-top">
-      <span class="stat-dot absent-dot"></span>
-      <span class="mini-stat__label">Absent</span>
+    <div class="header-actions">
+      <button class="btn btn-outline-excel" (click)="exportReport()">
+        <i class="fas fa-file-excel"></i> {{ getSelectedCount() > 0 ? 'Export Selected (' + getSelectedCount() + ')' : 'Export Excel' }}
+      </button>
+      <button class="btn btn-primary" (click)="openMarkModal()">
+        <i class="fas fa-calendar-plus"></i> Mark Attendance
+      </button>
     </div>
-    <span class="mini-stat__value">33</span>
   </div>
-  <div class="mini-stat late">
-    <div class="stat-top">
-      <span class="stat-dot late-dot"></span>
-      <span class="mini-stat__label">Late</span>
-    </div>
-    <span class="mini-stat__value">12</span>
-  </div>
-  <div class="mini-stat leave">
-    <div class="stat-top">
-      <span class="stat-dot leave-dot"></span>
-      <span class="mini-stat__label">On Leave</span>
-    </div>
-    <span class="mini-stat__value">18</span>
-  </div>
-  <div class="mini-stat wfh">
-    <div class="stat-top">
-      <span class="stat-dot wfh-dot"></span>
-      <span class="mini-stat__label">Work From Home</span>
-    </div>
-    <span class="mini-stat__value">27</span>
-  </div>
-</div>
 
-<!-- Filter Bar -->
-<div class="filter-card">
-  <div class="filter-bar">
-    <div class="filter-group">
-      <i class="far fa-calendar-alt filter-icon"></i>
-      <input type="date" class="filter-input" value="2024-12-19" />
-    </div>
-    <div class="filter-group">
-      <i class="fas fa-building filter-icon"></i>
-      <select class="filter-select">
-        <option value="">All Departments</option>
-        <option>Engineering</option>
-        <option>Marketing</option>
-        <option>Sales</option>
-        <option>HR</option>
-        <option>Finance</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <i class="fas fa-filter filter-icon"></i>
-      <select class="filter-select">
-        <option value="">All Status</option>
-        <option>Present</option>
-        <option>Absent</option>
-        <option>Late</option>
-        <option>On Leave</option>
-      </select>
-    </div>
-  </div>
-</div>
-
-<!-- Attendance Data Table Container -->
-<div class="table-card">
-  <app-data-table 
-    [columns]="columns" 
-    [data]="attendanceRecords" 
-    [pageSize]="10" 
-    [actions]="tableActions" 
-    (onActionClick)="onAction($event)">
-  </app-data-table>
-</div>
-
-<!-- Correction Request Modal -->
-<div class="modal-overlay" *ngIf="showCorrection" (click)="showCorrection = false">
-  <div class="correction-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3><i class="fas fa-user-edit"></i> Attendance Correction</h3>
-      <button class="modal-close" (click)="showCorrection = false"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" class="filter-input" [(ngModel)]="correctionForm.date" />
+  <!-- Metric KPI Cards Row (5 Cards) -->
+  <div class="metrics-grid">
+    
+    <div class="metric-card card-emerald">
+      <div class="metric-icon"><i class="fas fa-user-check"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ presentCount }}</span>
+        <span class="metric-lbl">Present Today</span>
       </div>
-      <div class="form-row">
+    </div>
+
+    <div class="metric-card card-rose">
+      <div class="metric-icon"><i class="fas fa-user-times"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ absentCount }}</span>
+        <span class="metric-lbl">Absent Today</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-amber">
+      <div class="metric-icon"><i class="fas fa-clock"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ lateCount }}</span>
+        <span class="metric-lbl">Late Arrivals</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-blue">
+      <div class="metric-icon"><i class="fas fa-umbrella-beach"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ leaveCount }}</span>
+        <span class="metric-lbl">On Leave</span>
+      </div>
+    </div>
+
+    <div class="metric-card card-purple">
+      <div class="metric-icon"><i class="fas fa-laptop-house"></i></div>
+      <div class="metric-info">
+        <span class="metric-val">{{ wfhCount }}</span>
+        <span class="metric-lbl">Work From Home</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Search & Filter Card -->
+  <div class="filter-card">
+    <div class="filter-bar">
+      
+      <div class="date-input-wrapper">
+        <i class="far fa-calendar-alt date-icon"></i>
+        <input type="date" [(ngModel)]="selectedDate" class="date-input" />
+      </div>
+
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search by employee name or ID..."
+          class="search-input"
+        />
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedDepartment" class="filter-select">
+          <option value="">All Departments</option>
+          <option *ngFor="let dept of departmentsList" [value]="dept">{{ dept }}</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <div class="select-wrapper">
+        <select [(ngModel)]="selectedStatus" class="filter-select">
+          <option value="">All Status</option>
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Late">Late</option>
+          <option value="On Leave">On Leave</option>
+          <option value="Work From Home">Work From Home</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+
+      <button class="btn-reset" (click)="resetFilters()">
+        <i class="fas fa-sync-alt"></i> Reset
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Selected Row Counter Alert Bar -->
+  <div class="selection-alert-bar" *ngIf="getSelectedCount() > 0">
+    <div class="selection-info">
+      <i class="fas fa-check-square"></i>
+      <span><strong>{{ getSelectedCount() }}</strong> attendance record(s) selected</span>
+    </div>
+    <div class="selection-actions">
+      <button class="btn-sel btn-sel-export" (click)="exportReport()">
+        <i class="fas fa-file-excel"></i> Export Selected to Excel
+      </button>
+      <button class="btn-sel btn-sel-clear" (click)="clearSelection()">
+        <i class="fas fa-times"></i> Clear Selection
+      </button>
+    </div>
+  </div>
+
+  <!-- Attendance Data Table Card -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="attendance-table">
+        <thead>
+          <tr>
+            <th class="checkbox-col">
+              <label class="custom-chk">
+                <input
+                  type="checkbox"
+                  [checked]="isAllSelected"
+                  (change)="toggleSelectAll()"
+                />
+                <span class="chk-box"></span>
+              </label>
+            </th>
+            <th>EMPLOYEE <i class="fas fa-sort sort-icon"></i></th>
+            <th>DEPARTMENT <i class="fas fa-sort sort-icon"></i></th>
+            <th>DATE <i class="fas fa-sort sort-icon"></i></th>
+            <th>CLOCK IN <i class="fas fa-sort sort-icon"></i></th>
+            <th>CLOCK OUT <i class="fas fa-sort sort-icon"></i></th>
+            <th>WORKED HOURS <i class="fas fa-sort sort-icon"></i></th>
+            <th>STATUS <i class="fas fa-sort sort-icon"></i></th>
+            <th class="text-center">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rec of filteredRecords" [class.row-selected]="isRowSelected(rec.id)">
+            <td class="checkbox-col" (click)="$event.stopPropagation()">
+              <label class="custom-chk">
+                <input
+                  type="checkbox"
+                  [checked]="isRowSelected(rec.id)"
+                  (change)="toggleSelectRow(rec.id, $event)"
+                />
+                <span class="chk-box"></span>
+              </label>
+            </td>
+            <td>
+              <div class="emp-user-cell">
+                <div class="avatar-circle">
+                  <img *ngIf="rec.avatar" [src]="rec.avatar" [alt]="rec.name" />
+                  <span *ngIf="!rec.avatar" class="avatar-initials">{{ rec.name.charAt(0) }}</span>
+                </div>
+                <div class="user-details">
+                  <span class="user-name">{{ rec.name }}</span>
+                  <span class="user-sub-id">{{ rec.employeeId }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="dept-text">{{ rec.department }}</span>
+            </td>
+            <td>
+              <span class="date-text">{{ rec.date }}</span>
+            </td>
+            <td>
+              <span class="time-text clock-in">
+                <i class="fas fa-sign-in-alt in-icon"></i> {{ rec.clockIn }}
+              </span>
+            </td>
+            <td>
+              <span class="time-text clock-out">
+                <i class="fas fa-sign-out-alt out-icon"></i> {{ rec.clockOut }}
+              </span>
+            </td>
+            <td>
+              <span class="hours-badge">{{ rec.hoursWorked }}</span>
+            </td>
+            <td>
+              <span class="status-pill" [ngClass]="{
+                'status-present': rec.status === 'Present',
+                'status-late': rec.status === 'Late',
+                'status-absent': rec.status === 'Absent',
+                'status-leave': rec.status === 'On Leave',
+                'status-wfh': rec.status === 'Work From Home'
+              }">
+                <span class="status-dot"></span> {{ rec.status }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="action-btn-group">
+                <button class="circle-btn btn-edit" title="Request Attendance Correction" (click)="openCorrection(rec)">
+                  <i class="fas fa-user-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredRecords.length === 0">
+            <td colspan="9" class="empty-table-cell">
+              <i class="fas fa-calendar-times empty-icon"></i>
+              <p>No attendance records found matching your filters.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Attendance Correction Request Modal -->
+  <div class="modal-backdrop" *ngIf="showCorrection" (click)="showCorrection = false">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-edit icon-blue"></i> Attendance Correction Request</h3>
+        <button class="close-btn" (click)="showCorrection = false">&times;</button>
+      </div>
+      <div class="modal-body">
         <div class="form-group">
-          <label>Corrected Check In</label>
-          <input type="time" class="filter-input" [(ngModel)]="correctionForm.checkIn" />
+          <label>Employee Name</label>
+          <input type="text" [value]="correctionForm.employeeName + ' (' + correctionForm.employeeId + ')'" disabled class="form-control" />
         </div>
         <div class="form-group">
-          <label>Corrected Check Out</label>
-          <input type="time" class="filter-input" [(ngModel)]="correctionForm.checkOut" />
+          <label>Date</label>
+          <input type="date" [(ngModel)]="correctionForm.date" class="form-control" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Corrected Check In Time</label>
+            <input type="time" [(ngModel)]="correctionForm.checkIn" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Corrected Check Out Time</label>
+            <input type="time" [(ngModel)]="correctionForm.checkOut" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Reason *</label>
+          <input type="text" [(ngModel)]="correctionForm.reason" placeholder="e.g. Forgot to clock in, system issue..." class="form-control" />
+        </div>
+        <div class="form-note">
+          <i class="fas fa-info-circle"></i> Request will be logged and submitted for HR approval.
         </div>
       </div>
-      <div class="form-group">
-        <label>Reason *</label>
-        <input type="text" class="filter-input" [(ngModel)]="correctionForm.reason" placeholder="Why is this correction needed?" />
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="showCorrection = false">Cancel</button>
+        <button class="btn btn-primary" (click)="submitCorrection()"><i class="fas fa-check"></i> Submit Request</button>
       </div>
-      <div class="form-note"><i class="fas fa-info-circle"></i> The request will be sent for approval by HR.</div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn--outline" (click)="showCorrection = false">Cancel</button>
-      <button class="btn btn--primary" (click)="submitCorrection()"><i class="fas fa-check"></i> Submit Request</button>
     </div>
   </div>
+
+  <!-- Mark Attendance Modal -->
+  <div class="modal-backdrop" *ngIf="showMarkModal" (click)="showMarkModal = false">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3><i class="fas fa-calendar-plus icon-blue"></i> Mark Attendance</h3>
+        <button class="close-btn" (click)="showMarkModal = false">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Select Employee</label>
+          <select [(ngModel)]="markForm.employeeId" class="form-control">
+            <option value="EMP-24-0001">Rahul Sharma (EMP-24-0001)</option>
+            <option value="EMP-24-0002">Priya Verma (EMP-24-0002)</option>
+            <option value="EMP-24-0003">Amit Kumar (EMP-24-0003)</option>
+            <option value="EMP-24-0004">Sneha Patel (EMP-24-0004)</option>
+            <option value="EMP-24-0005">Vikram Singh (EMP-24-0005)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" [(ngModel)]="markForm.date" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Attendance Status</label>
+          <select [(ngModel)]="markForm.status" class="form-control">
+            <option value="Present">Present</option>
+            <option value="Late">Late</option>
+            <option value="Absent">Absent</option>
+            <option value="On Leave">On Leave</option>
+            <option value="Work From Home">Work From Home</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Clock In Time</label>
+            <input type="time" [(ngModel)]="markForm.checkIn" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Clock Out Time</label>
+            <input type="time" [(ngModel)]="markForm.checkOut" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="showMarkModal = false">Cancel</button>
+        <button class="btn btn-primary" (click)="submitMarkAttendance()"><i class="fas fa-check"></i> Mark Attendance</button>
+      </div>
+    </div>
+  </div>
+
 </div>

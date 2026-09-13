@@ -1,0 +1,224 @@
+<div class="salary-form-page">
+  <!-- Top Header Banner -->
+  <div class="header-banner">
+    <div class="header-left">
+      <button class="back-btn" (click)="cancel()">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Salary Structures</span>
+      </button>
+      <div class="title-group">
+        <h2>Edit Salary Structure <span class="badge-id">#{{ structureId }}</span></h2>
+        <p>Modify salary components, allowances, tax percentages, and effective validity</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn--outline" (click)="applyStandardDefaults()">
+        <i class="fas fa-magic"></i> Apply Standard Defaults
+      </button>
+    </div>
+  </div>
+
+  <div class="form-container" *ngIf="!loading; else loadingTpl">
+    <form (ngSubmit)="saveStructure()" #salaryForm="ngForm">
+      <div class="form-grid">
+        <!-- Main Form Left Side -->
+        <div class="form-main">
+          
+          <!-- Employee & Status Section -->
+          <div class="form-card">
+            <div class="card-header">
+              <i class="fas fa-user-circle"></i>
+              <h3>Employee Details & Status</h3>
+            </div>
+            <div class="card-body grid-2">
+              <div class="form-group col-span-2">
+                <label class="required">Employee</label>
+                <select [(ngModel)]="form.employeeId" name="employeeId" class="form-control" required disabled>
+                  <option *ngFor="let emp of employees" [value]="emp.id">
+                    {{ emp.firstName }} {{ emp.lastName }} ({{ emp.id }}) — {{ emp.departmentName || 'Engineering' }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="required">Effective From</label>
+                <input type="date" [(ngModel)]="form.effectiveFrom" name="effectiveFrom" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label>Effective To (Optional)</label>
+                <input type="date" [(ngModel)]="form.effectiveTo" name="effectiveTo" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label>Structure Status</label>
+                <select [(ngModel)]="form.status" name="status" class="form-control">
+                  <option value="Active">Active</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Earnings Components -->
+          <div class="form-card">
+            <div class="card-header card-header--success">
+              <i class="fas fa-arrow-up"></i>
+              <h3>Earnings Components (Gross Salary)</h3>
+              <button type="button" class="btn-sub-action" (click)="applyAutoHra()">Auto 40% HRA</button>
+            </div>
+            <div class="card-body grid-2">
+              <div class="form-group">
+                <label class="required">Basic Salary (₹)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" [(ngModel)]="form.basicSalary" name="basicSalary" class="form-control" placeholder="0" required min="1">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>House Rent Allowance - HRA (₹)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" [(ngModel)]="form.hra" name="hra" class="form-control" placeholder="0">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Conveyance Allowance (₹)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" [(ngModel)]="form.conveyance" name="conveyance" class="form-control" placeholder="0">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Medical Allowance (₹)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" [(ngModel)]="form.medicalAllowance" name="medicalAllowance" class="form-control" placeholder="0">
+                </div>
+              </div>
+
+              <div class="form-group col-span-2">
+                <label>Special Allowance (₹)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" [(ngModel)]="form.specialAllowance" name="specialAllowance" class="form-control" placeholder="0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deductions Components -->
+          <div class="form-card">
+            <div class="card-header card-header--danger">
+              <i class="fas fa-arrow-down"></i>
+              <h3>Statutory & Tax Deductions</h3>
+            </div>
+            <div class="card-body grid-2">
+              <div class="form-group">
+                <label>Provident Fund - PF (%)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">%</span>
+                  <input type="number" [(ngModel)]="form.pfPercent" name="pfPercent" class="form-control" placeholder="12" step="0.5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Employee State Insurance - ESI (%)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">%</span>
+                  <input type="number" [(ngModel)]="form.esiPercent" name="esiPercent" class="form-control" placeholder="1.75" step="0.25">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Income Tax - TDS (%)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">%</span>
+                  <input type="number" [(ngModel)]="form.tdsPercent" name="tdsPercent" class="form-control" placeholder="10" step="1">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Professional Tax - PT (₹)</label>
+                <div class="input-with-symbol">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" [(ngModel)]="form.professionalTax" name="professionalTax" class="form-control" placeholder="150">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Live Summary Sidebar Right Side -->
+        <div class="form-sidebar">
+          <div class="summary-card sticky-card">
+            <div class="summary-header">
+              <i class="fas fa-calculator"></i>
+              <h3>Live Salary Breakdown</h3>
+            </div>
+
+            <div class="summary-list">
+              <div class="summary-item">
+                <span class="label">Basic Salary</span>
+                <span class="value">{{ form.basicSalary | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="label">HRA</span>
+                <span class="value">{{ form.hra | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="label">Conveyance & Medical</span>
+                <span class="value">{{ (form.conveyance + form.medicalAllowance) | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="label">Special Allowance</span>
+                <span class="value">{{ form.specialAllowance | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-item highlight-success">
+                <span class="label">Total Gross Earnings</span>
+                <span class="value">{{ totalEarnings | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+
+              <div class="summary-item highlight-danger">
+                <span class="label">Total Deductions</span>
+                <span class="value">-{{ totalDeductions | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+
+              <div class="netpay-box">
+                <span class="netpay-title">Net Take-Home Pay</span>
+                <span class="netpay-amount">{{ netPay | currency:'INR':'symbol-narrow':'1.0-0' }}</span>
+                <span class="netpay-subtitle">Monthly In-Hand Salary</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary btn--full" [disabled]="saving">
+                <i class="fas" [ngClass]="saving ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+                <span>{{ saving ? 'Updating...' : 'Update Salary Structure' }}</span>
+              </button>
+              <button type="button" class="btn btn--light btn--full" (click)="cancel()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="loading-state">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>Loading structure details...</span>
+    </div>
+  </ng-template>
+</div>

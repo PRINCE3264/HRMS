@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TableColumn } from '../../../core/models';
+import { ExcelExportService, ToastService } from '../../../core/services';
 
 @Component({
   selector: 'app-data-table',
@@ -10,7 +11,9 @@ export class DataTableComponent implements OnInit, OnChanges {
   @Input() columns: TableColumn[] = [];
   @Input() data: any[] = [];
   @Input() pageSize = 10;
-  @Input() selectable = false;
+  @Input() selectable = true;
+  @Input() showExport = true;
+  @Input() exportFileName = 'Export_Data';
   @Input() showHeader = true;
   @Input() emptyTitle = 'No data found';
   @Input() emptyMessage = 'There are no records to display.';
@@ -28,6 +31,11 @@ export class DataTableComponent implements OnInit, OnChanges {
   filteredData: any[] = [];
   pagedData: any[] = [];
   selectedItems = new Set<any>();
+
+  constructor(
+    private excelExportService: ExcelExportService,
+    private toast: ToastService
+  ) {}
 
   get totalItems(): number { return this.filteredData.length; }
   get totalPages(): number { return Math.ceil(this.totalItems / this.pageSize); }
@@ -91,6 +99,32 @@ export class DataTableComponent implements OnInit, OnChanges {
     if (this.selectedItems.has(row)) { this.selectedItems.delete(row); }
     else { this.selectedItems.add(row); }
     this.onSelectionChange.emit(Array.from(this.selectedItems));
+  }
+
+  exportToExcel(): void {
+    const itemsToExport = this.selectedItems.size > 0
+      ? Array.from(this.selectedItems)
+      : this.filteredData;
+
+    if (!itemsToExport || itemsToExport.length === 0) {
+      this.toast.warning('No data available to export');
+      return;
+    }
+
+    const formattedData = itemsToExport.map(row => {
+      const obj: any = {};
+      this.columns.forEach(col => {
+        let val = row[col.key];
+        if (col.type === 'currency' && typeof val === 'number') {
+          val = '₹' + val.toLocaleString('en-IN');
+        }
+        obj[col.label] = val !== undefined && val !== null ? val : '';
+      });
+      return obj;
+    });
+
+    this.excelExportService.exportToExcel(formattedData, this.exportFileName);
+    this.toast.success(`Exported ${itemsToExport.length} ${this.selectedItems.size > 0 ? 'selected' : ''} records to Excel`);
   }
 
   onAction(action: string, row: any): void { this.onActionClick.emit({ action, row }); }

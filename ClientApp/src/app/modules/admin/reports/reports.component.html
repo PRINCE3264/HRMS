@@ -1,6 +1,6 @@
 <app-page-header title="Reports & Analytics" subtitle="Comprehensive workforce analytics, attendance tracking, and financial payroll insights" [breadcrumbs]="[{label:'Dashboard',link:'/dashboard'},{label:'Reports'}]">
   <div class="header-actions">
-    <button class="btn btn--outline" (click)="exportReport()"><i class="fas fa-download"></i> Export Report</button>
+    <button class="btn btn--outline" (click)="exportReport()"><i class="fas fa-file-excel"></i> Export Excel</button>
     <button class="btn btn--primary"><i class="fas fa-plus"></i> Create Custom Report</button>
   </div>
 </app-page-header>
@@ -20,6 +20,41 @@
 
 <!-- ================= TAB 1: HR REPORTS ================= -->
 <div *ngIf="activeTab === 'hr'" class="tab-content">
+  <div class="report-stats">
+    <div class="r-stat metric-blue">
+      <div class="r-icon"><i class="fas fa-users"></i></div>
+      <div class="r-info">
+        <span class="r-label">Total Headcount</span>
+        <span class="r-val">254</span>
+        <span class="r-sub"><i class="fas fa-building"></i> 8 Active Departments</span>
+      </div>
+    </div>
+    <div class="r-stat metric-emerald">
+      <div class="r-icon"><i class="fas fa-user-plus"></i></div>
+      <div class="r-info">
+        <span class="r-label">New Hires</span>
+        <span class="r-val">12</span>
+        <span class="r-sub"><i class="fas fa-arrow-up"></i> +4.2% Growth</span>
+      </div>
+    </div>
+    <div class="r-stat metric-violet">
+      <div class="r-icon"><i class="fas fa-venus-mars"></i></div>
+      <div class="r-info">
+        <span class="r-label">Gender Diversity</span>
+        <span class="r-val">48% / 52%</span>
+        <span class="r-sub"><i class="fas fa-balance-scale"></i> Female / Male</span>
+      </div>
+    </div>
+    <div class="r-stat metric-amber">
+      <div class="r-icon"><i class="fas fa-user-minus"></i></div>
+      <div class="r-info">
+        <span class="r-label">Annual Turnover</span>
+        <span class="r-val">4.8%</span>
+        <span class="r-sub"><i class="fas fa-check-circle"></i> Industry Benchmark</span>
+      </div>
+    </div>
+  </div>
+
   <div class="report-grid">
     <div class="report-card">
       <div class="report-card__header">
@@ -57,7 +92,7 @@
           <div class="salary-bar" *ngFor="let item of salaryData">
             <div class="salary-bar__label">
               <span>{{ item.level }}</span>
-              <span>{{ item.avg | currency }}</span>
+              <span>{{ item.avg | currency:'INR':'symbol':'1.0-0' }}</span>
             </div>
             <div class="salary-bar__track">
               <div class="salary-bar__fill" [style.width]="item.percent + '%'" [style.background]="item.color"></div>
@@ -79,7 +114,7 @@
           <h4>{{ report.name }}</h4>
           <span>{{ report.description }}</span>
         </div>
-        <button class="quick-card__btn"><i class="fas fa-arrow-right"></i></button>
+        <button class="quick-card__btn" (click)="downloadQuickReport(report)" title="Export Excel"><i class="fas fa-file-excel"></i></button>
       </div>
     </div>
   </div>
@@ -91,29 +126,33 @@
     <div class="r-stat metric-emerald">
       <div class="r-icon"><i class="fas fa-user-check"></i></div>
       <div class="r-info">
+        <span class="r-label">Avg Attendance Rate</span>
         <span class="r-val">96.2%</span>
-        <span class="r-label">Average Attendance Rate</span>
+        <span class="r-sub"><i class="fas fa-chart-line"></i> +1.1% vs Last Month</span>
       </div>
     </div>
     <div class="r-stat metric-blue">
       <div class="r-icon"><i class="fas fa-clock"></i></div>
       <div class="r-info">
-        <span class="r-val">218</span>
         <span class="r-label">Present Today</span>
+        <span class="r-val">218</span>
+        <span class="r-sub"><i class="fas fa-user-check"></i> On Duty</span>
       </div>
     </div>
     <div class="r-stat metric-amber">
       <div class="r-icon"><i class="fas fa-user-clock"></i></div>
       <div class="r-info">
-        <span class="r-val">14</span>
         <span class="r-label">Late Arrivals</span>
+        <span class="r-val">14</span>
+        <span class="r-sub"><i class="fas fa-exclamation-triangle"></i> Action Flagged</span>
       </div>
     </div>
     <div class="r-stat metric-rose">
       <div class="r-icon"><i class="fas fa-user-times"></i></div>
       <div class="r-info">
-        <span class="r-val">3</span>
         <span class="r-label">Unexcused Absences</span>
+        <span class="r-val">3</span>
+        <span class="r-sub"><i class="fas fa-times-circle"></i> Requires HR Review</span>
       </div>
     </div>
   </div>
@@ -184,29 +223,33 @@
     <div class="r-stat metric-blue">
       <div class="r-icon"><i class="fas fa-money-bill-wave"></i></div>
       <div class="r-info">
-        <span class="r-val">$480,000</span>
         <span class="r-label">Total Monthly Payroll</span>
+        <span class="r-val">₹480,000</span>
+        <span class="r-sub"><i class="fas fa-calendar-alt"></i> September 2026 Cycle</span>
       </div>
     </div>
     <div class="r-stat metric-emerald">
       <div class="r-icon"><i class="fas fa-gift"></i></div>
       <div class="r-info">
-        <span class="r-val">$45,000</span>
         <span class="r-label">Bonuses & Incentives</span>
+        <span class="r-val">₹45,000</span>
+        <span class="r-sub"><i class="fas fa-chart-line"></i> Performance Pay</span>
       </div>
     </div>
     <div class="r-stat metric-violet">
       <div class="r-icon"><i class="fas fa-file-invoice-dollar"></i></div>
       <div class="r-info">
-        <span class="r-val">$32,000</span>
         <span class="r-label">Benefits & Insurance</span>
+        <span class="r-val">₹32,000</span>
+        <span class="r-sub"><i class="fas fa-shield-alt"></i> Company Contribution</span>
       </div>
     </div>
     <div class="r-stat metric-amber">
       <div class="r-icon"><i class="fas fa-hand-holding-usd"></i></div>
       <div class="r-info">
-        <span class="r-val">$23,000</span>
         <span class="r-label">Tax Withholding</span>
+        <span class="r-val">₹23,000</span>
+        <span class="r-sub"><i class="fas fa-university"></i> Statutory Deductions</span>
       </div>
     </div>
   </div>
@@ -214,7 +257,7 @@
   <div class="report-grid">
     <div class="report-card">
       <div class="report-card__header">
-        <h3>Monthly Payroll Expenditure ($)</h3>
+        <h3>Monthly Payroll Expenditure (₹)</h3>
       </div>
       <div class="report-card__body">
         <app-chart-bar title="" [chartData]="payrollExpensesData"></app-chart-bar>
